@@ -1,0 +1,108 @@
+<%
+
+var APPCONF = require('/configs/appconfig.jag');
+
+function FnMakePostRequestCall(URL, BASICAUTH, CONTENTTYPE, ACCEPTTYPE, INPUTDATA){
+
+	var xhr = new XMLHttpRequest();
+	if(BASICAUTH){
+		var VarBasicAuthCode = session.get('authToken');
+		xhr.setRequestHeader("Authorization" , "Bearer " + VarBasicAuthCode);
+	}
+	xhr.open('POST', URL);
+	xhr.setRequestHeader("Content-Type", CONTENTTYPE);
+	xhr.setRequestHeader("Accept", ACCEPTTYPE);
+	xhr.send(INPUTDATA);
+	var VarResponse = xhr.responseText;
+	return VarResponse;
+
+}
+
+function FnMakeGetRequestCall(URL, BASICAUTH){
+
+	var param = {};
+	var headers = {};
+	if(BASICAUTH){
+		var VarBasicAuthCode = session.get('authToken');
+		var headers = {Authorization : "Bearer " + VarBasicAuthCode};
+	}
+	var VarResponse = get(URL, param, headers,"json");
+	return VarResponse.data;
+	
+}
+
+function FnMakePutRequestCall(URL, BASICAUTH, CONTENTTYPE, ACCEPTTYPE, INPUTDATA){
+	var xhr = new XMLHttpRequest();
+	if(BASICAUTH){
+		var VarBasicAuthCode = session.get('authToken');
+		xhr.setRequestHeader("Authorization" , "Bearer " + VarBasicAuthCode);
+	}		
+	xhr.open('PUT', URL);
+	xhr.setRequestHeader("Content-Type", CONTENTTYPE);
+	xhr.setRequestHeader("Accept", ACCEPTTYPE);
+	xhr.send(INPUTDATA);
+	var VarResponse = xhr.responseText;
+	return VarResponse;
+	
+}
+
+function FnMakeDeleteRequestCall(URL, BASICAUTH, CONTENTTYPE, ACCEPTTYPE, INPUTDATA){
+	var xhr = new XMLHttpRequest();
+	if(BASICAUTH){
+		var VarBasicAuthCode = session.get('authToken');
+		xhr.setRequestHeader("Authorization" , "Bearer " + VarBasicAuthCode);
+	}
+	xhr.open('DELETE', URL);
+	xhr.setRequestHeader("Content-Type", CONTENTTYPE);
+	xhr.setRequestHeader("Accept", ACCEPTTYPE);
+	xhr.send(INPUTDATA);
+	var VarResponse = xhr.responseText;
+	return VarResponse;
+}
+
+function FnGetAuthCode(VARAPIMNGRKEY){
+	var util = require('/modules/utils.js');
+	var VarEncodeKey = util.base64encode(VARAPIMNGRKEY);
+	var VarUrl = APPCONF.GAPP_CONF.API_MNGR_SCHEME + "://" + APPCONF.GAPP_CONF.API_MNGR_IPADDR + ":" + APPCONF.GAPP_CONF.API_MNGR_PORT;
+	var VarTokenURL = VarUrl + APPCONF.GAPP_CONF.API_MNGR_TOKEN_URL;
+	var xhr = new XMLHttpRequest();
+	xhr.setRequestHeader("Authorization" , "Basic "+VarEncodeKey);	
+	xhr.open('POST', VarTokenURL);
+	xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+	xhr.setRequestHeader("Accept", 'application/json');
+	xhr.send();
+	var VarResponse = xhr.responseText;
+	return VarResponse;
+}
+
+function FnGetAuthToken(VARAPIMNGRKEY){
+	var util = require('/modules/utils.js');
+	var VarEncodeKey = util.base64encode(VARAPIMNGRKEY);
+	var VarUrl = APPCONF.GAPP_CONF.API_MNGR_SCHEME + "://" + APPCONF.GAPP_CONF.API_MNGR_IPADDR + ":" + APPCONF.GAPP_CONF.API_MNGR_PORT;
+	var VarTokenURL = VarUrl + APPCONF.GAPP_CONF.API_MNGR_PASS_TOKEN_URL;
+	var INPUTDATA = "&username=" + APPCONF.GAPP_CONF.CCD_USERNAME + "&password=" + APPCONF.GAPP_CONF.CCD_PASSWORD;
+	var xhr = new XMLHttpRequest();
+	xhr.setRequestHeader("Authorization" , "Basic "+VarEncodeKey);	
+	xhr.open('POST', VarTokenURL + INPUTDATA);
+	xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+	xhr.setRequestHeader("Accept", 'application/json');
+	xhr.send();
+	var VarResponse = xhr.responseText;
+	return VarResponse;
+}
+
+function FnMakeRequestCall(METHOD, URL, AUTHCODE, CONTENTTYPE, ACCEPTTYPE, INPUTDATA){
+	var xhr = new XMLHttpRequest();
+	if(AUTHCODE != ''){
+		xhr.setRequestHeader("Authorization" , "Bearer " + AUTHCODE);
+	}
+	
+	xhr.open(METHOD, URL);
+	xhr.setRequestHeader("Content-Type", CONTENTTYPE);
+	xhr.setRequestHeader("Accept", ACCEPTTYPE);
+	xhr.send(INPUTDATA);
+	var VarResponse = xhr.responseText;
+	return VarResponse;
+}
+
+%>

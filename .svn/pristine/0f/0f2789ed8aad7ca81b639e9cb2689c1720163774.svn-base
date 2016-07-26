@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+		<%
+			var i18n = require("i18n");
+			i18n.init(request, utils.getLocaleResourcePath());
+			var locale = 'lang_' + request.getLocale();			
+		%>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" content="UI for IOT platform">
+        <meta name="author" content="galaxy">
+		<title>Welcome to Galaxy</title>
+		<link rel="shortcut icon" href="<%=urlPrefix%><%=utils.resolveUrl('images/favicon.ico')%>">
+		
+		<!-- Material Design fonts -->
+		<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" />
+		<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+			
+		<!-- Bootstrap Material Design -->
+		<!--<link rel="stylesheet" type="text/css" href="<%=urlPrefix%><%=utils.resolveUrl('css/bootstrap-material-design.min.css')%>" />-->
+		
+		<!-- customstyle -->	  
+		<link rel="stylesheet" type="text/css" href="<%=urlPrefix%><%=utils.resolveUrl('css/gapp.css')%>" />	
+		<link rel="stylesheet" type="text/css" href="<%=urlPrefix%><%=utils.resolveUrl('css/animate.css')%>" />	
+		<link rel="stylesheet" type="text/css" href="<%=urlPrefix%><%=utils.resolveUrl('css/ripples.min.css')%>" />
+				
+		<!-- BEGIN GLOBAL MANDATORY STYLES -->
+		<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" />
+		<link rel="stylesheet" type="text/css" href="<%=urlPrefix%><%=utils.resolveUrl('css/font-awesome.min.css')%>" />
+		<link rel="stylesheet" type="text/css" href="<%=urlPrefix%>plugins/simple-line-icons/simple-line-icons.min.css" />
+		<link rel="stylesheet" type="text/css" href="<%=urlPrefix%>plugins/bootstrap/css/bootstrap.min.css" />
+
+		<link rel="stylesheet" type="text/css" href="<%=urlPrefix%>plugins/uniform/css/uniform.default.css" />
+		<link rel="stylesheet" type="text/css" href="<%=urlPrefix%>plugins/bootstrap-switch/css/bootstrap-switch.min.css" />
+		
+		<!-- BEGIN THEME STYLES -->
+		<link rel="stylesheet" type="text/css" id="style_components" href="<%=urlPrefix%><%=utils.resolveUrl('css/components-md.css')%>" />
+		<link rel="stylesheet" type="text/css" href="<%=urlPrefix%><%=utils.resolveUrl('css/plugins-md.css')%>" />
+		<link rel="stylesheet" type="text/css" href="<%=urlPrefix%><%=utils.resolveUrl('css/layout.css')%>" />
+		<link rel="stylesheet" type="text/css" id="style_color" href="<%=urlPrefix%><%=utils.resolveUrl('css/darkblue.css')%>" />
+		<link rel="stylesheet" type="text/css" href="<%=urlPrefix%><%=utils.resolveUrl('css/custom.css')%>" />
+		<link rel="stylesheet" type="text/css" href="<%=urlPrefix%>css/ladda-themeless.min.css" />
+		
+		<!-- KendoUI Styles -->
+		<link rel="stylesheet" type="text/css" href="<%=urlPrefix%>css/KendoUI/kendo.common.min.css"  />
+		<link rel="stylesheet" type="text/css" href="<%=urlPrefix%>css/KendoUI/kendo.material.css"  />
+		
+	

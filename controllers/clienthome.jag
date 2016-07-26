@@ -1,0 +1,97 @@
+<%
+var VarTenantKey;
+var VarCurrentTenantInfo;
+
+(function() {
+	
+    if (!user) {
+        sendLogin();
+        return;
+    }
+	
+	var vars;
+	var matcher = new URIMatcher(request.getRequestURI());
+	
+	if (!matcher.match('/clienthome')) {
+	
+		response.sendError(404, JSON.stringify({
+					error: true
+				}));
+		return;
+		
+	}
+	
+	var APPCONF = require('/configs/appconfig.jag');
+	
+    	
+	var method = request.getMethod();
+	if (method === 'POST') {
+		var ObjChildTenantInfo = session.get('CHILD_CLIENT');
+		
+		if(ObjChildTenantInfo != null){
+			var VarTenantInfo = (request.getParameter('gapp-tenant-info') != null) ? request.getParameter('gapp-tenant-info') : '';
+			
+			if(VarTenantInfo !=''){
+				var VarTenantInfo = parse(request.getParameter('gapp-tenant-info'));
+				var ObjDate = new Date();
+				var VarTime = (ObjDate.getTime()).toFixed();
+				var ObjChild = {"tenantName":VarTenantInfo['tenantName'],"tenantDomain":VarTenantInfo['tenantDomain'],"parentDomain":VarTenantInfo['parentDomain'],"time":VarTime,"tenantId":VarTenantInfo['tenantId']};
+				session.put('CHILD_CLIENT', ObjChild);
+				VarTenantKey = VarTenantInfo.tenantId;
+			} else {
+				if(request.getParameter('gapp-tenant-key')!=''){
+					VarTenantKey = request.getParameter('gapp-tenant-key');
+				} else {
+					VarTenantKey = ObjChildTenantInfo.tenantId;
+				}
+				
+				var usr = require('/modules/user.js');
+				VarCurrentTenantInfo = usr.FnGetCurrentClientInfo(VarTenantKey);
+				if(VarCurrentTenantInfo.tenantDomain == APPCONF.GAPP_CONF.MY_DOMAIN_NAME){
+					response.sendRedirect(APPCONF.GAPP_CONF.CONTEXT_PATH+'/');
+					return;
+				}
+				
+			}			
+			
+		} else { 
+
+			if(utils.allowed(user.roles,[APPCONF.GAPP_CONF.SUPER_ADMIN_ROLE])){ 
+				response.sendRedirect(APPCONF.GAPP_CONF.CONTEXT_PATH+'/');
+				return;
+			} else if(!utils.allowed(user.roles,[APPCONF.GAPP_CONF.CLIENT_ADMIN_ROLE])){
+				response.sendRedirect(APPCONF.GAPP_CONF.CONTEXT_PATH+'/userhome');
+				return;
+			} else { 
+				var ObjTenantInfo = session.get('PARENT_CLIENT');
+				VarTenantKey = ObjTenantInfo['tenantId'];
+				
+			}
+		}
+		
+	} else {
+	
+		var ObjTenantInfo = session.get('PARENT_CLIENT');
+		if(ObjTenantInfo != null){
+			VarTenantKey = ObjTenantInfo['tenantId'];
+			if(ObjTenantInfo['tenantDomain'] == APPCONF.GAPP_CONF.MY_DOMAIN_NAME && utils.allowed(user.roles,[APPCONF.GAPP_CONF.SUPER_ADMIN_ROLE])){
+				response.sendRedirect(APPCONF.GAPP_CONF.CONTEXT_PATH+'/');
+				return;
+			} else if(!utils.allowed(user.roles,[APPCONF.GAPP_CONF.CLIENT_ADMIN_ROLE])){
+				response.sendRedirect(APPCONF.GAPP_CONF.CONTEXT_PATH+'/userhome');
+				return;
+			}
+			
+		} else {
+
+			response.sendError(404, JSON.stringify({
+						error: true
+					}));
+			return;
+		
+		}
+		
+	}
+
+	include(utils.resolvePath('templates/clienthome.jag'));
+} ()); %>

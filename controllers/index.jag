@@ -1,0 +1,31 @@
+<%
+var VarTenantKey;
+(function() {
+	
+    if (!user) {
+        sendLogin();
+        return;
+    }
+	
+    if (userDomain !== (urlDomain || superDomain)) {
+        response.sendRedirect(utils.tenantedPrefix(urlPrefix, userDomain));
+        return;
+    }
+	
+	var APPCONF = require('/configs/appconfig.jag');
+	
+	if(utils.allowed(user.roles,[APPCONF.GAPP_CONF.CLIENT_ADMIN_ROLE])){
+		response.sendRedirect(APPCONF.GAPP_CONF.CONTEXT_PATH+'/clienthome');
+		return;
+	} else if(!utils.allowed(user.roles,[APPCONF.GAPP_CONF.SUPER_ADMIN_ROLE])){
+		response.sendRedirect(APPCONF.GAPP_CONF.CONTEXT_PATH+'/userhome');
+		return;
+	}
+	
+	var ObjTenantInfo = session.get('PARENT_CLIENT');
+	if(ObjTenantInfo != null){
+		VarTenantKey = ObjTenantInfo['tenantId'];
+	}	
+	
+    include(utils.resolvePath('templates/index.jag'));
+} ()); %>

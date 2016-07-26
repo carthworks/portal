@@ -1,0 +1,68 @@
+<script type="text/javascript">
+	//geo-tag
+	var VarCreateGeoTagUrl = '<%=APICONF.GAPP_SERVICES.tags.geotags.create%>';
+	var VarFindGeoTagUrl  = '<%=APICONF.GAPP_SERVICES.tags.geotags.find%>';
+	var VarUpdateGeoTagUrl = '<%=APICONF.GAPP_SERVICES.tags.geotags.update%>';
+	
+	//name-tag
+	VarFetchAllTagsUrl = '<%=APICONF.GAPP_SERVICES.tags.nametags.fetchall%>';
+	VarMapTagsEntities = '<%=APICONF.GAPP_SERVICES.tags.nametags.maptags%>';
+	
+	function FnShowTags(){
+		$("#tag-wrapper").slideToggle();
+		setTimeout(function() {					  
+			$(".gllpLatlonPicker").each(function() {
+				$(document).gMapsLatLonPicker().init( $(this) );
+			});				  
+		}, 1000);
+	}
+	document.addEventListener('DOMContentLoaded', function () {
+		setTimeout(function() {					  
+			$(".gllpLatlonPicker").each(function() {
+				$(document).gMapsLatLonPicker().init( $(this) );
+			});				  
+		}, 1000);
+		
+		$('#add-geo-tag').on('click', function() {
+			var var_lat=$("#gllpLatitude").val();
+			var var_long=$("#gllpLongitude").val();
+			if(var_lat === undefined || var_lat=='' || var_lat=='null' || var_lat == '0' || var_long === undefined || var_long=='' || var_long=='null' || var_long == '0'){
+			
+			}else {
+				var_lat =precise_round(var_lat,7);
+				var_long =precise_round(var_long,7);
+				
+				$('#tag-latitude').val(var_lat);
+				$('#tag-longitude').val(var_long);
+
+				var VarLatLongDisplay = var_lat+' , ' +var_long+' ' ;
+				var VarLatLongDisplay = var_lat+' , ' +var_long+' ' ;
+
+				$('#tag-latitude-longitude-display-value').html(VarLatLongDisplay);
+			}
+			
+		});
+
+		$('#clear-geo-tag').on('click', function() {
+			$('#tag-latitude').val('');
+			$('#tag-longitude').val('');
+			$('#tag-latitude-longitude-display-value').html('');
+			
+			$("#gllpLatitude").val('');
+			$("#gllpLongitude").val('');
+			
+			$(".gllpLatlonPicker").each(function() {
+				$(document).gMapsLatLonPicker().init( $(this) );
+			});		
+			
+		});
+		
+	});		
+</script>
+
+<!-- Scripts for Tag(Geo Map) section -->
+	<script src="https://maps.googleapis.com/maps/api/js"></script>
+	<script type='text/javascript' src="<%=urlPrefix%><%=utils.resolveUrl('js/jquery-gmaps-latlon-picker.js')%>"></script>
+<!-- Scripts for Tag(Geo Map) section -->
+
+<!--<script type='text/javascript' src="<%=urlPrefix%>plugins/tag-handler/js/jquery.taghandler.min.js"></script>-->

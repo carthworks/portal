@@ -1,0 +1,271 @@
+<%
+	var APPCONF = require('/configs/appconfig.jag');
+	var APICONF = require('/configs/apiproperties.jag');
+	var usr = require('/modules/user.js');
+	include(utils.resolvePath('templates/portal-header.jag'));
+	include('/controllers/includes/theme-portal-styles.jag');
+%>
+	<link href="<%=urlPrefix%>css/jquery-custom-scrollbar/jquery.mCustomScrollbar.css" rel="stylesheet" type="text/css" />
+	<style type="text/css">
+		#grid-view .k-grid-header .k-header {
+			background-color: #f44336;
+		}
+
+		#grid-view .k-header a.k-link, .k-grid-header th{
+			color: #000 !important;
+		}
+
+		.alert-danger {
+			background-color: #f2dede;
+			border-color: #ebccd1;
+			color: #a94442;
+		}
+		
+		.form-control-custom {
+			height: 20px;
+			padding: 6px 12px;
+			font-size: 14px;
+			color: #555;
+			border: 1px solid #ccc;
+			border-radius: 4px;
+			width: 85%;
+		}
+		
+		.diviceactions a {
+			margin: 2px;
+		}
+		
+		.k-grid-norecords {
+				text-align: center;
+				margin: 6% 0 0 0;
+				color: #f44336 !important;
+			}
+		.k-header.k-grid-toolbar {
+			background: transparent;
+		}
+		
+		.view-switch{padding: 9px 25px 9px 9px;}
+		.device_tenantcnt,
+		.device_devicecnt,
+		.device_statuscnt{
+				  min-height: 130px;
+				display:inline-block;
+				width:100%;
+				overflow:hidden;
+				-webkit-transition: background 0.2s linear;
+				-moz-transition: background 0.5s linear;
+				-ms-transition: background 0.5s linear;
+				-o-transition: background 0.5s linear;
+				transition: background 0.2s linear;
+		}
+		.device_tenantcnt,.device_devicecnt,.device_statuscnt{
+				color:#fff;
+				padding-left:10px;
+				margin-top: 10px;
+		}	
+
+		.device_tenantcnt p,.device_devicecnt p,.device_statuscnt p{
+		color: #fff;
+			font-size: 42px;
+			float: right;
+			padding-right: 10%;
+			margin-top: 6%;
+			max-width: 111px;
+			text-overflow: ellipsis;
+			white-space: normal;
+			overflow: hidden;
+			max-width: 60%;
+		}
+		.device_tenantcnt{background-color: #f0b518 ;}
+		.device_devicecnt{background-color:#9069a1;}
+		.device_statuscnt{background-color: #f06292;}
+		.md-shadow {    box-shadow: 1px 2px 14px -2px rgba(0,0,0,0.5);}
+		 .clientlistblock {
+    	height: 350px;
+    	overflow-y: scroll;
+    }
+    
+   .view-switch,h3,a{color:#fff}
+.view-switch{padding: 9px 25px 9px 9px;}
+.view-switch a{padding: 8px;margin: 1px;}
+.view-switch .fa{font-size:18px;color:#000}
+	</style>
+</head>
+<body class="page-md page-header-fixed page-quick-sidebar-over-content page-footer-fixed  page-full-width">
+	<div class="se-pre-con"></div>
+	<% include(utils.resolvePath('templates/global-header.jag')); %>
+	<!-- BEGIN CONTAINER -->
+	<div class="page-container">
+		<!-- BEGIN SIDEBAR -->
+		<div class="page-sidebar-wrapper">
+			<div class="page-sidebar   navbar-collapse collapse">
+				<!-- BEGIN SIDEBAR MENU -->	
+				<ul class="page-sidebar-menu page-sidebar-menu-hover-submenu " data-keep-expanded="false" data-auto-scroll="false" data-slide-speed="200">
+					<li class="sidebar-toggler-wrapper"><div class="sidebar-toggler"></div></li>
+					<li class="nav-item start active open ">
+						<a href="dashboard.html" class="nav-link nav-toggle">
+                            <i class="icon-bar-chart"></i>
+                            <span class="title">Dashboard</span>
+                            <span class="selected"></span>                              
+                        </a>
+                    </li>
+					<li class="">
+						<a href="javascript:;" class="nav-link nav-toggle">
+							<i class="icon-puzzle"></i>
+                            <span class="title">Dashboard Designer</span>
+                            <span class="selected"></span>                               
+                        </a>
+					</li>
+			
+				
+				</ul>
+				<!-- END SIDEBAR MENU -->
+			</div>
+		</div>
+		<!-- END SIDEBAR -->
+		
+		<!-- BEGIN CONTENT -->
+		<div class="page-content-wrapper">
+			<div class="page-content">
+				<h3 class="page-title pull-left">Device Management</h3>
+				<% if(ObjPageAccess['dashboard'] == '1') { %>
+				<div class="pull-right view-switch btn-group" id="toggle-device-dashboard">
+					<a href="#" class="switchlist btn-primary"><i class="fa fa-list" style="position: relative;top: 2px;"></i></a>				
+					<a href="Javascript:void(0)"  onclick="FnGotoChart()" class="switchchart btn-default"><i class="fa fa-tachometer"></i></a>
+				</div>
+				<% } %>
+				<div class="page-bar" style="clear:both">
+					<ul class="page-breadcrumb">
+						<li>
+							<i class="fa fa-home"></i>
+							<a href="Javascript:void(0)" onclick="FnBreadCrumbHome()">Home</a>
+							<i class="fa fa-angle-right"></i>
+						</li>
+						<li>
+							<a href="Javascript:void(0)">Devices</a>
+						</li>
+						
+					</ul>
+
+				</div>
+				<!-- BEGIN PAGE CONTENT-->
+				<div class="row">
+					<div class="col-md-12">	
+						<!--<div id="" class="Metronic-alerts alert alert-danger fade in">
+							<button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>						
+							<i class="fa-lg fa fa-warning"></i>Could not complete request. Please check your internet connection
+						</div>-->					
+						
+						<!-- List View -->
+						<div class="portlet dark  light bordered device-listview">
+							<div class="portlet-title">
+								<div class="caption font-red-sunglo ">
+									<i class="icon-settings font-red-sunglo"></i>
+									<span class="caption-subject bold uppercase">Devices</span>
+								</div>
+								<div class="actions">
+									<% if(ObjPageAccess['assign'] == '1') { %>
+									<div class="btn-group">
+										<a href="Javascript:void(0)" class="btn btn-raised green" id="gapp-device-assign" onclick="FnAssignDevice()" disabled > + Assign Device</a>						
+									</div>
+									<% } %>
+									<% if(ObjPageAccess['add'] == '1' && VarCurrentTenantInfo.tenantDomain ==APPCONF.GAPP_CONF.MY_DOMAIN_NAME) { %>
+									<div class="btn-group">
+										<a href="Javascript:void(0)" onclick="FnCreateDevice()" class="btn btn-raised green"> +  Create Device</a>					
+									</div>
+									<% } %>
+								</div>
+							</div>							
+							<div class="portlet-body">
+								<div id="splitter" style="height: 480px;">
+									<div id="tenantSection">
+										<div id="gapp-clients-list"></div>
+									</div>
+									<div id="deviceSection">							
+										<div id="gapp-device-list"></div>							
+									</div>
+								</div>
+								<form id="gapp-device-create" role="form" action="<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/device/add" name="gapp-device-create" method="post">
+									<input type="hidden" id="gapp-tenant-key" name="gapp-tenant-key" value="<%=VarTenantKey%>" />
+								</form>
+								
+								<form id="gapp-goto-chart" role="form" action="<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/device/chart" name="gapp-goto-chart" method="post">
+									<input type="hidden" id="gapp-tenant-key" name="gapp-tenant-key" value="<%=VarTenantKey%>" />
+								</form>
+																
+								<form action="<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/device/assign" id="gapp-assign_device" method="post">
+									<input class="form-control" type="hidden" id="tenant_name" name="tenant_name"  value="" />
+									<input type="hidden" id="gapp-tenant-key" name="gapp-tenant-key" value="<%=VarTenantKey%>" />
+								</form>
+								
+								<form action="<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/device/view" name="gapp-device-view" id="gapp-device-view" method="post">
+									<input type="hidden" name="device_id" id="device_id" value="" />
+									<input type="hidden" id="gapp-tenant-key" name="gapp-tenant-key" value="<%=VarTenantKey%>" />
+								</form>
+								
+								<form action="<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/device/writeback" name="gapp-device-writeback" id="gapp-device-writeback" method="post">
+									<input type="hidden" name="source_id" id="source_id" value="" />
+									<input type="hidden" name="ds_name" id="ds_name" value="" />
+									<input type="hidden" id="gapp-tenant-key" name="gapp-tenant-key" value="<%=VarTenantKey%>" />
+								</form>
+								
+							</div>
+						</div><!--End: List View -->
+						
+					</div>
+				</div>
+				<!-- END PAGE CONTENT-->
+			</div>
+		</div>
+		<!-- END CONTENT -->
+		
+	</div>
+	<!-- END CONTAINER -->
+	<% include(utils.resolvePath('templates/global-footer.jag')); %>
+	
+	<script type="text/x-kendo-template" id="clientSearchtemplate">
+		<div class="toolbar" >
+			<input type="text" id="searchClientId" class="form-control-custom" placeholder="Search Client"/>
+		</div>
+	</script>
+	<% 
+		include(utils.resolvePath('templates/portal-footer.jag'));
+		include('/controllers/includes/theme-portal-scripts.jag');
+	%>
+	<script type="text/javascript">
+		var VarListClientsUrl = '<%=APICONF.GAPP_SERVICES.clients.list%>';
+		var VarListDeviceUrl = '<%=APICONF.GAPP_SERVICES.device.list%>';
+		var VarListDeviceConfUrl = '<%=APICONF.GAPP_SERVICES.device.configuration%>';
+		var VarLUDomainName = '<%=usr.domainName()%>';	
+		var VarCurrentTenantInfo = $.parseJSON('<%=VarCurrentTenantInfo%>');
+		//var VarCheckTenantAdminUser = '<%=VarCurrentTenantInfo.tenantName%>';
+		
+		var ObjPageAccess = $.parseJSON('<%=ObjPageAccess%>');
+		
+		var VarAppRootDomain = '<%=APPCONF.GAPP_CONF.MY_DOMAIN_NAME%>';
+		
+		
+		var VarTenantsCountUrl = '<%=APICONF.GAPP_SERVICES.clients.childrencount%>';
+		
+	</script>
+	<script type="text/javascript" src="<%=urlPrefix%><%=utils.resolveUrl('js/device/list.js')%>"></script>
+	<script src="<%=urlPrefix%>js/jquery-custom-scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
+	<script>
+		//$(document).ready(function(){
+			//$(".device-chartview").hide();
+			//$(".switchlist").on("click",function(){
+				//$(".device-listview").show("slow");
+				//$(".device-chartview").removeClass("pt-page-flipInRight pt-page-delay500").addClass("pt-page-flipOutLeft");
+				//$(".device-listview").addClass("pt-page-flipInRight pt-page-delay500");
+				//$(".device-chartview").hide();
+			//});
+			//$(".switchchart").on("click",function(){
+				//$(".device-chartview").show("slow");
+				//$(".device-listview").removeClass("pt-page-flipInRight pt-page-delay500").addClass("pt-page-flipOutLeft");
+				//$(".device-chartview").addClass("pt-page-flipInRight pt-page-delay500");
+				//$(".device-listview").hide();
+			//});
+		//});
+	</script>
+</body>
+</html>

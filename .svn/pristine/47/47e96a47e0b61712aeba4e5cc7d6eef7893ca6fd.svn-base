@@ -1,0 +1,145 @@
+<%
+	var APPCONF = require('/configs/appconfig.jag');
+	var APICONF = require('/configs/apiproperties.jag');
+	var usr = require('/modules/user.js');
+	include(utils.resolvePath('templates/portal-header.jag'));
+	include('/controllers/includes/theme-portal-styles.jag');
+%>	
+	<style type="text/css">		
+		.portlet-title {min-height: 12px !important; padding:0;}
+			.md-radio.has-error label > .check {
+			background: #26A69A !important;
+		}
+		.md-radio.has-error label > .box {
+			border-color: #26A69A !important;
+		}
+		.form-group.form-md-line-input .help-block{left: 0;}
+		.daterange-formcontrol div,.daterange-formcontrol select{float:left;margin-right:15px;}
+		
+		#splitter{border: 0;}
+		.daterange-formcontrol{padding-left:15px;margin-top: 16px;padding: 0px 15px 0px 15px;}
+		.portlet.light{min-height:550px;}
+		.asset_splitter{    
+			background-color: #F3F3F3;
+    min-height: 617px;
+    border-right: 5px solid #F5F2F2;
+    box-shadow: -8px -3px 17px -10px #797979 inset;
+		}
+		.form-body{padding: 0px!important;}
+	</style>
+	
+</head>
+<body class="page-md page-header-fixed page-quick-sidebar-over-content page-footer-fixed  page-full-width">
+	<div class="se-pre-con"></div>
+	<% include(utils.resolvePath('templates/global-header.jag')); %>
+	<!-- BEGIN CONTAINER -->
+	<div class="page-container">
+		<!-- BEGIN CONTENT -->
+		<div class="page-content-wrapper">
+			<div class="page-content">
+				<h3 class="page-title">	Genset History  <small></small></h3>
+				<div class="page-bar">
+					<ul class="page-breadcrumb">
+						<li>
+							<i class="fa fa-home"></i>
+							<a href="Javascript:void(0)" onclick="FnBreadCrumbHome()">Home</a>
+							<i class="fa fa-angle-right"></i>
+						</li>
+						<li>
+							<a href="Javascript:void(0)" onclick="FnNavigateClientList()">History</a>
+						</li>
+					</ul>
+				</div>
+				<!-- BEGIN PAGE CONTENT-->
+					<div class="row">
+						<div class="col-md-12">						
+							<div class="portlet light bordered animated fadeInUp dark">
+							<div class="portlet-title">
+								<div class="caption font-red-sunglo ">
+									<i class="fa fa-calendar font-red-sunglo"></i>
+									<span class="caption-subject bold uppercase">Genset History</span>
+								</div>
+							</div>		
+								<div class="portlet-body form">
+									<form name="gapp-addclient-form" id="gapp-addclient-form" method="post" role="form" autocomplete="off" enctype="multipart/form-data" style="border: 1px solid #DCDADA;">
+										<div class="form-body">
+											<div>
+													<div class="col-md-2 asset_splitter">
+														<h4><strong>Gensets</strong></h4>
+														<div id="treeview" style="height: 585px;overflow: auto;"></div>
+													</div>
+													
+													<div class="col-md-10">
+														<section class="row">
+															<div class="daterange-formcontrol">
+															<select id="asset-points" class="pull-left col-md-2" style="margin-bottom:10px;height:29px;" tabindex="1">
+																<option  selected="selected" value=""> Select points </option>
+															</select>
+															<div class="form-group">
+															<label>Start Date </label>	
+															<input type="text" class="form-control date-picker" name="startDate" id="startDate" tabindex="2"  placeholder="Select"/>
+															</div>	
+															
+															<div class="form-group">
+															<label>End Date </label>
+															<input type="text" class="form-control date-picker" name="endDate" id="endDate" tabindex="3" placeholder="Select"/>
+															</div>
+															<button type="button" class="btn  btn-raised green" name="gapp-facility-save" id="gapp-facility-save" onclick="return FnAssetPointHistory();" tabindex="4">Search</button>	
+															
+															<button id="btnExport" name="btnExport" onclick="return ExportToCsvGenset();" class="btn  btn-raised green pull-right" disabled>Export to CSV</button>
+															</div>		
+															
+														</section>
+														 
+														<section class="row" style="margin-bottom:20px;padding-left:15px;padding-right: 15px;">
+															<div id="gapp-assetshistory-list"></div>
+														</section>
+														<section class="row" style="margin-bottom:10px;padding-left:15px;padding-right: 15px;">
+															<div id="gapp-assetshistory-chart" style="height:400px"></div>
+														</section>
+
+													</div>
+										</div>	
+										</div>
+										<div class="clearfix"></div>
+									</form>
+									<form id="gapp-client-list" role="form" action="<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/clients/list" name="gapp-client-list" method="post">
+										<input type="hidden" id="gapp-tenant-key" name="gapp-tenant-key" value="<%=VarTenantKey%>" />
+									</form>
+								</div>
+							</div>	
+						</div>
+					</div>
+				<!-- END PAGE CONTENT-->
+			</div>
+		</div>
+		<!-- END CONTENT -->
+	</div>
+	<!-- END CONTAINER -->
+	<% include(utils.resolvePath('templates/global-footer.jag')); %>
+	<% 
+		include(utils.resolvePath('templates/portal-footer.jag'));
+		include('/controllers/includes/theme-portal-scripts.jag');
+	%>
+	<script type="text/javascript">
+		var VarListClientsUrl = '<%=APICONF.GAPP_SERVICES.clients.list%>';
+		var VarListAssetsUrl = '<%=APICONF.GAPP_SERVICES.assets.filterlist%>';
+		var VarLUDomainName = '<%=usr.domainName()%>';
+		var VarCurrentTenantInfo = $.parseJSON('<%=VarCurrentTenantInfo%>');
+		var ObjPageAccess = $.parseJSON('<%=ObjPageAccess%>');
+		var VarListAssetsUrl = '<%=APICONF.GAPP_SERVICES.assets.filterlist%>';
+		var VarAssetsPointsUrl = '<%=APICONF.GAPP_SERVICES.hierarchy.immediatechildren%>';
+		var VarAssetsHistoryUrl = '<%=APICONF.GAPP_SERVICES.assets.findhistory%>';
+		
+	</script>
+
+	<script type="text/javascript" src="<%=urlPrefix%><%=utils.resolveUrl('js/assets/history.js')%>"></script>
+		<script type="text/javascript">	
+			window.onload = function(){
+				FnGetAssetsList();
+				FnDefaultInitialGridChart();
+			};
+
+	</script>
+</body>
+</html>

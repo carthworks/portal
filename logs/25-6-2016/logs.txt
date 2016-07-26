@@ -1,0 +1,30 @@
+
+=========================================================================================================
+SYSTEM IP: 10.234.60.46
+TIME : 9:18:7
+METHOD : POST
+URL : http://10.234.31.158:9763/avocado-user-management-1.0.0/services/um/authenticate
+PAYLOAD : {"userName" : "pcsadmin@pcs.galaxy", "password" : "password"}
+RESPONSE : {"scope" : "default", "tokenType" : "bearer", "expireIn" : "3600", "accessToken" : "ff901e64a91c5ea2fc1dd8b218a90", "refreshToken" : "d231f5abec138c56aa3eb1bb59c75", "roleNames" : [], "premissions" : []}
+
+=========================================================================================================
+
+=========================================================================================================
+SYSTEM IP: 10.234.60.46
+TIME : 9:18:28
+METHOD : POST
+URL : http://10.234.31.158:9763/avocado-user-management-1.0.0/services/um/authenticate
+PAYLOAD : {"userName" : "pcsadmin@pcs.galaxy", "password" : "password"}
+RESPONSE : {"scope" : "default", "tokenType" : "bearer", "expireIn" : "3278", "accessToken" : "ff901e64a91c5ea2fc1dd8b218a90", "refreshToken" : "d231f5abec138c56aa3eb1bb59c75", "roleNames" : [], "premissions" : []}
+
+=========================================================================================================
+
+=========================================================================================================
+SYSTEM IP: 10.234.60.46
+TIME : 9:18:45
+METHOD : POST
+URL : http://10.234.31.158:9763/avocado-user-management-1.0.0/services/um/authenticate
+PAYLOAD : {"userName" : "pcsadmin@pcs.galaxy", "password" : "password"}
+RESPONSE : {"scope" : "default", "tokenType" : "bearer", "expireIn" : "3262", "accessToken" : "ff901e64a91c5ea2fc1dd8b218a90", "refreshToken" : "d231f5abec138c56aa3eb1bb59c75", "roleNames" : [], "premissions" : []}
+
+=========================================================================================================

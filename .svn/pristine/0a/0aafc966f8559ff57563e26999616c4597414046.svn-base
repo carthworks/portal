@@ -1,0 +1,56 @@
+<%
+var pageId;
+var VarTenantKey;
+var VarCurrentTenantInfo;
+
+(function() {
+
+	if (!user) {
+        sendLogin();
+        return;
+    }
+	
+	
+	var VarUriStr = request.getRequestURI();
+	VarUriStr = VarUriStr.replace("/error/","");
+	if(VarUriStr != null && VarUriStr != ''){
+	
+		var ArrKeys = VarUriStr.split('/');
+		pageId = ArrKeys[0];
+		VarTenantKey = (ArrKeys[1] != null) ? ArrKeys[1] : '';
+		var pages = require('/configs/pages.json');
+		if(pageId != null && pageId != '' && pages.error[pageId]){
+		
+			if(VarTenantKey != ''){
+				VarTenantKey = utils.base64decode(VarTenantKey);
+			} else {
+				var ObjTenantInfo = session.get('PARENT_CLIENT');
+				if(ObjTenantInfo != null){
+					VarTenantKey = ObjTenantInfo['tenantId'];
+				}
+			}
+
+			var usr = require('/modules/user.js');
+			VarCurrentTenantInfo = usr.FnGetCurrentClientInfo(VarTenantKey);
+			
+			include(utils.resolvePath('templates/'+pages.error[pageId]));
+		
+		} else {
+		
+		response.sendError(404, JSON.stringify({
+					error: true
+				}));
+		return;
+		
+		}
+	
+	} else {
+	
+		response.sendError(404, JSON.stringify({
+					error: true
+				}));
+		return;
+	
+	}
+
+} ()); %>

@@ -1,0 +1,155 @@
+<%
+	var APPCONF = require('/configs/appconfig.jag');
+	var APICONF = require('/configs/apiproperties.jag');
+	var usr = require('/modules/user.js');
+	include(utils.resolvePath('templates/portal-header.jag'));
+	include('/controllers/includes/theme-portal-styles.jag');
+%>
+	<link href="<%=urlPrefix%>css/jquery-custom-scrollbar/jquery.mCustomScrollbar.css" rel="stylesheet" type="text/css" />
+	<style type="text/css">
+		#grid-view .k-grid-header .k-header {
+			background-color: #f44336;
+		}
+
+		#grid-view .k-header a.k-link, .k-grid-header th{
+			color: #000 !important;
+		}
+
+		.alert-danger {
+			background-color: #f2dede;
+			border-color: #ebccd1;
+			color: #a94442;
+		}
+	</style>
+</head>
+<body class="page-md page-header-fixed page-quick-sidebar-over-content page-footer-fixed  page-full-width">
+	<div class="se-pre-con"></div>
+	<% include(utils.resolvePath('templates/global-header.jag')); %>
+	<!-- BEGIN CONTAINER -->
+	<div class="page-container">
+		<!-- BEGIN SIDEBAR -->
+		<div class="page-sidebar-wrapper">
+			<div class="page-sidebar   navbar-collapse collapse">
+				<!-- BEGIN SIDEBAR MENU -->	
+				<ul class="page-sidebar-menu page-sidebar-menu-hover-submenu " data-keep-expanded="false" data-auto-scroll="false" data-slide-speed="200">
+					<li class="sidebar-toggler-wrapper"><div class="sidebar-toggler"></div></li>
+					<li class="nav-item start active open ">
+						<a href="dashboard.html" class="nav-link nav-toggle">
+                            <i class="icon-bar-chart"></i>
+                            <span class="title">Dashboard</span>
+                            <span class="selected"></span>                              
+                        </a>
+                    </li>
+					<li class="">
+						<a href="javascript:;" class="nav-link nav-toggle">
+							<i class="icon-puzzle"></i>
+                            <span class="title">Dashboard Designer</span>
+                            <span class="selected"></span>                               
+                        </a>
+					</li>
+					<li class="heading">
+						<h3 class="uppercase">Device Management</h3>
+					</li>
+					<li class="open">
+						<a href="javascript:;">
+							<i class="icon-diamond"></i>
+							<span class="title">Device </span>
+							<span class="arrow "></span>
+						</a>
+						<ul class="sub-menu">						
+							<li>
+								<a href="ui_icons.html">
+								<span class="badge badge-roundless badge-danger">new</span>Create Device</a>
+							</li>		
+						
+							<li>
+								<a href="ui_tabs_accordions_navs.html">
+								List Device</a>
+							</li>
+							<li>
+								<a href="ui_tabs_accordions_navs.html">
+								Update Device</a>
+							</li>					
+						</ul>
+					</li>
+				</ul>
+				<!-- END SIDEBAR MENU -->
+			</div>
+		</div>
+		<!-- END SIDEBAR -->
+		
+		<!-- BEGIN CONTENT -->
+		<div class="page-content-wrapper">
+			<div class="page-content">
+				<h3 class="page-title">	Facility Management  </h3>
+				<div class="page-bar">
+					<ul class="page-breadcrumb">
+						<li>
+							<i class="fa fa-home"></i>
+							<a href="Javascript:void(0)" onclick="FnBreadCrumbHome()">Home</a>
+							<i class="fa fa-angle-right"></i>
+						</li>
+						<li>
+							<a href="Javascript:void(0)">Facility</a>
+						</li>
+						
+					</ul>
+				</div>
+				<!-- BEGIN PAGE CONTENT-->
+				<div class="row">
+					<div class="col-md-12">	
+						<!--<div id="" class="Metronic-alerts alert alert-danger fade in">
+							<button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>						
+							<i class="fa-lg fa fa-warning"></i>Could not complete request. Please check your internet connection
+						</div>-->					
+						
+						<div class="portlet light bordered">
+							<div class="portlet-title">
+								<div class="caption font-red-sunglo">
+									<i class="icon-settings font-red-sunglo"></i>
+									<span class="caption-subject bold uppercase">Facility</span>
+								</div>
+								<div class="actions">
+									<% if(ObjPageAccess['add'] == '1') { %>
+									<div class="btn-group">
+										<a href="Javascript:void(0)" onclick="FnCreateFacility()" class="btn green"> +  Create Facility</a>					
+									</div>
+									<% } %>
+								</div>
+							</div>
+							<div class="portlet-body">
+								<div id="gapp-facility-list"></div>
+								<form id="gapp-facility-create" role="form" action="<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/facility/add" name="gapp-facility-create" method="post">
+									<input type="hidden" id="gapp-tenant-key" name="gapp-tenant-key" value="<%=VarTenantKey%>" />
+								</form>
+								<form id="gapp-facility-view" role="form" action="<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/facility/view" name="gapp-facility-view" method="post">
+									<input type="hidden" id="facility_id" name="facility_id" />
+									<input type="hidden" id="gapp-tenant-key" name="gapp-tenant-key" value="<%=VarTenantKey%>" />
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- END PAGE CONTENT-->
+			</div>
+		</div>
+		<!-- END CONTENT -->
+		
+	</div>
+	<!-- END CONTAINER -->
+	<% include(utils.resolvePath('templates/global-footer.jag')); %>
+	<% 
+		include(utils.resolvePath('templates/portal-footer.jag'));
+		include('/controllers/includes/theme-portal-scripts.jag');
+	%>
+	<script type="text/javascript">
+		var VarListFacilityUrl = '<%=APICONF.GAPP_SERVICES.facility.list%>';
+		var VarLUDomainName = '<%=usr.domainName()%>';
+		var VarCurrentTenantInfo = $.parseJSON('<%=VarCurrentTenantInfo%>');
+		var ObjPageAccess = $.parseJSON('<%=ObjPageAccess%>');
+	</script>
+	<script type="text/javascript" src="<%=urlPrefix%><%=utils.resolveUrl('js/facility/list.js')%>"></script>
+	<script src="<%=urlPrefix%>js/jquery-custom-scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
+	
+</body>
+</html>

@@ -1,0 +1,116 @@
+<%
+	var APPCONF = require('/configs/appconfig.jag');
+	var APICONF = require('/configs/apiproperties.jag');
+	var usr = require('/modules/user.js');
+	include(utils.resolvePath('templates/portal-header.jag'));
+	include('/controllers/includes/theme-portal-styles.jag');
+	
+%>
+	<style type="text/css">
+		#grid-view .k-grid-header .k-header {
+			background-color: #f44336;
+		}
+
+		#grid-view .k-header a.k-link, .k-grid-header th{
+			color: #000 !important;
+		}
+		 
+	</style>
+</head>
+<body class="page-md page-header-fixed page-quick-sidebar-over-content page-footer-fixed  page-full-width">
+	<div class="se-pre-con"></div>
+	<% include(utils.resolvePath('templates/global-header.jag')); %>
+	<!-- BEGIN CONTAINER -->
+	<div class="page-container">
+		<div class="gapp-header">
+			<% include(utils.resolvePath('templates/leftnavigation.jag')); %>
+				<h3 class="page-title">	POI Management  </h3>
+				<div class="page-bar">
+					<ul class="page-breadcrumb">
+						<li>
+							<i class="fa fa-home"></i>
+							<a href="Javascript:void(0)" onclick="FnBreadCrumbHome()">Home</a>
+							<i class="fa fa-angle-right"></i>
+						</li>
+						<li>
+							<a href="Javascript:void(0)">POI Types</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		<!-- BEGIN CONTENT -->
+		<div class="page-content-wrapper">
+			<div class="page-content">
+				<!-- BEGIN PAGE CONTENT-->
+					<div class="row">
+						<div class="col-md-12">		
+						
+							<div class="portlet light bordered">
+								<div class="portlet-title">
+									<div class="caption font-red-sunglo">
+										<i class="pageheadericon pageheader-assettypeicon"></i>
+										<span class="caption-subject bold uppercase"> POI Types </span>
+									</div>
+									<div class="actions">
+										<% if(ObjPageAccess['delete'] == '1') { %>
+										<div class="btn-group">
+											<a href="Javascript:void(0)" class="btn green hidden" id="gapp-user-delete" onclick="FnDeleteUser()" disabled> +  Delete </a>						
+										</div>
+										<% } %>
+										<% if(ObjPageAccess['add'] == '1') { %>
+										<div class="btn-group">
+											<a href="Javascript:void(0)" onclick="FnCreateTemplate()" class="btn green"> +  Create </a>						
+										</div>
+										<% } %>
+									</div>
+								</div>
+								<div class="portlet-body">
+								
+									<div id="gapp-template-list"></div>
+									
+									<form id="gapp-template-create" role="form" action="<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/pointofinterest/template/add" name="gapp-template-create" method="post">
+										<input type="hidden" id="gapp-tenant-key" name="gapp-tenant-key" value="<%=VarTenantKey%>" />
+									</form>	
+
+									
+									<form id="gapp-template-view" role="form" action="<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/pointofinterest/template/view" name="gapp-template-view" method="post">
+										<input type="hidden" id="entity_id" name="entity_id" />
+										<input type="hidden" id="gapp-tenant-key" name="gapp-tenant-key" value="<%=VarTenantKey%>" />
+									</form>
+									
+								</div>
+							</div>
+						</div>
+					</div>
+				<!-- END PAGE CONTENT-->
+			</div>
+		</div>
+		<!-- END CONTENT -->
+		
+	</div>
+	<!-- END CONTAINER -->
+	<% include(utils.resolvePath('templates/global-footer.jag')); %>
+	<% 
+		include(utils.resolvePath('templates/portal-footer.jag'));
+		include('/controllers/includes/theme-portal-scripts.jag');
+	%>
+	
+	<script id="delete-confirmation" type="text/x-kendo-template">
+		<p class="delete-message">Are you sure want to delete the user?</p>
+		<button class="delete-confirm k-button" style="width: 80px;">Yes</button>
+		<button class="delete-cancel k-button" style="width: 80px;">No</a>
+	</script>
+	
+	<script type="text/javascript">
+		var VarListTemplateUrl = '<%=APICONF.GAPP_SERVICES.pointofinterest.template.list%>';
+		var VarDeleteUsersUrl = '<%=APICONF.GAPP_SERVICES.pointofinterest.poi.delete%>';
+		var VarLUDomainName = '<%=usr.domainName()%>';
+		var VarCurrentTenantInfo = $.parseJSON('<%=VarCurrentTenantInfo%>');
+		var ObjPageAccess = $.parseJSON('<%=ObjPageAccess%>');
+		var VarEditPOIId = '<%=VarEntityId%>';
+		console.log(ObjPageAccess);
+	</script>
+	<script type="text/javascript" src="<%=urlPrefix%><%=utils.resolveUrl('js/pointofinterest/template/list.js')%>"></script>
+	<script src="<%=urlPrefix%>js/jquery-custom-scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
+</body>
+</html>

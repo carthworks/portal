@@ -1,0 +1,563 @@
+<%
+	var APPCONF = require('/configs/appconfig.jag');
+	var APICONF = require('/configs/apiproperties.jag');
+	var usr = require('/modules/user.js');
+	include(utils.resolvePath('templates/portal-header.jag'));
+	include('/controllers/includes/theme-portal-styles.jag');
+	
+%>
+	<link rel="stylesheet" href="<%=urlPrefix%>plugins/leaflet/leaflet.css" type="text/css"/>
+	<style type="text/css">	
+	body, html{
+		  height: 100%;
+		  width: 100%;
+		  overflow:hidden;
+		}
+		
+	
+/************************ GeoFence Create  kt**************************************/
+#geofence-page .formelement_addition a{
+			background-color: #E0E0E0;
+			padding: 9px 5px 5px 6px;
+		}		
+			
+		#geofence-page .portlet-title {    min-height: 12px !important; padding:0;}
+		#geofence-page .md-radio.has-error label > .check {
+			  background: #26A69A !important;
+			}
+		#geofence-page .md-radio.has-error label > .box {
+			border-color: #26A69A !important;
+			}
+		#geofence-page .form-group.form-md-line-input .help-block{left: 0;}
+		
+
+		#geofence-page .page-container,.page-content,#mapMonitoring{
+			position: relative;
+			width:100%;
+			height:100%!important;
+			min-height:100%!important;
+			margin:0!important;
+			padding:0!important;
+		}
+	#geofence-page .page-content-wrapper{
+			width:100%;
+			height:90%!important;
+			margin-top: 48px;
+	}
+	
+	#geofence-page .col-split-3{
+		width: 285px;
+		position: absolute;
+		height: 100%!important;
+		float: left;
+		z-index: 9;
+		right:0;
+		background-color: rgba(49, 48, 48, 0.8);
+	}
+	#geofence-page .col-split-12{
+	width: 100%;
+    height: 100%!important;
+    float: left;
+	}
+	
+	#geofence-page #left_container {   overflow-y: auto;}
+	
+	#geofence-page h4{margin:0px;padding-left:10px;}
+	
+	#geofence-page .tree_header{position:absolute;left:27px;color: #fff;}
+	
+	#geofence-page .left_container_content{
+			padding: 10px;
+			margin-top: 5px;
+			border-top: 1px solid rgba(255,255,255,0.3);
+			color:#fff;
+	}
+	#geofence-page .left_container_content a{color:#fff;}
+	#geofence-page i.fa{color: #fff;font-size:17px!important}
+	#geofence-page .btn-default{background-color:#fff}
+	
+	#geofence-page .k-group.k-treeview-lines{
+			color: #fff;
+			height: 700px;
+			overflow: auto;
+			padding-left: 10px;
+	}
+	
+	#geofence-page .monitoring-popup{
+			width:300px;
+			display: inline-block;
+	}
+	
+	#geofence-page .monitoring-popup figure{
+		    width: 33%;
+			padding: 5px;
+			height: 110px;
+			float: left;
+			text-align: center;
+			background: #c3c4c3 url("<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/extensions/themes/galaxyapp/images/marker/equipicon.svg") no-repeat;
+			background-position: center center;
+			background-size: 44px 44px;
+			margin-top: 7px;
+		}
+	#geofence-page .monitoring-popup section
+		{
+			width: 63%;
+			float: left;
+			margin-left: 10px;
+			overflow: hidden
+		}
+	#geofence-page .monitoring-popup section strong.popup-header{
+		    padding: 4px 0px 2px 0px;
+			color: #fff;
+			float: left;
+			font-size: 16px;
+			text-transform: uppercase;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: pre-wrap;
+			width: 200px;
+	}
+	#geofence-page .k-group, .k-flatcolorpicker.k-group, .k-menu, .k-menu .k-group, .k-popup.k-widget.k-context-menu{color:#fff}
+	#geofence-page .leaflet-popup-content-wrapper,.leaflet-popup-content-wrapper, .leaflet-popup-tip{background-color: rgba(49, 48, 48, 0.8);}
+	#geofence-page .brand-success{color:#3DA53D;padding-bottom:10px;font-size:14px;font-weight:bold;}
+	#geofence-page .brand-default strong{font-size:13px!important;}
+	#geofence-page .brand-default{color:#fff;font-size:13px;}
+	#geofence-page .leaflet-popup-content-wrapper {
+		border-radius: 3px;
+	}
+	#geofence-page .k-state-focused{color:#000!important}
+	
+	#geofence-page #geofence-pane{
+			position: absolute;
+			z-index: 1000;
+			float: right !important;
+			display: block;
+			text-align: right;
+			top: 60px;
+			right: 0;
+			padding: 10px;
+			color: #fff;
+			margin-right: 11px;
+			border-radius: 4px;
+			width: 36px;
+			height: 36px;
+}
+
+
+#geofence-page label.col-md-5.control-label {
+    text-align: left;
+    padding-left: 14px;
+}
+
+#geofence-page .page-title small {
+  font-size: 14px;
+  letter-spacing: 0px;
+  font-weight: bold;
+  color: #578ebe;
+}
+#geofence-page hr {
+    margin: 6px 0 !important;
+    border: 0;
+    border-top: 1px solid #c3c3c3;
+    border-bottom: 0;
+}
+
+	#geofence-page .panel-default > .panel-heading{
+					color: #FFFFFF;
+					background-color: #578ebe !important;
+					padding:3px !important;
+				}
+			
+				
+	#geofence-page .panel .panel-body {
+			font-size: 13px;
+			color: rgba(49, 48, 48, 0.8);
+		}
+	#geofence-page ul.nav.nav-tabs li a {
+    color: #555;
+}
+
+#geofence-page .tabbable-custom {
+    margin-bottom: 0 !important;;
+   
+}
+#geofence-page .well {
+    min-height: 160px;
+    padding: 19px;
+    margin-bottom: 20px;
+    background-color: #f5f5f5;
+    border: 1px solid #e3e3e3;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.05);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.05);
+	height: auto;
+    display: inline-block;
+}
+#geofence-page .geofence-actions-pane {
+   min-height: 35px;
+    padding: 10px;
+    margin-bottom: 20px;
+    background-color: #585655;
+    border: 1px solid #e3e3e3;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.05);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.05);
+	height: auto;
+    display: inline-block;
+	
+}
+
+
+#geofence-page .wall-blue-dark{
+	background-color: #DEF0FF;
+    border: 1px solid #C6DAEB;
+	width:100%;
+	 border-top: 2px solid #3598DC;
+}
+
+#geofence-page .wall-blue{
+background-color: #DEF0FF;
+    border: 1px solid #C6DAEB;
+	 border-top: 2px solid #3598DC;
+}
+
+#geofence-page #geofence-actions{
+	margin: 0;
+	text-align: right;  
+	display: block;
+
+}
+#geofence-page .portlet > .portlet-title > .caption{ font-size: 13px !important;line-height: 18px !important;}
+
+#geofence-page #geofence-style-settings{ 
+
+
+}	
+		
+		
+	</style>
+</head>
+<body class="page-md page-header-fixed page-quick-sidebar-over-content page-footer-fixed  page-full-width" id="geofence-page">
+	<div class="se-pre-con"></div>
+	<% include(utils.resolvePath('templates/global-header.jag')); %>
+	<!-- BEGIN CONTAINER -->
+	<div class="page-container">
+		<!-- BEGIN SIDEBAR -->
+		<div class="page-sidebar-wrapper">
+			<div class="page-sidebar navbar-collapse collapse">
+				<!-- BEGIN SIDEBAR MENU -->	
+				<ul class="page-sidebar-menu page-sidebar-menu-hover-submenu" data-keep-expanded="false" data-auto-scroll="false" data-slide-speed="200">
+					<li class="sidebar-toggler-wrapper"><div class="sidebar-toggler"></div></li>
+					<li class="nav-item start active open ">
+						<a href="dashboard.html" class="nav-link nav-toggle">
+                            <i class="icon-bar-chart"></i>
+                            <span class="title">Dashboard</span>
+                            <span class="selected"></span>                              
+                        </a>
+                    </li>
+					<li class="">
+						<a href="javascript:;" class="nav-link nav-toggle">
+							<i class="icon-puzzle"></i>
+                            <span class="title">Dashboard Designer</span>
+                            <span class="selected"></span>                               
+                        </a>
+					</li>
+					<li class="heading">
+						<h3 class="uppercase">Device Management</h3>
+					</li>
+			
+				</ul>
+				<!-- END SIDEBAR MENU -->
+			</div>
+		</div>
+		<!-- END SIDEBAR -->
+		
+
+		
+		<!-- BEGIN CONTENT -->
+		<div class="page-content-wrapper">
+			<div class="page-content">
+				<div class="col-split-3" id="left_container">
+					<section class="pull-left" style="width:100%;margin-top: 0px;padding: 10px 12px;">
+						<a href="Javascript:void(0)" class="pull-left" id="btn_toggle" style="margin-top:7px;"><i class="fa fa-bars"></i></a>
+						<h4 class="tree_header pull-left pageTitleTxt" style="margin-top:0px;"><% if(VarGeofenceId!='') { %> View Geofence <% } else { %> Create Geofence <% } %></h4>
+						<button type="button" class="btn btn-default btn-sm pull-right home_btn" onclick="FnBreadCrumbHome()"><span class="glyphicon glyphicon-th" aria-hidden="true"></span>&nbsp;&nbsp;Home</button>
+					</section>
+					
+					<section class="col-md-12 left_container_content">				
+						<div class="panel-group accordion scrollable" id="accordion3">	
+	
+						
+							<!--- BEGIN Create Geofence --->
+							<div class="panel panel-default">								
+								
+								<div id="collapse_3_1" class="panel-collapse collapse in" aria-expanded="true">
+									<div class="panel-body">
+										<form class="form-horizontal" name="gapp-geofence-form" id="gapp-geofence-form" method="post" role="form" style="color: #42454A;">
+											<div class="form-actions geofence-actions-pane"  id="geofence-actions">
+												<% if(ObjPageAccess['edit']=='1') { %>										
+												<a class="btn btn-circle btn-icon-only red" href="Javascript:void(0)" onclick="FnEditGeofence()" id="gapp-geofence-edit"><i class="icon-note icons"></i></a>			
+												<% } %>
+												<button type="button" class="btn blue btn-xs" name="gapp-geofence-save" id="gapp-geofence-save" onclick="return FnSaveGeofence()">Save</button>
+												<button type="button" class="btn btn-xs default" name="gapp-geofence-clear" id="gapp-geofence-clear" onclick="FnClearGeofence()">Clear map</button>
+												<button type="button" class="btn btn-xs default" name="gapp-geofence-cancel" id="gapp-geofence-cancel" onclick="FnCancelGeofence()">Cancel</button>
+											</div>
+											<div class="clearfix margin-bottom-10"></div>
+											<div class="form-group">
+												<label class="col-md-5 control-label">Name <span class="required" aria-required="true">* </span></label>
+												<div class="col-md-7">
+													<input type="text" name="geofenceName" id="geofenceName" class="form-control input-small" placeholder="Enter text" required data-required-msg="Name not specified" data-available data-available-url="<%=APICONF.GAPP_SERVICES.geofence.nameunique%>" data-available-msg="Geofence name already exists" />
+													<span class="help-block"></span>
+												</div>
+											</div>
+											<div class="form-group">
+												<label class="col-md-5 control-label">Zoom Level </label>
+												<div class="col-md-7">
+													<input type="number" class="form-control input-small" name="zoom" id="zoom" min="0" max="18" step="1" value="8" />
+													<span class="help-block"></span>
+												</div>
+											</div>
+											<div class="form-group">
+												<label class="col-md-2 control-label" for="form_control_1">Status</label>
+												<div class="col-md-10">
+													<div class="md-radio-inline">										
+														<div class="md-radio has-error">
+															<input type="radio" id="statusName_active" name="statusName" class="md-radiobtn" checked value="ACTIVE">
+															<label for="statusName_active" style="color:#26A69A">
+															<span></span>
+															<span class="check"></span>
+															<span class="box"></span>
+															Active </label>
+														</div>
+														<div class="md-radio has-warning">
+															<input type="radio" id="statusName_inactive" name="statusName" class="md-radiobtn" value="INACTIVE">
+															<label for="statusName_inactive">
+															<span></span>
+															<span class="check"></span>
+															<span class="box"></span>
+															In Active</label>
+														</div>
+													</div>
+												</div>
+											</div>											
+											<div class="form-actions geofence-actions-pane wall-blue" style="width:100%; padding: 10px 10px 0 10px;  margin-bottom: 1px;">
+											
+												<div class="tabbable-custom nav-justified ">
+													<ul class="nav nav-tabs" style="margin:0;" id="geotypeHead">
+														<li class="active">
+															<a href="#tab_Polygon" data-toggle="tab" aria-expanded="false" onclick="FnDefineGeofenceType('Polygon')">	Polygon </a>
+														</li>
+														<li class="">
+															<a href="#tab_Circle" data-toggle="tab" aria-expanded="true" onclick="FnDefineGeofenceType('Circle')"> Circle </a>
+														</li>
+														<li class="">
+															<a href="#tab_Route" data-toggle="tab" aria-expanded="true" onclick="FnDefineGeofenceType('Route')"> Road Map </a>
+														</li>
+													</ul>
+												</div>
+												<div class="tab-content">
+													<div class="tab-pane fade active in" id="tab_Polygon">
+														<div class="portlet box" style="background:#F3565D">
+															<div class="portlet-title hidden">
+																<div class="caption">
+																	<i class="fa fa-cogs"></i>Draw Polygon
+																</div>
+																<div class="tools">	</div>
+															</div>
+															<div class="portlet-body" style="min-height:220px">	
+																<div class="form-body">											
+																	<div id="draw-polygon-grid"></div>								
+																</div>				
+															</div>
+														</div>
+													</div>
+													<div class="tab-pane fade in" id="tab_Circle">
+														<div class="portlet box " style="background:#F3565D">
+															<div class="portlet-title hidden">
+																<div class="caption">
+																	<i class="fa fa-cogs"></i>Draw Circle
+																</div>
+																<div class="tools">	</div>
+															</div>
+															<div class="portlet-body" style="min-height:220px">																
+																<div class="form-body">
+																	<div class="form-group">
+																		<label class="col-md-5 control-label">Latitude <span class="required" aria-required="true">* </span></label>
+																		<div class="col-md-7">
+																			<input type="text" class="form-control input-small" name="latitude" id="latitude" placeholder="Enter Latitude" readonly />
+																			<span class="help-block"></span>
+																		</div>
+																	</div>
+																	
+																	<div class="form-group">
+																		<label class="col-md-5 control-label">Longitude <span class="required" aria-required="true">* </span></label>
+																		<div class="col-md-7">
+																			<input type="text" class="form-control input-small" name="longitude" id="longitude" placeholder="Enter Longitude" readonly />
+																			<span class="help-block"></span>
+																		</div>
+																	</div>
+																	
+																	<div class="form-group">
+																		<label class="col-md-5 control-label">Radius(km)<span class="required" aria-required="true">* </span> </label>
+																		<div class="col-md-7">
+																			<input type="text" class="form-control input-small" name="radius" id="radius" placeholder="Enter Radius" readonly />
+																			<span class="help-block"></span>
+																		</div>
+																	</div>
+																</div>			
+															</div>												
+														</div>								
+													</div>
+													<div class="tab-pane fade in" id="tab_Route">
+														<div class="portlet box" style="background:#F3565D">
+															<div class="portlet-body" style="min-height:220px">	
+																<div class="form-body">
+																	<div class="form-group">
+																		<label class="col-md-5 control-label">Sideways(m) <span class="required" aria-required="true">* </span></label>
+																		<div class="col-md-7">
+																			<input type="number" class="form-control input-small" name="geofence_road_width" id="geofence_road_width" min="10" max="100" step="10" value="20" />
+																			<span class="help-block"></span>
+																		</div>
+																	</div>
+																	<div id="draw-roadmap-grid"></div>								
+																</div>				
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>	<!--form-actions geofence-actions-pane-->	
+											
+											
+											<h1 class="page-title"><small>Style setttings</small></h1>									
+											<div class="well wall-blue-dark" id="geofence-style-settings" style="color: #555555;">									
+												<div class="form-group clearfix">
+													<label class="col-md-5 control-label">Border Color</label>
+													<div class="col-md-7">
+														<input type="text" class="form-control input-small" name="geofence_border_color" id="geofence_border_color" />
+														<span class="help-block"></span>
+													</div>
+												</div>
+												<div class="form-group clearfix">
+													<label class="col-md-5 control-label">Border Thickness</label>
+													<div class="col-md-7">
+														<input type="number" class="form-control input-small" name="geofence_border_weight" id="geofence_border_weight" min="1" max="10" step="1" value="3" />
+													</div>
+												</div>
+												<div class="form-group clearfix">
+													<label class="col-md-5 control-label">Border Alpha</label>
+													<div class="col-md-7">
+														<input type="number" class="form-control input-small" name="geofence_border_opacity" id="geofence_border_opacity" min="0" max="1" step="0.1"  value="1" />
+														<span class="help-block"></span>
+													</div>
+												</div>
+												<div class="form-group">
+													<label class="col-md-5 control-label">Fill Color</label>
+													<div class="col-md-7">
+														<input type="text" class="form-control input-small" name="geofence_fill_color" id="geofence_fill_color" />
+														<span class="help-block"></span>
+													</div>
+												</div>
+												
+												<div class="form-group">
+													<label class="col-md-5 control-label">Fill Alpha</label>
+													<div class="col-md-7">
+														<input type="number" class="form-control input-small" name="geofence_fill_opacity" id="geofence_fill_opacity" min="0" max="1" step="0.1"  value="0.2" />
+														<span class="help-block"></span>
+													</div>
+												</div>
+											</div>
+										</form>
+										<form name="gapp-geofence-list" id="gapp-geofence-list" role="form" action="<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/geofence/list" method="post">
+											<input type="hidden" id="gapp-tenant-key" name="gapp-tenant-key" value="<%=VarTenantKey%>" />
+										</form>
+									</div>
+								</div>
+							
+							</div>				
+							<div class="clearfix margin-bottom-10">	</div>
+						</div>			
+					</section>
+				</div>
+				<div class="col-split-12">
+					<!-- BEGIN PAGE CONTENT-->
+					<section id="geofencegmap"  style="width:100%; height:100%"></section>
+				</div>		
+				<!-- END PAGE CONTENT-->
+			</div>
+		</div>
+		<!-- END CONTENT -->
+
+	</div>
+	
+	
+	<!-- END CONTAINER -->
+	<% include(utils.resolvePath('templates/global-footer.jag')); %>
+	<% 
+		include(utils.resolvePath('templates/portal-footer.jag'));
+		include('/controllers/includes/theme-portal-scripts.jag');
+	%>
+	
+	<script id="rowTemplate" type="text/x-kendo-tmpl">		  
+		<tr role="row" id="#: rowid#" class="geofence_grid">
+		  <td role="gridcell">#: latitude#</td>
+		  <td role="gridcell">#: longitude #</td>
+		  <td role="gridcell" class="formelement_addition"><a href="javascript:void(0);" class="remove_marker" title="Remove Marker"><i class="fa fa-minus-circle"></i></a></td>
+		</tr>     
+	</script>
+	
+	<script type="text/javascript">
+		var VarCreateGeofenceUrl = '<%=APICONF.GAPP_SERVICES.geofence.create%>';
+		var VarViewGeofenceUrl = '<%=APICONF.GAPP_SERVICES.geofence.view%>';
+		var VarUpdateGeofenceUrl = '<%=APICONF.GAPP_SERVICES.geofence.update%>';
+		var VarLUDomainName = '<%=usr.domainName()%>';
+		var VarCurrentTenantInfo = $.parseJSON('<%=VarCurrentTenantInfo%>');
+		var ObjPageAccess = $.parseJSON('<%=ObjPageAccess%>');
+		var VarEditGeofenceId = '<%=VarGeofenceId%>';
+	</script>
+	<script type='text/javascript' src="<%=urlPrefix%>plugins/leaflet/leaflet.js"></script>
+	<script type='text/javascript' src="<%=urlPrefix%>plugins/leaflet/smoothmarkerbouncing.js"></script>
+	<script type='text/javascript' src="<%=urlPrefix%>plugins/leaflet/leaflet.polylineoffset.js"></script>
+	<script type="text/javascript" src="<%=urlPrefix%><%=utils.resolveUrl('js/geofence/add.js')%>"></script>	
+	<script src="<%=urlPrefix%>js/jquery-custom-scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
+	<script>
+	
+	
+		$(document).ready(function(){
+					$(".home_btn").show();
+					$("#left_container").animate({width:'460px'}, 200);
+					 $(".tree_header").css({"transform":"rotate(0deg) scale(1)","transition": "all 0.2s","height": "205px","left":"27px","top":"17px","transform-origin": "left left"});
+					 $(".left_container_content").show();
+		
+		 
+					// $(".home_btn").hide();
+					// $("#left_container").animate({width:'40px'}, 200);
+					// $(".tree_header").css({"transform":"translate(-86px, -105px) rotate(90deg) scale(1)","transition": "transform //0.2s","transform-origin": "left center","width": "215px","height": "203px","left":"10px","top":"35px"});
+					TriggerClick = 1;
+
+			  $("#btn_toggle").click(function(){
+			  
+				if(TriggerClick==0){
+					 TriggerClick=1;
+					 $(".home_btn").show();
+					  $("#left_container").animate({width:'460px'}, 200);
+					 $(".tree_header").css({"transform":"rotate(0deg) scale(1)","transition": "all 0.2s","height": "205px","left":"27px","top":"17px","transform-origin": "left left"});
+					 $(".left_container_content").show();
+					 
+					
+				}else{
+					 TriggerClick=0;
+					  $("#left_container").animate({width:'40px'}, 200);
+					 $(".tree_header").css({"transform":"translate(-86px, -105px) rotate(90deg) scale(1)","transition": "transform 0.2s","transform-origin": "left center","width": "215px","height": "203px","left":"10px","top":"35px"});
+					 $(".left_container_content").hide();
+					 $(".home_btn").hide();
+					
+				};
+  });
+		;
+		
+});
+		
+	</script>
+
+</body>
+</html>

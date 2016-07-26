@@ -1,0 +1,17 @@
+<%
+	var APPCONF = require('/configs/appconfig.jag');	
+%>
+
+<!-- BEGIN FOOTER -->
+<div class="page-footer">
+	<div class="page-footer-inner">
+		 &copy; 2016 Galaxy, Pacific Controls.
+	</div>
+	<div class="scroll-to-top">
+		<i class="icon-arrow-up"></i>
+	</div>
+</div>
+<!-- END FOOTER -->
+<form id="breadcrumb-home" role="form" action="<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/clienthome" name="breadcrumb-home" method="post">
+	<input type="hidden" id="gapp-tenant-key" name="gapp-tenant-key" value="<%=VarTenantKey%>" />
+</form>

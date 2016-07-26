@@ -1,0 +1,56 @@
+<%
+var pageId;
+var VarEquipEntity;
+var VarEquipView;
+var VarEquipList;
+var VarTenantKey;
+var VarCurrentTenantInfo;
+
+(function() {
+
+	if (!user) {
+        sendLogin();
+        return;
+    }
+	
+	var vars;
+	var matcher = new URIMatcher(request.getRequestURI());
+	
+	if (matcher.match('/pointsmapping/{id}')) {
+        vars = matcher.elements();
+        pageId = (vars.id).toString();
+    } else {
+		response.sendError(404, JSON.stringify({
+					error: true
+				}));
+		return;
+	}
+	
+	var pages = require('/configs/pages.json');
+	if (!pages.pointsmapping[pageId]) {
+	
+        response.sendRedirect(utils.tenantedPrefix(urlPrefix+"error/404"));
+        return;
+    } else {
+	
+		var method = request.getMethod();
+		
+		if (method === 'POST') {
+					
+			VarEquipEntity = request.getParameter("equip_entity");
+			VarEquipView = request.getParameter("equip_view");
+			VarEquipList = request.getParameter("equip_list");
+			VarStayOnPage = request.getParameter("stay_on_page");
+			VarTenantKey = (request.getParameter("gapp-tenant-key") != null) ? request.getParameter("gapp-tenant-key") : '';
+			
+		}
+		
+		var usr = require('/modules/user.js');
+		VarCurrentTenantInfo = usr.FnGetCurrentClientInfo(VarTenantKey);
+		
+		include(utils.resolvePath('templates/'+pages.pointsmapping[pageId]));
+	}
+
+} ());
+
+%>

@@ -1,0 +1,125 @@
+<%
+var method;
+var requesturi;
+var querystring;
+var payload;
+
+(function () {
+
+	var log = new Log();
+	var usr = require('/modules/user.js');
+	var user = usr.current();
+	
+	if (!user) {
+		response.sendError(401, 'unauthorized to access');
+		return;
+	}
+	
+	var APPCONF = require('/configs/appconfig.jag');
+	var APICONF = require('/configs/apiproperties.jag');
+	include('commonservicefunctions.jag');
+	
+	var VarEndPointUrl = (APICONF.GAPP_SERVICES.server.scheme) + "://" + (APICONF.GAPP_SERVICES.server.host) + ":" + (APICONF.GAPP_SERVICES.server.port);
+		
+	method = request.getMethod();
+	requesturi = request.getRequestURI();
+	querystring = request.getQueryString();
+	payload = request.getContent();
+				
+	function FnServiceProcess(method,requesturi,querystring,payload){
+		var VarResponse;
+		var VarApiUrl = FnBuildServiceUrl(requesturi,querystring);
+		
+		var VarAuthTokenValid = FnCheckTokenLife();
+		if(VarAuthTokenValid == true){
+				
+			switch (method) {
+				case "POST" :
+						
+						VarResponse = FnMakePostRequestCall(VarApiUrl,true,'application/json','application/json',payload);
+						break;
+				case "GET" : 
+						
+						VarResponse = FnMakeGetRequestCall(VarApiUrl,true);
+						break;
+				case "PUT" :
+				
+						VarResponse = FnMakePutRequestCall(VarApiUrl,true,'application/json','application/json',payload);
+						break;
+				case "DELETE" :
+						VarResponse = FnMakeDeleteRequestCall(VarApiUrl,true,'application/json','application/json',payload);
+						break;
+				default :
+						response.sendError(401, 'unathorized');
+						break;	
+			}
+		} else {
+			VarResponse = {"errorCode":"408","errorMessage":"Token Expired"};
+		}
+		
+		if(APPCONF.GAPP_CONF.APP_LOG_INIT == '1'){
+			include('applicationlogs.jag');
+			FnWriteLog(method,VarApiUrl,payload,VarResponse);
+		}
+		
+		print(VarResponse);
+		
+	}
+	FnServiceProcess(method,requesturi,querystring,payload);
+	
+	function FnBuildServiceUrl(VarRequestUri,VarQryString){
+		var VarServiceurl = FnGetServiceUrl(VarRequestUri);
+		if(VarServiceurl != ''){
+			if(VarQryString != null && VarQryString != ''){
+				var URLQueryParams = getUrlVars(VarQryString);
+				if(URLQueryParams != null){
+					VarServiceurl = VarServiceurl + "?";
+					for (x in URLQueryParams) {
+						VarServiceurl += x +"="+ URLQueryParams[x] + "&";
+					}
+					VarServiceurl = VarServiceurl.slice(0, -1);
+				}
+			}
+		}
+		VarServiceurl = VarEndPointUrl + VarServiceurl;
+		return VarServiceurl;
+	}
+	
+	function FnGetServiceUrl(VarRequestUri){
+		if(VarRequestUri==null || VarRequestUri==''){
+			return VarRequestUri;
+		}
+		
+		var separator = APPCONF.GAPP_CONF.CONTEXT_PATH + "/ajax";
+		var pos = parseInt(VarRequestUri.indexOf(separator));
+		var VarServiceurl =  VarRequestUri.substring(pos + separator.length);
+		return VarServiceurl;
+	}
+	
+	function getUrlVars(url) {
+		var URLQueryParams = {};
+		var hash;
+		var hashes = url.slice(url.indexOf('?') + 1).split('&');
+		for (var i = 0; i < hashes.length; i++) {
+			hash = hashes[i].split('=');
+			URLQueryParams[hash[0]] = hash[1];
+		}
+		return URLQueryParams;
+	}
+	
+	function FnCheckTokenLife(){
+		var VarSessionCreationTime = session.getCreationTime();
+		var VarSessionAccessedTime = session.getLastAccessedTime();
+		var VarTimeDiff = Number(VarSessionAccessedTime - VarSessionCreationTime);
+		var VarTokenExpireTime = Number(usr.expireIn()) * 1000;
+		if(VarTokenExpireTime > VarTimeDiff){
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+}());
+
+	
+%>

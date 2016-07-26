@@ -1,0 +1,184 @@
+<%
+	var APPCONF = require('/configs/appconfig.jag');
+	var usr = require('/modules/user.js');
+%>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="UI for IOT platform">
+        <meta name="author" content="galaxy app">
+		<title>Galaxy App</title>
+		<link rel="shortcut icon" href="<%=urlPrefix%><%=utils.resolveUrl('images/favicon.ico')%>">
+		<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" />
+		<link rel="stylesheet" type="text/css" href="<%=urlPrefix%><%=utils.resolveUrl('css/font-awesome.min.css')%>" />
+		<link rel="stylesheet" type="text/css" href="<%=urlPrefix%>plugins/bootstrap/css/bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="<%=urlPrefix%><%=utils.resolveUrl('css/animate.css')%>" />			
+		<link rel="stylesheet" type="text/css" href="<%=urlPrefix%><%=utils.resolveUrl('css/gapp.css')%>" />
+		<link rel="stylesheet" type="text/css" href="<%=urlPrefix%>css/jquery-custom-scrollbar/jquery.mCustomScrollbar.css" />  		
+		<link rel="stylesheet" type="text/css" href="<%=urlPrefix%><%=utils.resolveUrl('css/home.css')%>" />		
+		<style>
+		.dynamicTile{    margin-top: 20px;}
+		.tilescategoryGroup:before{background:none transparent!important}
+		.content-wrapper{
+		overflow: visible;
+		    display: inline-block;
+    width: 95%;
+		}
+			#wrap div.col-md-4{
+    padding: 5px;
+			}
+			.tilecaption{
+			    text-align: left;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+font-size: 14px; font-size: 0.9vw;
+			}
+
+@media (min-width: 768px) { .tilecaption{font-size: 14px; font-size: 1.1vw;     padding-left: 10px!important;} }
+@media (min-width: 368px) { .tilecaption{font-size: 14px; font-size: 1.4vw;     padding-left: 10px!important;} }
+
+@media (min-width: 992px) { .tilecaption{font-size: 14px; font-size: 1vw;    padding-left: 3px!important; }}
+
+
+@media (min-width: 1200px) {.tilecaption{ font-size: 14px; font-size: 0.9vw;     padding-left: 10px!important;}}
+			
+			.tile-group{margin-right:0px;}
+			.container-ss .tile_image{border:0px;}
+			.tile_style aside {
+    padding-top: 2%;
+	}
+			@media (max-width: 1280px) and (min-width: 1024px), (max-height: 811px){
+			.container-ss .tile_image {
+						    width: 50%;
+							 }
+			}
+			#wrap{overflow:auto}
+			.tile_style,.tile_style aside{height:auto;}
+			.whitebar{padding: 4px 0px;}
+			.tile-group h3 {
+				padding-left: 3px;
+				color: #205081 !important;
+			}
+		</style>	
+
+</head>
+<body class="outer-wrapper">
+	<div id="wrapper">
+		<header class="header">   
+			<section class="GAP_home">
+				<div class="col-md-8 col-xs-12">
+					<%
+					var VarLogoImagePath = usr.FngetClientImage(VarTenantKey);
+					if(VarLogoImagePath != ''){
+					%>
+					<img class="img-responsive" src="<%=VarLogoImagePath%>" alt="logo" style="float: left;margin-right: 10px;height:46px;padding:3px 0px;"/>
+					<% } %>
+					
+					<h3 class="capitalize homeHeaderTxt"><a href="Javascript:void(0)" onclick="FnBreadCrumbHome()"><%=VarTenantKey%></h3></a></div>
+					<div class="col-md-4 col-xs-12"> 
+						<% include(utils.resolvePath('templates/socialmedia-links.jag')); %>
+					</div>
+			</section>
+		</header>
+		<section id="wrap">
+			<div class="main-content dynamicTile pt-page-scaleUpDown pt-page-delay300">
+				<div class="content-wrapper tiles panorama-sections">
+					<section class="tile-group four-wide first panorama-section col-md-6">
+						<div class="container-ss get-width">
+							<!-- Category 1 -->
+							<div class="col-lg-4 col-md-4 col-sm-3 col-xs-12">
+								<div class="live-tile exclude tile" data-mode="none" data-bounce="true">
+									<div class="tile_style">
+										<section class="home-tilebg1">
+											<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/ccd/contact/list')">
+													<!-- Wrapper for slides -->
+															<aside><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/tiles/contacts-thin.svg')%>"  class="tile_image hvr-grow-shadow img-responsive" /></aside>
+											</a>
+											<section class="tilecaptionbox whitebar">
+											<div class="tilecaption">Contacts</div>
+											</section>
+										</section>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-4 col-md-4 col-sm-3 col-xs-12">
+								<div class="live-tile exclude tile" data-mode="none" data-bounce="true">
+									<div class="tile_style">
+										<section class="home-tilebg2">
+											<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/ccd/import/equipmentlist')">
+													<!-- Wrapper for slides -->
+													<aside><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/tiles/import assets-thin.svg')%>"  class="tile_image hvr-grow-shadow img-responsive" /></aside>
+											</a>
+											<section class="tilecaptionbox whitebar">
+											<div class="tilecaption">Import Assets</div>
+											</section>
+										</section>
+									</div>
+								</div>
+							</div>
+							
+							<div class="col-lg-4 col-md-4 col-sm-3 col-xs-12">
+								<div class="live-tile exclude tile" data-mode="none" data-bounce="true">
+									<div class="tile_style">
+										<section class="home-tilebg3">
+											<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/ccd/faults/list')">
+													<!-- Wrapper for slides -->
+													<aside><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/tiles/fault-logs-thin.svg')%>"  class="tile_image hvr-grow-shadow img-responsive" /></aside>
+											</a>
+											<section class="tilecaptionbox whitebar">
+											<div class="tilecaption">Fault Logs</div>
+											</section>
+										</section>
+									</div>
+								</div>
+							</div>
+														
+						</div>
+					</section>
+					<!-- End: Category 1 -->
+	
+				</div>
+
+			</div>
+		</section>
+
+		<div  id="myfooter" class="page-footer-inner">&copy; 2016 Galaxy, Pacific Controls.</div> 
+	</div>
+	
+	<form action="" name="gapp-tenant-info" id="gapp-tenant-info" method="post">
+		<input type="hidden" name="gapp-tenant-key" id="gapp-tenant-key" value="<%=VarTenantKey%>" />
+	</form>
+	
+	<form id="breadcrumb-home" role="form" action="<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/clienthome" name="breadcrumb-home" method="post">
+		<input type="hidden" id="gapp-tenant-key" name="gapp-tenant-key" value="<%=VarTenantKey%>" />
+	</form>
+	
+</body>
+
+	<% 
+		include('/controllers/includes/theme-portal-scripts.jag');
+	%>
+	
+  <script type='text/javascript' src="<%=urlPrefix%>plugins/jquery.min.js"></script>
+	<script type='text/javascript' src="<%=urlPrefix%>plugins/jquery-ui/jquery-ui.min.js"></script>
+	<script type='text/javascript' src="<%=urlPrefix%>plugins/bootstrap/js/bootstrap.min.js"></script>  
+	<script type='text/javascript' src="<%=urlPrefix%><%=utils.resolveUrl('js/metroJs.min.js')%>"></script>
+	<script type='text/javascript' src="<%=urlPrefix%><%=utils.resolveUrl('js/ripples.min.js')%>"></script>
+	<script type='text/javascript' src="<%=urlPrefix%><%=utils.resolveUrl('js/modernizr.js')%>"></script>
+	<script type='text/javascript' src="<%=urlPrefix%><%=utils.resolveUrl('js/jquery.shapeshift.min.js')%>"></script>
+	<script type='text/javascript' src="<%=urlPrefix%><%=utils.resolveUrl('js/jquery.touchSwipe.min.js')%>"></script>
+	<script type='text/javascript' src="<%=urlPrefix%><%=utils.resolveUrl('js/clienthome.js')%>"></script>
+	<script type='text/javascript' src="<%=urlPrefix%>js/jquery-custom-scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
+	<!--<script type='text/javascript' src="<%=urlPrefix%><%=utils.resolveUrl('js/home-common.js')%>"></script>-->
+	
+	<script type='text/javascript'>
+
+	function FnBreadCrumbHome(){
+		$("#breadcrumb-home").submit();
+	}
+
+	</script>
+</body>
+</html>

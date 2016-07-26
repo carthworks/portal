@@ -1,0 +1,188 @@
+<%
+	var APICONF = require('/configs/apiproperties.jag');
+	var APPCONF = require('/configs/appconfig.jag');
+	var usr = require('/modules/user.js');
+	include(utils.resolvePath('templates/portal-header.jag'));
+	include('/controllers/includes/theme-portal-styles.jag');
+%>
+	<style type="text/css">
+		.checkbox-inner-padding { padding: 20px 30px;}
+		.portlet-title { min-height: 12px !important; padding:0; }
+		.pwrapper {
+			width: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    height: 530px;
+    /* white-space: nowrap; */
+    padding: 12px 0;
+    border-top: 1px solid #cfcfcf !important;
+    /* overflow: auto; */
+		}
+		.permission-wrapper { display: inline-block;
+    float: left;
+    width: 100%;}
+		
+		#gapp-addrole-form label {
+			top: 0;
+			margin-bottom: 0;
+			font-size: 13px;
+			color: #888888;
+			opacity: 1;
+			filter: alpha(opacity=100);
+		}
+		
+		.resourceTitle {
+			text-transform: capitalize;
+			font-size: 13px;
+		}
+		
+		.md-checkbox label {
+			text-transform: capitalize;
+		}
+		
+		.splitpermissionDIV{
+		    width: 250px;
+			float: left;
+			display: inline-block;
+			margin: 10px 15px;
+		}
+	</style>
+</head>
+<body class="page-md page-header-fixed page-quick-sidebar-over-content page-footer-fixed  page-full-width">
+	<div class="se-pre-con"></div>
+	<% include(utils.resolvePath('templates/global-header.jag')); %>
+	<!-- BEGIN CONTAINER -->
+	<div class="page-container">
+		<!-- BEGIN SIDEBAR -->  
+		<div class="page-sidebar-wrapper">
+			<div class="page-sidebar   navbar-collapse collapse">
+				<!-- BEGIN SIDEBAR MENU -->	
+				<ul class="page-sidebar-menu page-sidebar-menu-hover-submenu " data-keep-expanded="false" data-auto-scroll="false" data-slide-speed="200">
+					<li class="sidebar-toggler-wrapper"><div class="sidebar-toggler"></div></li>
+					<li class="nav-item start active open ">
+						<a href="dashboard.html" class="nav-link nav-toggle">
+                            <i class="icon-bar-chart"></i>
+                            <span class="title">Dashboard</span>
+                            <span class="selected"></span>                               
+                        </a>
+                    </li>
+					<li class="">
+						<a href="javascript:;" class="nav-link nav-toggle">
+							<i class="icon-puzzle"></i>
+                            <span class="title">Dashboard Designer</span>
+                            <span class="selected"></span>                               
+                        </a>
+					</li>
+				
+					
+				</ul>
+				<!-- END SIDEBAR MENU -->
+			</div>
+		</div>
+		<!-- END SIDEBAR -->
+		
+		<!-- BEGIN CONTENT -->
+		<div class="page-content-wrapper">
+			<div class="page-content">
+				<h3 class="page-title">	Role Management  <small></small></h3>
+				<div class="page-bar">
+					<ul class="page-breadcrumb">
+						<li>
+							<i class="fa fa-home"></i>
+							<a href="Javascript:void(0)" onclick="FnBreadCrumbHome()">Home</a>
+							<i class="fa fa-angle-right"></i>
+						</li>
+						<li>
+							<a href="Javascript:void(0)" onclick="FnNavigateRoleList()">Roles</a>
+							<i class="fa fa-angle-right"></i>
+						</li>
+						<li>
+							<a href="Javascript:void(0)" id="caption-display-role-breadcrumb"><% if(VarRoleId!='') { %> View Role <% } else { %> Create Role <% } %></a>
+						</li>
+					</ul>
+				</div>
+				<!-- BEGIN PAGE CONTENT-->
+				<div class="row">
+					<div class="col-md-12">						
+						<div class="portlet light bordered animated fadeInUp dark">
+							<div class="portlet-title">
+								<div class="caption font-red-sunglo">
+									<i class="fa fa-key font-red-sunglo"></i>
+									<span class="caption-subject bold uppercase" id="caption-display-role-subject"> <% if(VarRoleId!='') { %> View Role <% } else { %> Create Role <% } %> </span>
+								</div>
+								<div class="actions">
+									<div class="form-actions">
+										<% if(ObjPageAccess['edit']=='1') { %>
+											<a class="btn btn-circle btn-icon-only red" href="Javascript:void(0)" onclick="FnEditRole()" id="gapp-role-edit"><i class="icon-note icons"></i></a>
+										<% } %>
+										<button type="button" class="btn btn-raised default" name="gapp-role-cancel" id="gapp-role-cancel" onclick="FnCancelRole()" tabindex="5">Cancel</button>
+										<button type="button" class="btn  btn-raised btn-danger" name="gapp-role-save" id="gapp-role-save" onclick="return FnSaveRole()" tabindex="5">Save</button>
+								</div>
+								</div>
+							</div>
+							<div class="portlet-body form">
+								<form name="gapp-addrole-form" id="gapp-addrole-form" role="form" autocomplete="off" novalidate>
+									<div class="form-body">
+										<div class=" ">								
+											<div class="col-md-4">										
+												<div class="form-group form-md-line-input">
+													<input class="form-control" name="roleName" id="roleName" required="true" data-required-msg="Please enter role name" autofocus tabindex="1" title="Please enter role name"/>
+													<label for="form_control_1">Role Name <span class="required" aria-required="true">*</span></label>
+												</div>
+												<div class="form-group form-md-line-input">
+														<textarea class="form-control" name="Description" id="Description" rows="3" style="border: 1px solid #e5e5e5;"></textarea>
+														<label for="form_control_1">Description</label>
+												</div>
+												
+											</div>
+											<div class="col-md-8">	
+												<label for="form_control_1">Permissions</label>										
+												<div class="pwrapper well" style="display:block" id="permissionsContainer"></div>
+											</div>										
+										</div>
+										<div class="clearfix"></div>
+									</div>
+									<input type="hidden" name="role_id" id="role_id" value="<%=VarRoleId%>" />
+								</form>
+								<form id="gapp-role-list" role="form" action="<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/roles/list" name="gapp-role-list" method="post">
+									<input type="hidden" id="gapp-tenant-key" name="gapp-tenant-key" value="<%=VarTenantKey%>" />
+								</form>
+							</div>
+						</div>
+					</div>
+					<!-- END SAMPLE FORM PORTLET-->
+				</div>
+				<!-- END PAGE CONTENT-->
+			</div>
+		</div>
+		<!-- END CONTENT -->
+		
+	</div>
+	<!-- END CONTAINER -->
+	<% include(utils.resolvePath('templates/global-footer.jag')); %>
+	<% 
+		include(utils.resolvePath('templates/portal-footer.jag'));
+		include('/controllers/includes/theme-portal-scripts.jag');
+	%>
+	<script type="text/javascript">
+		var VarCreateRoleUrl = '<%=APICONF.GAPP_SERVICES.roles.create%>';
+		var VarResourceUrl = '<%=APICONF.GAPP_SERVICES.roles.resource%>';
+		var VarPermissionsUrl = '<%=APICONF.GAPP_SERVICES.roles.permissions%>';
+		var VarViewRoleUrl = '<%=APICONF.GAPP_SERVICES.roles.view%>';
+		var VarUpdateRoleUrl = '<%=APICONF.GAPP_SERVICES.roles.update%>';
+		var VarLUDomainName = '<%=usr.domainName()%>';
+		var VarEditRoleId = '<%=VarRoleId%>';
+		var VarCurrentTenantInfo = $.parseJSON('<%=VarCurrentTenantInfo%>');
+		var VarAPPServerPath = '<%=APPCONF.GAPP_CONF.APP_SERVER_PATH%>';
+	</script>
+	<script type="text/javascript" src="<%=urlPrefix%><%=utils.resolveUrl('js/roles/add.js')%>"></script>
+	<script type="text/javascript">
+		
+		if(VarEditRoleId != ''){
+			FnGetRoleDetails(VarEditRoleId);
+		} else {
+			FnGetResourcesList();
+		}
+	</script>	
+</body>
+</html>

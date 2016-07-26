@@ -1,0 +1,17 @@
+<%
+
+	var GADGET_SERVICES = {
+							"server" : {
+											"host" : "10.234.31.152",
+											"port" : "8282",
+											"scheme" : "http"
+							},
+							"cummins" : {
+								"tenantsChildren" : "/tenants/1.0.0/tenants/children",
+								"subscribe" : "/saffron/1.0.0/ds/subscribe",
+								"pointlist" : "/hierarchy/1.0.0/hierarchy/children/immediate",
+								"assetinfo" : "/galaxy-cummins/1.0.0/gensets/find"
+							}
+						};
+							
+%>

@@ -1,0 +1,913 @@
+<%
+	var APPCONF = require('/configs/appconfig.jag');
+	var APICONF = require('/configs/apiproperties.jag');
+	var usr = require('/modules/user.js');
+	include(utils.resolvePath('templates/portal-header.jag'));
+	include('/controllers/includes/theme-portal-styles.jag');
+	
+%>
+	<link rel="stylesheet" href="<%=urlPrefix%>css/jquery-ui.css">
+    <link rel="stylesheet" href="<%=urlPrefix%>css/common.css">
+	<link rel="stylesheet" href="<%=urlPrefix%>css/designer.css">
+	<link rel="stylesheet" href="<%=urlPrefix%>css/jquery-custom-scrollbar/jquery.mCustomScrollbar.css">
+	
+	<style type="text/css">				
+
+	a,a:focus {
+	    outline: 0;
+	}
+	.ues-hidden {
+	    display: none;
+	}
+	/******************BEGIN KT Style *****************/
+	
+	#ues-designer {
+	    overflow: auto;
+	}
+	.thumbnail {
+	    background-color: transparent !important;
+	    border: 0px solid #ddd;
+	}
+	.caption {
+	    font-size: 15px !important;
+	}
+	#dblayout-box {
+	    display: block;
+	    height: auto;
+	    text-align: center;
+	    background-color: #364150;
+	    padding: 28px 0;
+	    border-top: 1px solid #FFB5B0 !important;
+	    /*transition: all 1s linear;*/
+	}
+	#dblayout-box:hover,
+	#dblayout-box:focus {
+	    background-color: #222933;
+	    border-bottom: 4px solid #f44336 !important;
+	}
+	.blue.btn {
+	    color: #FFFFFF !important;
+	    background-color: #3598dc;
+	}
+	.note {
+	    margin: 0 0 20px 0;
+	    padding: 15px 30px 15px 15px;
+	    border-left: 5px solid #eee;
+	    -webkit-border-radius: 0 4px 4px 0;
+	    -moz-border-radius: 0 4px 4px 0;
+	    -ms-border-radius: 0 4px 4px 0;
+	    -o-border-radius: 0 4px 4px 0;
+	    border-radius: 0 4px 4px 0;
+	    padding: 0;
+	    margin: 0;
+	    margin: 0 0 18px 0px;
+	}
+	.note.note-success {
+	    background-color: #eef7ea;
+	    border-color: #c9e2b3;
+	    color: #3c763d;
+	}
+	.note.note-info {
+	    background-color: #eef7fb;
+	    border-color: #f44336;
+	    color: #31708f;
+	    background-color: #364150;
+	}
+	.grey-cascade.btn {
+	    color: #fff !important;
+	}
+	.ues-context-menu .nav li a:hover {
+	    color: #fff;
+	    background: #f44336 !important;
+	}
+	/*
+		#ues-store-menu-actions .nav .active a { background-color: #95A5A6; color: #fff;border: none; border-radius: 75%; height: 50px;    width: 50px;}
+		#ues-store-menu-actions .nav li a{ background-color: #95A5A6; color: #fff;border: none; border-radius: 75%; height: 50px;    width: 50px;}
+		#ues-store-menu-actions .nav li {   background: transparent;   border-bottom: 0px solid #e4e4e4;   border-right: 0 solid #e4e4e4;  margin-bottom: 0;}
+		span.glyphicon.glyphicon-plus-sign {    top: -3px;}
+		ul.nav.navbar-nav {    margin-left: 47px;}
+		div#ues-store-menu-actions {    top: 12px;    position: fixed;    left: 41px;}
+		#ues-store{margin-left:0; border: 1px solid rgb(54, 65, 80);    background: rgb(54, 65, 80);    border-top: 3px solid #f44336;    padding: 6px 0 0 0;}
+			*/
+	
+	nav#ues-store-menu {
+	    background-color: #364150;
+	    background-color: transparent !important
+	}
+	a.ues-store-toggle {
+	    background: #18bc9c;
+	}
+	.ues-bg-gray {
+	    background-color: #364150 !important;
+	}
+	ul.nav.navbar-nav li {
+	    padding: 10px 0 0 12px;
+	}
+	#ues-store-menu-actions .nav li {
+	    /* background: #f4f4f4; */
+	    /* border-bottom: 1px solid #e4e4e4; */
+	    /* border-right: 1px solid #e4e4e4; */
+	    /* margin-bottom: 0; */
+	    
+	    background: none;
+	    border: 0;
+	    margin: 0;
+	}
+	ul.nav.navbar-nav.nav-tabs {
+	    border: 0;
+	}
+	ul.nav.navbar-nav.nav-tabs li {
+	    padding: 0;
+	    margin: 0;
+	}
+	#ues-store-menu .nav-tabs > li > a {
+	    padding: 5px !important;
+	    border-radius: 3px;
+	}
+	#ues-store-menu-actions .nav .active a {
+	   /* background: #f44336 !important;*/
+	}
+	#ues-designer {
+	    margin-left: 0;
+	}
+	#ues-store-menu {
+	    width: 36px
+	}
+	#ues-store {
+	    position: fixed;
+	    width: 210px;
+	    height: calc(100% - 100px);
+	    margin-left: 0;
+	    /*border-right: 1px solid #e7e7e7;*/
+	    
+	    margin-top: 0;
+	    border: 0;
+	}
+	h4.ues-page-title {
+	    margin: 0;
+	    margin-bottom: 12px;
+	    padding: 0;
+	    background-color: transparent;
+	    color: #fff;
+	}
+	#ues-store .ues-store-assets {
+	    /* overflow: scroll; */
+	    
+	    height: 100%;
+	    overflow-y: auto !important;
+	}
+	#ues-designer.ues-storeprop-visible {
+	    margin-left: 230px;
+	    margin-right: 200px;
+	    
+		width: calc(100% - 535px);
+		height:590px;
+	}
+	.page-sub-title {
+	    font-weight: 300;
+	    text-transform: uppercase;
+	    font-size: 15px;
+	}
+	#ues-properties {
+	    position: fixed;
+	    height: calc(100% - 100px);
+	    right: 0;
+	    width: 222px;
+	    margin-top: 0;
+	}
+	#ues-store-wrapper {} #ues-properties {
+	    background-color: #364150;
+	}
+	form.ues-component-properties {
+	    padding-left: 14px;
+	}
+	.row.ues-help {
+	    color: #fff;
+	}
+	.navbar-default .navbar-nav>li>a:focus,
+	.navbar-default .navbar-nav>li>a:hover {
+	    color: #333;
+	  /*  background-color: rgba(204, 22, 22, 1);*/
+		background-color: #f44336;
+	}
+	span.glyphicon.glyphicon-plus-sign {
+	    top: 1px;
+	}
+	.dropdown-menu li > a:hover,
+	.dropdown-menu .active > a,
+	.dropdown-menu .active > a:hover {
+	    background: transparent !important;
+	    color: #000 !important;
+	}
+	.panel-danger > .panel-heading {
+	    /* color: white;
+				  background-color: #F3565D;
+				  border-color: #f13e64;*/
+	    
+	    background: #f44336 !important;
+	    line-height: 15px;
+	    padding: 10px 15px !important;
+	    color: #fff;
+	    border-bottom: 1px solid #000;
+	}
+	#ues-store-wrapper {
+	    display: block;
+	    min-height: 620px;
+	    background: rgb(54, 65, 80);
+	    padding: 12px 0 0 0;
+	    border-top: 4px solid #f44336 !important;
+	}
+	.page-footer-fixed .page-footer {
+	    background-color: #28303b;
+	}
+	.grey-salt.btn {
+	    /* color: #FAFCFB; */
+	    
+	    background-color: #bfcad1;
+	    color: #000 !important;
+	}
+	#ues-properties {
+	    background-color: #28303B;
+	    border-left: 1px solid #667384;
+	    padding: 6px 0 0 0;
+	        top: 160px;
+			right: 43px;
+			height: 590px
+	}
+	/*#ues-store .ues-thumbnail img, .ues-store-thumbnail img { width: 133px !important;}*/
+	
+	h3.page-sub-title {
+	    padding: 0;
+	    margin: 0;
+	    line-height: 30px;
+	}
+	
+	div#ues-store {
+		margin: 0 0 0 26px;
+		height: 590px
+	}
+	.collapse.navbar-collapse.ues-context-menu-actions {
+		padding: 0 13px 0px 0;
+	}
+	
+	.navbar-default .navbar-nav>.active>a, .navbar-default .navbar-nav>.active>a:focus, .navbar-default .navbar-nav>.active>a:hover {
+			color: #555;
+			background-color: #e7e7e7;background: #f44336 !important;
+		}
+	/******************END  KT Style *****************/
+
+
+	</style>
+
+</head>
+<body class="page-md page-header-fixed page-quick-sidebar-over-content page-footer-fixed  page-full-width" dir="rtl">
+	<div class="se-pre-con"></div>
+	<% include(utils.resolvePath('templates/global-header.jag')); %>
+	<!-- BEGIN CONTAINER -->
+	<div class="page-container">
+	
+		<!-- BEGIN CONTENT -->
+		<div class="page-content-wrapper">
+			<div class="page-content">
+				<h3 class="page-title">	Dashboard  <small></small></h3>
+				<div class="page-bar">
+					<ul class="page-breadcrumb">
+						<li>
+							<i class="fa fa-home"></i>
+							<a href="Javascript:void(0)" onclick="FnBreadCrumbHome()">Home</a>
+							<i class="fa fa-angle-right"></i>
+						</li>
+						<li>
+							<a href="Javascript:void(0)" onclick="FnManageDashboard('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/dashboard/list')">Dashboards</a>
+							<i class="fa fa-angle-right"></i>
+						</li>
+						<li>
+							<a href="Javascript:void(0)">Dashboard Designer</a>
+						</li>
+					</ul>
+				</div>
+				<!-- BEGIN PAGE CONTENT-->
+				<div class="row">
+					<div class="col-md-12">
+					
+						<div class="portlet light bordered" style=" display:block; clear: both; min-height: 640px;">
+						
+							<!-- BEGIN  ues-workspace-designer ----->
+							<div id="ues-workspace-designer" class="ues-workspace">
+								<nav role="navigation" class="navbar navbar-default ues-context-menu  note note-info">
+									<div class="container-fluid" >            
+										<div class="collapse navbar-collapse ues-context-menu-actions">
+											<ul class="nav navbar-nav">
+											
+												<li title="Drag and drop Gadgets to the design view">
+													<nav id="ues-store-menu" class="navbar-default navbar" role="navigation">
+												
+														<!-- Brand and toggle get grouped for better mobile display -->
+														<div class="navbar-header">
+															<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#ues-store-menu-actions">
+																<span class="sr-only">Toggle navigation</span>
+																<span class="icon-bar"></span>
+																<span class="icon-bar"></span>
+																<span class="icon-bar"></span>
+															</button>
+															<span class="visible-xs navbar-brand">Designer Menu</span>
+														</div>
+														
+														<!-- Collect the nav links, forms, and other content for toggling -->
+														
+														<div id="ues-store-menu-actions" class="collapse navbar-collapse">
+															<ul class="nav navbar-nav nav-tabs" role="tablist">
+																<li>
+																	<a class="ues-store-toggle  btn blue btn-sm" data-type="gadget" 
+																	href="#" style="width:120px;font-size: 11px; padding: 6px 18px 6px 18px;"><span class="glyphicon glyphicon-plus-sign"></span>  add Widgets</a>
+																</li> 		
+																<!-- 
+																	<li>
+																		<a class="ues-store-toggle" data-type="widget" href="#">
+																			<i class="fw fw-applications"></i>
+																		</a>
+																	</li> 
+																-->
+															</ul>
+														</div>
+													</nav>
+												</li>
+												
+												<li style="margin: 0 0 0 120px;"><a href="#" class="ues-page-add btn blue btn-sm" >
+													<span class="fw-stack">
+														<i class="fw fw-ring fw-stack-2x"></i>
+														<i class="fw fw-add fw-stack-1x"></i>
+													</span><span class="glyphicon glyphicon-plus"></span>  Add Page</a>
+												</li>
+												<li><a href="#" class="ues-dashboard-preview btn blue btn-sm">
+													<span class="fw-stack">
+														<i class="fw fw-ring fw-stack-2x"></i>
+														<i class="fw fw-view fw-stack-1x"></i>
+													</span> <span class="glyphicon glyphicon-eye-open"></span> Preview</a></li>
+												
+												<li>
+												<a href="Javascript:void(0)" onclick="FnManageDashboard('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/dashboard/settings/<%=dashboard.id%>')" class="btn blue  btn-sm">
+													<span class="fw-stack">
+														<i class="fw fw-ring fw-stack-2x"></i>
+														<i class="fw fw-settings fw-stack-1x"></i>
+													</span><span class="glyphicon glyphicon-cog"></span> Settings
+												</a>													
+												</li>
+												</ul>
+											
+											<ul class="nav navbar-nav navbar-right">			
+												<li>													
+													<button type="button" class=" ues-page-switcher btn blue btn-sm  dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="1000" data-close-others="true" aria-expanded="true" style="height: 33px;">												
+													<span class="glyphicon glyphicon-list-alt"></span> Pages <span class="caret"></span>
+													</button>
+													<ul class="dropdown-menu  ues-pages-list pull-right" role="menu"></ul>
+												</li>
+																									
+												<li><a href="javascript:void(0)" class="ues-page-properties-toggle btn blue btn-sm" onclick="animationClick('#ues-properties','slideInRight')"><i class="fw fw-register2"></i> <span class="glyphicon glyphicon-pencil"></span> page properties</a></li>
+												
+												<li class="ues-hidden"><a href="#" class="ues-component-properties-toggle btn blue btn-sm"><i class="fa fa-cogs"></i></a></li>
+											</ul>
+										</div>
+										<!--/.nav-collapse -->
+									</div>
+									
+								</nav>
+								
+								<!--- Begin :use-store ---->
+								<!--- Begin :ues-store-wrapper ---->
+								<div id="ues-store-wrapper" class="">
+								<div id="ues-store" class="ues-hidden mCustomScrollbar"    data-mcs-theme="light" >
+									<div id="ues-store-gadget" class="ues-store-assets ues-hidden" data-type="gadget">
+										<div class="container-fluid ues-content">
+											<div class="row ues-search-box">
+												<div class="col-md-12">
+													<form>
+														<div class="form-group">
+															<input type="text" class="form-control" placeholder="Search">
+														</div>
+													</form>
+												</div>
+											</div>
+											<div class="row ues-help">
+												<div class="col-md-12">* Drag and drop Gadgets to the design view</div>
+											</div>
+											<div class="row ues-thumbnails"></div>
+										</div>
+									</div>
+									<!--<div id="ues-store-widget" class="ues-store-assets ues-hidden" data-type="widget">
+										<div class="container-fluid ues-content">
+											<div class="row ues-search-box">
+												<div class="col-md-12">
+													<form>
+														<div class="form-group">
+															<input type="text" class="form-control" placeholder="Search">
+														</div>
+													</form>
+												</div>
+											</div>
+											<div class="row ues-help">
+												<div class="col-md-12">* Drag and drop Widgets to the design view</div>
+											</div>
+											<div class="row ues-thumbnails"></div>
+										</div>
+									</div>-->
+								</div>								
+								<!--- End :use-store ---->
+								
+								
+								
+								<div id="ues-properties" class="ues-hidden mCustomScrollbar" data-mcs-theme="light">															 
+									<div class="container-fluid ues-content"></div>
+								</div>
+								<div id="ues-designer" ></div>
+		
+								</div>
+								<div class="clearfix "></div>
+								<form id="gapp-dashboard-list" role="form" action="<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/dashboard/list" name="gapp-dashboard-list" method="post">
+									<input type="hidden" id="gapp-tenant-key" name="gapp-tenant-key" value="<%=VarTenantKey%>" />
+								</form>
+								<form id="gapp-dashboard-viewer" role="form" action="" name="gapp-dashboard-viewer" method="post" target="_blank">
+									<input type="hidden" id="gapp-tenant-key" name="gapp-tenant-key" value="<%=VarTenantKey%>" />
+								</form>
+								<form id="gapp-dashboard-manage" role="form" action="" name="gapp-dashboard-manage" method="post">
+									<input type="hidden" id="gapp-tenant-key" name="gapp-tenant-key" value="<%=VarTenantKey%>" />
+								</form>
+							</div>
+							<!-- END  ues-workspace-designer ----->
+							
+							
+							<!-- BEGIN  ues-workspace-layout ----->
+							<div id="ues-workspace-layout" class="ues-workspace ues-hidden ">
+								<nav role="navigation" class="navbar navbar-default ues-context-menu">
+									<div class="container-fluid">
+										<!--<div class="navbar-header">
+											<button data-target=".ues-context-menu-actions" data-toggle="collapse" class="navbar-toggle" type="button">
+												<span class="sr-only">Toggle navigation</span>
+												<span class="icon-bar"></span>
+												<span class="icon-bar"></span>
+												<span class="icon-bar"></span>
+											</button>
+											<a href="<%=tenantedUrlPrefix%>./" class="navbar-brand ues-tiles-menu-toggle"><i class="fw fw-tiles"></i></a>
+										</div>-->
+										<div class="collapse navbar-collapse ues-context-menu-actions">
+											<ul class="nav navbar-nav" style="float:right;">
+												<!--<li class="active"><a href="#">Dashboard Design</a></li>-->
+												<li><a href="#" class="ues-go-back">
+													<span class="fw-stack">
+														<i class="fw fw-ring fw-stack-2x"></i>
+														<i class="fw fw-left-arrow fw-stack-1x"></i>
+													</span> Go Back</a>
+												</li>
+											</ul>
+										</div>
+										<!--/.nav-collapse -->
+									</div>
+									<div class="ues-tiles-menu">
+										<div class="collapse navbar-collapse">
+											<h3 class="page-sub-title">Please select a layout</h3>
+										</div>
+									</div>
+								</nav>
+								<div class="container-fluid">
+									<div class="row">
+										<div class="col-md-12 ues-content"></div>
+									</div>
+								</div>
+							</div>
+							<!-- END  ues-workspace-layout ----->
+							
+							
+						</div>
+						
+						
+						
+					</div>
+				</div>
+				<!-- END PAGE CONTENT-->
+			</div>
+		</div>
+		<!-- END CONTENT -->
+	
+	</div>
+	<!-- END CONTAINER -->
+	<% include(utils.resolvePath('templates/global-footer.jag')); %>
+	
+	<!-- Modal Notification-->
+	<div class="modal fade" id="pagenotification" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title">Notification</h4>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div id="pagenotification-content" style="padding: 10px 25px;"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- Modal Notification-->
+	<div class="modal fade" id="dbnotification" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">Notification</h4>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div id="dbnotification-content" style="padding: 10px 25px;"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<% 
+		include(utils.resolvePath('templates/portal-footer.jag'));
+		include('/controllers/includes/theme-portal-scripts.jag');
+	%>
+	<script src="<%=urlPrefix%>js/async.js"></script>
+	<script src="<%=urlPrefix%>js/jquery-ui.js"></script>
+	<script src="<%=urlPrefix%>js/handlebars-v1.3.0.js"></script>
+	<!-- TODO fix shindig url -->
+	<script src="/shindig/gadgets/js/container:open-views:opensearch:rpc:xmlutil:pubsub-2.js?c=1&debug=1&container=default"></script>
+	<script src="<%=urlPrefix%>js/ues.js"></script>
+	<script src="<%=urlPrefix%>js/ues-prefs.js"></script>
+	<% include('/controllers/includes/common-scripts.jag'); %>
+	<% include('/controllers/includes/dashboard-scripts.jag'); %>
+	<script src="<%=urlPrefix%>js/ues-gadgets.js"></script>
+	<script src="<%=urlPrefix%>js/ues-store.js"></script>
+	<script src="<%=urlPrefix%>js/ues-dashboards.js"></script>
+	<script src="<%=urlPrefix%>extensions/components/gadget/index.js"></script>
+	<script src="<%=urlPrefix%>extensions/components/widget/index.js"></script>
+	<script src="<%=urlPrefix%>extensions/uris/local/index.js"></script>
+	<script src="<%=urlPrefix%>extensions/uris/store/index.js"></script>
+	<script src="<%=urlPrefix%>js/designer.js"></script>
+	<script id="ues-layout-hbs" type="text/x-handlebars-template">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-md-12">
+					<h4 class="ues-page-title">{{current.title}}</h4>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">				
+					<div class="ues-layout container-fluid"></div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<div id="ues-dashboard-facility"></div>
+				</div>
+			</div>
+		</div>
+	</script>
+	<script id="ues-component-toolbar-hbs" type="text/x-handlebars-template">
+		<div class="ues-toolbar">
+			<ul class="list-inline pull-right">
+				<!--<li><a href="#" data-toggle="tooltip" title="{{id}}"> <i class="fw fw-info"> </i></a></li>-->
+				<li><a href="#" class="ues-move-handle" data-id="{{id}}" data-action="move" title="Expand"><i class="fa fa-arrows-alt"></i></a></li>
+				<li><a href="#" class="ues-properties-handle" title="Settings"><i class="fa fa-cogs"></i></a></li>
+				<li><a href="#" class="ues-trash-handle" title="Delete"><i class="fa fa-trash-o"></i></a></li>
+			</ul>
+		</div>
+	</script>
+	<script id="ues-component-properties-hbs" type="text/x-handlebars-template">
+		<div class="row">
+			<div class="col-md-12 title-section">
+				<h4 class="ues-title">{{title}}</h4>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<div class="ues-sandbox" data-component="{{id}}">
+					<form class="ues-component-properties">
+						{{#has options}}
+							<div class="ues-options ues-properties" style="margin-top: 10px; ">
+								<h4>Options</h4>
+								{{#each options}}
+									<div class="form-group">
+										{{#equals type "STRING"}}
+											<label>{{title}}</label>
+											<input type="text" class="form-control" name="{{@key}}" placeholder="{{title}}" value="{{value}}">
+										{{/equals}}
+										{{#equals type "BOOL"}}
+											<label>
+												<input type="checkbox" name="{{title}}"{{#equals value true}} checked="checked"{{/equals}}> {{title}}
+											</label>
+										{{/equals}}
+										{{#equals type "ENUM"}}
+											<label>{{title}}</label>
+											<select id="{{@key}}" name="{{@key}}" class="form-control">
+												 {{#each options}}
+													<option value="{{value}}" {{#equals value ../value}} selected="selected"{{/equals}}>{{displayValue}}</option>
+												 {{/each}}
+											</select>
+										{{/equals}}
+										
+									</div>
+								{{/each}}
+							</div>
+							<hr/>
+						{{/has}}
+						{{#has settings}}
+							<div class="ues-settings ues-properties">
+								<h4>Settings</h4>
+								<div class="checkbox">
+									<label>
+										<input type="checkbox" name="personalize"{{#if settings.personalize}} checked="checked"{{/if}}> Personalizable
+									</label>
+								</div>
+							</div>
+							<hr/>
+						{{/has}}
+						
+						{{#has styles}}
+							<div class="ues-styles ues-properties" data-mcs-theme="light">
+								<h4>Styles</h4>
+								<div class="form-group hidden">
+									<label>Title
+										<input type="text" class="form-control" name="title" placeholder="Title" value="{{#if styles.title}}{{styles.title}}{{/if}}">
+									</label>
+								</div>
+								<div class="form-group hidden">
+									<label>Title Position
+										<select class="form-control ues-title-position">
+											<option value="left"{{#equals "left" styles.titlePosition}} selected="selected"{{/equals}}>Left</option>
+											<option value="center"{{#equals "center" styles.titlePosition}} selected="selected"{{/equals}}>Center</option>
+											<option value="right"{{#equals "right" styles.titlePosition}} selected="selected"{{/equals}}>Right</option>
+										</select>
+									</label>
+								</div>
+															
+								<div class="form-group">
+									<label>Height (px)</label>
+									<div class ="input-group">
+										<select name="height" class="form-control" style="width: 130px;">
+											<option>Height</option>
+											<option value="300" {{#equals "300" styles.height}} selected="selected"{{/equals}}>300 pixel</option>
+											<option value="325" {{#equals "325" styles.height}} selected="selected"{{/equals}}>325 pixel</option>
+											<option value="350" {{#equals "350" styles.height}} selected="selected"{{/equals}}>350 pixel</option>
+											<option value="375" {{#equals "375" styles.height}} selected="selected"{{/equals}}>375 pixel</option>
+											<option value="400" {{#equals "400" styles.height}} selected="selected"{{/equals}}>400 pixel</option>
+											<option value="425" {{#equals "425" styles.height}} selected="selected"{{/equals}}>425 pixel</option>
+											<option value="450" {{#equals "450" styles.height}} selected="selected"{{/equals}}>450 pixel</option>
+											<option value="475" {{#equals "475" styles.height}} selected="selected"{{/equals}}>475 pixel</option>
+											<option value="500" {{#equals "500" styles.height}} selected="selected"{{/equals}}>500 pixel</option>
+											<option value="525" {{#equals "525" styles.height}} selected="selected"{{/equals}}>525 pixel</option>
+											<option value="550" {{#equals "550" styles.height}} selected="selected"{{/equals}}>550 pixel</option>
+											<option value="575" {{#equals "575" styles.height}} selected="selected"{{/equals}}>575 pixel</option>
+											<option value="600" {{#equals "600" styles.height}} selected="selected"{{/equals}}>600 pixel</option>
+										</select>
+										<!--<input type="text" class="form-control" name="height" placeholder="Height" value="{{#if styles.height}}{{styles.height}}{{/if}}">-->
+										<!--<span class = "input-group-addon">px</span>-->
+									</div>
+								</div>
+										
+								<div class="checkbox">
+									<label>
+										<input type="checkbox" name="borders"{{#if styles.borders}} checked="checked"{{/if}}> Borders
+									</label>
+								</div>
+								
+							</div>
+							<hr/>
+						{{/has}}
+						
+						{{#has features}}
+						<div class="ues-features ues-properties">
+							<h4>Features</h4>
+							
+								{{#compare features.maximize undefined operator="!="}}
+								<div class="checkbox">
+									<label>
+										<input type="checkbox" name="maximize"{{#if features.maximize}} checked="checked"{{/if}}> Maximize
+									</label>
+								</div>
+								{{/compare}}
+								
+								{{#compare features.filter undefined operator="!="}}
+								<div class="checkbox">
+									<label>
+										<input type="checkbox" name="filter"{{#if features.filter}} checked="checked"{{/if}}> Filter
+									</label>
+								</div>
+								{{/compare}}
+								
+								{{#compare features.exportchartpdf undefined operator="!="}}
+								<div class="checkbox">
+									<label>
+										<input type="checkbox" name="exportchartpdf"{{#if features.exportchartpdf}} checked="checked"{{/if}}> Export as PDF
+									</label>
+								</div>
+								{{/compare}}
+								
+								{{#compare features.exportchartimage undefined operator="!="}}
+								<div class="checkbox">
+									<label>
+										<input type="checkbox" name="exportchartimage"{{#if features.exportchartimage}} checked="checked"{{/if}}> Export as Image
+									</label>
+								</div>
+								{{/compare}}
+								
+								{{#compare features.exportgridpdf undefined operator="!="}}
+								<div class="checkbox">
+									<label>
+										<input type="checkbox" name="exportgridpdf"{{#if features.exportgridpdf}} checked="checked"{{/if}}> Export as PDF
+									</label>
+								</div>
+								{{/compare}}
+															
+								{{#compare features.exportgridexcel undefined operator="!="}}
+								<div class="checkbox">
+									<label>
+										<input type="checkbox" name="exportgridexcel"{{#if features.exportgridexcel}} checked="checked"{{/if}}> Export as Excel
+									</label>
+								</div>
+								{{/compare}}
+								
+								{{#compare features.refresh undefined operator="!="}}
+								<div class="checkbox">
+									<label>
+										<input type="checkbox" name="refresh"{{#if features.refresh}} checked="checked"{{/if}}> Refresh
+									</label>
+								</div>
+								{{/compare}}
+								
+								{{#compare features.dataview undefined operator="!="}}
+								<div class="checkbox">
+									<label>
+										<input type="checkbox" name="dataview"{{#if features.dataview}} checked="checked"{{/if}}> Data Visualization
+									</label>
+								</div>
+								{{/compare}}
+						</div>
+						<hr/>
+						{{/has}}
+						
+						{{#has listeners}}
+							<div class="panel-group ues-notifiers ues-properties hidden" id="accordion-events" role="tablist" aria-multiselectable="true"  data-mcs-theme="light">
+								<h4>Events</h4>
+								{{#each listeners}}
+								  <div class="panel panel-default listener" data-event="{{event}}">
+									<div class="panel-heading" role="tab" id="heading-{{event}}" data-event="{{event}}">
+									  <h4 class="panel-title">
+										<a data-toggle="collapse"
+											data-parent="#accordion-events"
+											href="#collapse-{{event}}" aria-expanded="true" aria-controls="collapse-{{event}}">{{event}}
+										</a>
+									  </h4>
+									</div>
+									<div id="collapse-{{event}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-{{event}}">
+									  <div class="panel-body">
+									  {{#each notifiers}}
+									  
+											<div class="checkbox">
+												<label>
+													<input type="checkbox" class="notifier" data-from="{{from}}"
+													data-event="{{event}}" value="" {{#if wired}} checked="checked"{{/if}} data-info="{{type}}"> {{event}} ( {{content.title}}
+													<!--<a href="#" data-toggle="tooltip" title="{{from}}">
+														<i class="fw fw-info"></i>
+													</a>-->)
+												</label>
+											</div>	
+										
+									  {{/each}}
+									  </div>
+									</div>
+								  </div>
+								{{/each}}
+							</div>
+						{{/has}}
+						{{#has options listeners settings styles}}
+						{{else}}
+							No properties to configure.
+						{{/has}}
+					</form>
+				</div>
+			</div>
+		</div>
+	</script>
+	<script id="ues-components-list-hbs" type="text/x-handlebars-template">
+		{{#each assets}}
+		
+		<div class="col-md-12" {{#equals id 'site-list'}} style="display:none;" {{/equals}}>
+			<div class="ues-thumbnail" data-id="{{id}}" data-type="{{../type}}">
+				<img src="{{resolveURI thumbnail}}"/>
+				<h5 class="ues-title">{{title}}</h5>
+			</div>
+		</div>
+		
+		{{/each}}
+	</script>
+	<script id="ues-no-components-hbs" type="text/x-handlebars-template">
+		<div class="col-md-12">No items found.</div>
+	</script>
+	<script id="ues-layouts-list-hbs" type="text/x-handlebars-template">
+		<div class="row thumbnails">
+			{{#if length}}
+			{{#each .}}
+			<div class="col-md-3 col-sm-4 box">
+			
+			<!-- BEGIN Portlet PORTLET-->
+			<div class="portlet box orange">
+				<div class="portlet-title">
+					<div class="caption">
+								<span class="glyphicon glyphicon-list-alt"></span> &nbsp{{title}}
+					</div>
+					<div class="tools">
+						<!-- <a href="javascript:;" class="collapse" data-original-title="" title=""></a>	 -->				
+					</div>
+					<div class="actions">
+								<!--
+									<a href="javascript:;" class="btn btn-default btn-sm">
+									<i class="fa fa-pencil"></i> Edit </a>
+								-->
+							<div class="thumbnail layout-slection0">
+								<div class="ues-toolbar">
+									<button type="button" class="btn btn-sm blue ues-add" data-id="{{id}}">Select</button>
+								</div>
+							</div>
+					</div>				
+				</div>				
+				
+				<div class="portlet-body"  id="dblayout-box"   onmouseover="animationHover(this,'pulse')">
+				<img src="{{resolveURI thumbnail}}" style="box-shadow: 0px 2px 5px 2px rgba(0, 0, 0, 0.1);" title="{{title}}"/>
+				</div>
+				
+							</div>
+			<!-- END Portlet PORTLET-->	
+			
+			
+			</div>
+			{{/each}}
+			{{else}}
+			<div class="col-md-12">
+				<div class="caption">
+					<h4>No layouts found.</h4>
+				</div>
+			</div>
+			{{/if}}
+		</div>
+	</script>
+	<script id="ues-page-properties-hbs" type="text/x-handlebars-template">
+		<!--<div class="row">
+			<div class="col-md-12 title-section">
+				<h3 class="ues-page-title">{{title}}</h3>
+			</div>
+		</div>
+		-->
+		<div class="row">
+			<div class="col-md-12">
+				<div class="ues-sandbox">
+					<form>
+						<h4>Properties</h4>
+						<div class="form-group">
+							<label>Title
+								<input type="text" class="form-control title" name="title" placeholder="Page Title" value="{{title}}">
+							</label>
+						</div>
+						<div class="form-group">
+							<label>URL
+								<input type="text" class="form-control id" name="id" placeholder="URL" value="{{id}}">
+							</label>
+						</div>
+						<div class="checkbox" style=" padding-left: 22px;">
+							<label>
+								<input type="checkbox" class="landing"{{#if landing}} checked="checked"{{/if}}> Use as Landing
+							</label>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</script>
+	<script id="ues-pages-list-hbs" type="text/x-handlebars-template">
+		{{#each pages}}
+		<li{{#equals id ../current.id}} class="active"{{/equals}}>
+			<a href="#" data-id="{{id}}">{{title}} <i class="fw fw-delete pull-right ues-trash"></i></a>
+		</li>
+		{{/each}}
+	</script>
+
+	<script type="text/javascript">
+		var VarCurrentTenantInfo = $.parseJSON('<%=VarCurrentTenantInfo%>');
+		$(document).ready(function(){			
+
+			$("#ues-store #ues-properties").mCustomScrollbar({
+					axis:"yx" // vertical and horizontal scrollbar
+			
+			});		
+		});
+		
+		function FnManageDashboard(VarFrmAction){
+			$('#gapp-dashboard-manage').attr('action',VarFrmAction);
+			$('#gapp-dashboard-manage').submit();
+		}
+				
+	</script>
+</body>
+</html>

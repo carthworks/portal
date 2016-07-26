@@ -1,0 +1,142 @@
+<%
+	var APICONF = require('/configs/apiproperties.jag');
+	var usr = require('/modules/user.js');
+	include(utils.resolvePath('templates/portal-header.jag'));
+	include('/controllers/includes/theme-portal-styles.jag');
+%>
+	<link href="<%=urlPrefix%>css/jquery-custom-scrollbar/jquery.mCustomScrollbar.css" rel="stylesheet" type="text/css" />
+	<style type="text/css">
+		#grid-view .k-grid-header .k-header {
+			background-color: #f44336;
+		}
+
+		#grid-view .k-header a.k-link, .k-grid-header th{
+			color: #000 !important;
+		}
+		
+		.form-control-custom {
+			height: 20px;
+			padding: 6px 12px;
+			font-size: 14px;
+			color: #555;
+			border: 1px solid #ccc;
+			border-radius: 4px;
+			width: 85%;
+		}
+
+		
+	</style>
+</head>
+<body class="page-md page-header-fixed page-quick-sidebar-over-content page-footer-fixed  page-full-width">
+	<div class="se-pre-con"></div>
+	<% include(utils.resolvePath('templates/global-header.jag')); %>
+	<!-- BEGIN CONTAINER -->
+	<div class="page-container">		
+		<!-- BEGIN CONTENT -->
+		<div class="page-content-wrapper">
+			<div class="gapp-header">
+				<% include(utils.resolvePath('templates/leftnavigation.jag')); %>
+				<h3 class="page-title">	Map Points  </h3>
+				<div class="page-bar">
+					<ul class="page-breadcrumb">
+						<li>
+							<i class="fa fa-home"></i>
+							<a href="Javascript:void(0)" onclick="FnBreadCrumbHome()">Home</a>
+							<i class="fa fa-angle-right"></i>
+						</li>
+						<li>						
+							<a href="Javascript:void(0)" onclick="FnNavigateAssetList()">Assets</a>
+							<i class="fa fa-angle-right"></i>
+						</li>
+						<li>
+							<a href="Javascript:void(0)">Map Points</a>
+						</li>
+						
+					</ul>
+				</div>				
+			</div>
+			
+			<div class="page-content">
+				<!-- BEGIN PAGE CONTENT-->
+				<div class="row">
+					<div class="col-md-12">	
+						
+						<div class="portlet animated fadeInUp dark  light bordered">
+							<div class="portlet-title">
+								<div class="caption " style="padding-top: 25px;">
+									<span class="caption-subject bold uppercase">Asset Name : </span><span id="pointmap_asset_name"></span>
+								</div>
+								<div class="actions">
+									<div class="form-actions">
+										<span class="md-checkbox">
+											<input type="checkbox" id="check_stay_page" class="md-check k-valid" data-pername="stay on page" value="stay on page" >
+											<label for="check_stay_page">
+												<span class="inc"></span>
+												<span class="check"></span>
+												<span class="box"></span>Stay on page
+											</label>
+										</span>&nbsp;&nbsp;
+										<button type="button" class="btn btn-raised default" name="gapp-mappoint-cancel" id="gapp-mappoint-cancel" onclick="FnCancelMapPoints()" tabindex="5"><i class="icon-close icons" aria-hidden="true"></i>Cancel</button>
+										<button type="button" class="btn  btn-raised btn-danger" name="gapp-mappoint-save" id="gapp-mappoint-save" onclick="return FnSaveMapPoints()" tabindex="5"><i class="icon-check icons" aria-hidden="true"></i>Save</button>
+									</div>
+								</div>
+							</div>							
+							<div class="portlet-body">
+								<div id="splitter" style="height: 480px;">
+									<div id="tenantSection">
+										<div id="gapp-devices-list"></div>
+									</div>
+									<div id="deviceSection">							
+										<div id="gapp-points-list"></div>							
+									</div>
+								</div>
+								<form id="gapp-mappoint-entity" role="form" action="" name="gapp-mappoint-entity" method="post">
+									<input type="hidden" id="equip_entity" name="equip_entity" value="<%=VarEquipEntity%>" />
+									<input type="hidden" id="equip_view" name="equip_view" value="<%=VarEquipEntity%>" />
+								</form>
+								<form id="gapp-equipment-view" role="form" action="" name="gapp-equipment-view" method="post">
+									<input type="hidden" id="entity_id" name="entity_id" />
+									<input type="hidden" id="gapp-tenant-key" name="gapp-tenant-key" value="<%=VarTenantKey%>" />
+								</form>
+								<form id="gapp-asset-list" role="form" action="<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/equipments/asset/list" name="gapp-asset-list" method="post">
+									<input type="hidden" id="gapp-tenant-key" name="gapp-tenant-key" value="<%=VarTenantKey%>" />
+								</form>
+
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- END PAGE CONTENT-->
+			</div>
+		</div>
+		<!-- END CONTENT -->
+		
+	</div>
+	<!-- END CONTAINER -->
+	<% include(utils.resolvePath('templates/global-footer.jag')); %>
+	
+	<script type="text/x-kendo-template" id="deviceSearchtemplate">
+		<div class="toolbar" >
+			<input type="text" id="searchDeviceId" class="form-control-custom" placeholder="Search Device"/>
+		</div>
+	</script>
+	<% 
+		include(utils.resolvePath('templates/portal-footer.jag'));
+		include('/controllers/includes/theme-portal-scripts.jag');
+	%>
+	<script type="text/javascript">
+		var VarListDeviceUrl = '<%=APICONF.GAPP_SERVICES.device.ownedlist%>';
+		var VarListDevicePointsUrl = '<%=APICONF.GAPP_SERVICES.equipments.asset.devicepoints%>';
+		var VarPointsMappingUrl = '<%=APICONF.GAPP_SERVICES.equipments.asset.pointsmapping%>';
+		var VarLUDomainName = '<%=usr.domainName()%>';
+		var VarLUTenantName = '<%=usr.tenantName()%>';
+		var VarEquipEntity = $.parseJSON('<%=VarEquipEntity%>');
+		var VarEquipView = '<%=VarEquipView%>';
+		var VarEquipList = '<%=VarEquipList%>';
+		var VarCurrentTenantInfo = $.parseJSON('<%=VarCurrentTenantInfo%>');
+	</script>
+	<script type="text/javascript" src="<%=urlPrefix%><%=utils.resolveUrl('js/pointsmapping/asset.js')%>"></script>
+	<script src="<%=urlPrefix%>js/jquery-custom-scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
+	
+</body>
+</html>

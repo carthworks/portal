@@ -1,0 +1,106 @@
+<%
+	var APICONF = require('/configs/apiproperties.jag');
+	var APPCONF = require('/configs/appconfig.jag');
+	var usr = require('/modules/user.js');
+	include(utils.resolvePath('templates/portal-header.jag'));
+	include('/controllers/includes/theme-portal-styles.jag');
+%>
+	<style type="text/css">		
+		.portlet-title {    min-height: 12px !important; padding:0;}
+	</style>
+</head>
+<body class="page-md page-header-fixed page-quick-sidebar-over-content page-footer-fixed  page-full-width">
+	<div class="se-pre-con"></div>
+	<% include(utils.resolvePath('templates/global-header.jag')); %>
+	<!-- BEGIN CONTAINER -->
+	<div class="page-container">
+		<!-- BEGIN CONTENT -->
+		<div class="page-content-wrapper">
+			<div class="gapp-header">
+				<% include(utils.resolvePath('templates/leftnavigation.jag')); %>
+				<h3 class="page-title">	Client Management  </h3>
+				<div class="page-bar">
+				<ul class="page-breadcrumb">
+					<li>
+						<i class="fa fa-home"></i>
+						<a href="Javascript:void(0)" onclick="FnBreadCrumbHome()">Home</a>
+						<i class="fa fa-angle-right"></i>
+					</li>
+					<li>
+						<a href="Javascript:void(0)" onclick="FnNavigateClientList()">Clients</a>
+						<i class="fa fa-angle-right"></i>
+					</li>
+					<li>
+						<a href="Javascript:void(0)">Create Client Admin</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<div class="page-content">
+
+				<!-- BEGIN PAGE CONTENT-->
+					<div class="row">
+						<div class="col-md-12">						
+							<div class="portlet light bordered animated fadeInUp dark" >
+								<div class="portlet-title">
+									<div class="caption font-red-sunglo">
+										<i class="pageheadericon pageheader-clienticon"></i>
+										<span class="caption-subject bold uppercase"> Create Client Admin </span>
+									</div>
+								</div>
+								<div class="portlet-body form">
+									<form name="gapp-clientadmin-form" id="gapp-clientadmin-form" role="form" autocomplete="off">
+										<div class="form-body form">											
+											<div class="col-md-6">
+											
+												<!-- BEGIN EMAILID -->										
+												<div class="form-group form-md-line-input">
+													<input  type="email" class="form-control" name="clientadminemail" id="clientadminemail" tabindex="1" required data-required-msg="Please enter emailid" data-email-msg="Please enter valid emailid" />																
+													<label class="col-md-12 control-label" for="name">Email Id <span class="required" aria-required="true">* </span></label>
+													<div class="form-control-focus"></div>			
+												</div>	
+												<!-- END TYPE EMAILID -->
+												
+												<div class="form-actions">
+													<div class="row">
+														<div class=" col-md-12 align-right pull-right" style="text-align:right">
+																<button type="button" class="btn  btn-raised green" name="gapp-clientadmin-save" id="gapp-clientadmin-save" onclick="return FnCreateClientAdmin()" tabindex="5">Send Email</button>
+														</div>
+													</div>
+												</div>												
+																								
+											</div>	
+											<input type="hidden" name="client_domain" id="client_domain" value="<%=VarClientDomain%>" />
+										</div>
+									</form>
+									
+									<div class="clearfix"></div>
+									
+								</div>
+								<form name="gapp-client-list" id="gapp-client-list" action="<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/clients/list" method="post">
+									<input type="hidden" id="gapp-tenant-key" name="gapp-tenant-key" value="<%=VarTenantKey%>" />
+								</form>
+							</div>	
+						</div>
+					</div>
+				<!-- END PAGE CONTENT-->
+			</div>
+		</div>
+		<!-- END CONTENT -->
+		
+	</div>
+	<!-- END CONTAINER -->
+	<% include(utils.resolvePath('templates/global-footer.jag')); %>
+	<% 
+		include(utils.resolvePath('templates/portal-footer.jag'));
+		include('/controllers/includes/theme-portal-scripts.jag');
+	%>
+	<script type="text/javascript">
+		var VarCreateClientAdminUrl = '<%=APICONF.GAPP_SERVICES.clients.sendemail%>';
+		var VarTenantDomain = '<%=VarClientDomain%>';
+		var VarLUDomainName = '<%=usr.domainName()%>';
+		var VarAPPServerPath = '<%=APPCONF.GAPP_CONF.APP_DOMAIN_ROOT_URL%>';
+	</script>
+	<script type="text/javascript" src="<%=urlPrefix%><%=utils.resolveUrl('js/clients/sendemail.js')%>"></script>
+</body>
+</html>

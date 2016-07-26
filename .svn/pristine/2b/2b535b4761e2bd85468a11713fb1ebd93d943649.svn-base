@@ -1,0 +1,150 @@
+<%
+	var APPCONF = require('/configs/appconfig.jag');
+	var APICONF = require('/configs/apiproperties.jag');
+	var usr = require('/modules/user.js');
+	include(utils.resolvePath('templates/portal-header.jag'));
+	include('/controllers/includes/theme-portal-styles.jag');
+%>
+	<link href="<%=urlPrefix%>css/jquery-custom-scrollbar/jquery.mCustomScrollbar.css" rel="stylesheet" type="text/css" />
+	<style type="text/css">
+		#assetSection {
+			background-color: #F3F3F3;
+			box-shadow: -8px -3px 17px -10px #797979 inset;
+		}
+		.leftbar-clientlist{
+			padding: 5px 10px;
+		}
+	
+	.search-client{
+	    height: 20px;
+    padding: 6px 12px;
+    font-size: 14px;
+    color: #555;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 85%;
+	margin-bottom:15px;
+	}
+	
+	span.k-in > span.highlight {
+		background: #7EA700;
+		color: #ffffff;
+		border: 1px solid green;
+		padding: 1px;
+	}
+
+	span.k-in > span.highlight {
+		background:orange
+	}
+
+	.health-count{
+		text-align: center;
+	   margin: 13px 0px 13px;
+	}
+	
+	#gapp-device-status .k-header.k-grid-toolbar {
+		display: block;
+		background: transparent;
+		text-align: right;
+	}
+	
+	.alarm-assetcount{
+	display:inline-block;
+	width:100%;
+	}
+	
+	.alarm-assetcount > div{
+	font-size:16px;
+	font-weight:bold;
+	}
+
+	</style>
+</head>
+<body class="page-md page-header-fixed page-quick-sidebar-over-content page-footer-fixed  page-full-width">
+	<div class="se-pre-con"></div>
+	<% include(utils.resolvePath('templates/global-header.jag')); %>
+	<!-- BEGIN CONTAINER -->
+	<div class="page-container">
+		<!-- BEGIN CONTENT -->
+		<div class="page-content-wrapper">
+			<div class="gapp-header">
+				<% include(utils.resolvePath('templates/leftnavigation.jag')); %>
+				<h3 class="page-title">	Alarm Management  </h3>
+				<div class="page-bar">
+					<ul class="page-breadcrumb">
+						<li>
+							<i class="fa fa-home"></i>
+							<a href="Javascript:void(0)" onclick="FnBreadCrumbHome()">Home</a>
+							<i class="fa fa-angle-right"></i>
+						</li>
+						<li>
+							<a href="Javascript:void(0)">Alarm Definition</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="page-content">
+				<!-- BEGIN PAGE CONTENT-->
+				<div class="row">
+					<div class="col-md-12">
+						<div class="portlet dark  light bordered device-listview">
+							<div class="portlet-title">
+								<div class="caption font-red-sunglo ">
+									<i class="pageheadericon pageheader-deviceicon"></i>
+									<span class="caption-subject bold uppercase">Alarm Definition</span>
+								</div>
+							</div>
+							<div class="portlet-body">
+								<div id="splitter" style="height: 510px;border: 0px;">
+									<div id="assetSection">
+										<div class="leftbar-clientlist">
+											<input id="treeViewSearchInput" class="search-client" placeholder="Search Asset"></input>
+											<div id="gapp-assets-list"></div>
+										</div>
+									</div>
+									<div id="deviceSection">
+										<section id="pointsSection">
+											<div class="alarm-assetcount" >
+												<div class="pull-left" style="padding:10px 10px 0px 10px;">Asset: <span class="alarm-assetname"> -- </span></div>
+												<aside class="pull-right" style="padding: 0px 12px;">
+													<section style="float: left;text-align: center;">
+														<span class="alarm-totalassetcount" style="clear: both;display: block;font-size: 18px;color: #02A902;">0</span>														
+														<span style="display: block;font-weight: bold;font-size: 16px;color: #02A902;">ASSETS</span>
+													</section>
+													<section style="float: left;text-align: center;margin-left:15px;">
+													<span class="alarm-totalpointcount" style="clear: both;display: block;font-size: 18px;color: #15ABA5;">0</span>
+														<span style="display: block;font-weight: bold;font-size: 16px;color: #15ABA5;">POINTS</span>
+													</section>
+												</aside>
+											</div>
+											<div id="gapp-points-list"></div>
+										</section>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- END CONTENT -->
+	</div>
+	<!-- END CONTAINER -->
+	<% include(utils.resolvePath('templates/global-footer.jag')); %>
+	
+	<% 
+		include(utils.resolvePath('templates/portal-footer.jag'));
+		include('/controllers/includes/theme-portal-scripts.jag');
+	%>
+	<script type="text/javascript">
+		var VarListAssetsUrl = '<%=APICONF.GAPP_SERVICES.equipments.asset.list%>';
+		var VarAssetsPointsUrl = '<%=APICONF.GAPP_SERVICES.hierarchy.immediatechildren%>';
+		var VarDefinitionListUrl = '<%=APICONF.GAPP_SERVICES.alarm.definitionlist%>';
+		var VarDefinitionCreateUrl = '<%=APICONF.GAPP_SERVICES.alarm.definitioncreate%>';
+		var VarCurrentTenantInfo = $.parseJSON('<%=VarCurrentTenantInfo%>');
+		var ObjPageAccess = $.parseJSON('<%=ObjPageAccess%>');
+	</script>
+	<script type="text/javascript" src="<%=urlPrefix%><%=utils.resolveUrl('js/alarm/alarmdefinition.js')%>"></script>
+	<script src="<%=urlPrefix%>js/jquery-custom-scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
+</body>
+</html>

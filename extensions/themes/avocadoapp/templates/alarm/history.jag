@@ -1,0 +1,120 @@
+<%
+	var APICONF = require('/configs/apiproperties.jag');
+	var usr = require('/modules/user.js');
+	include(utils.resolvePath('templates/portal-header.jag'));
+	include('/controllers/includes/theme-portal-styles.jag');
+	
+%>
+	<style type="text/css">
+		#grid-view .k-grid-header .k-header {
+			background-color: #f44336;
+		}
+
+		#grid-view .k-header a.k-link, .k-grid-header th{
+			color: #000 !important;
+		}
+
+		.alert-danger {
+			background-color: #f2dede;
+			border-color: #ebccd1;
+			color: #a94442;
+		}
+		
+		.Normal{   background-color:#28d8b4; color:#fff;}
+		.Alarm{    background-color: #fe6c6c; color:#fff;}
+		.paddingRight15{padding-right:15px;}
+		.portlet.light.bordered{min-height:550px;}
+		
+		.alarm_search {
+			border: 1px #F1F1F1 solid;
+			padding: 20px 0px 0px 5px;
+			margin-bottom: 10px;
+		}
+	</style>
+</head>
+<body class="page-md page-header-fixed page-quick-sidebar-over-content page-footer-fixed  page-full-width">
+	<div class="se-pre-con"></div>
+	<% include(utils.resolvePath('templates/global-header.jag')); %>
+	<!-- BEGIN CONTAINER -->
+	<div class="page-container">
+		<div class="gapp-header">
+			<% include(utils.resolvePath('templates/leftnavigation.jag')); %>
+				<h3 class="page-title">	Alarm Logs </h3>
+				<div class="page-bar">
+					<ul class="page-breadcrumb">
+						<li>
+							<i class="fa fa-home"></i>
+							<a href="Javascript:void(0)" onclick="FnBreadCrumbHome()">Home</a>
+							<i class="fa fa-angle-right"></i>
+						</li>
+						<li>
+							<a href="Javascript:void(0)">Alarm Logs</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		
+		<!-- BEGIN CONTENT -->
+		<div class="page-content-wrapper">
+			<div class="page-content">
+				<!-- BEGIN PAGE CONTENT-->
+					<div class="row">
+						<div class="col-md-12">	
+													
+							<div class="portlet light bordered">
+								<div class="portlet-title">
+									<div class="caption font-red-sunglo">
+										<i class="pageheadericon pageheader-alarmlogicon"></i>
+										<span class="caption-subject bold uppercase"> Alarm Logs </span>
+									</div>
+								</div>
+								<div class="portlet-body">
+									<div class="alarm_search">
+										<form class="form-inline margin-bottom-15">
+											<div class="form-group paddingRight15">
+												<label for="fromdate" style="font-weight:bold;padding-right:10px;">From Date</label>
+												<input type="text" class="form-control" name="fromdate" id="fromdate" placeholder="Select">
+											</div>
+											<div class="form-group paddingRight15" >
+												<label for="todate" style="font-weight:bold;padding-right:10px;">To Date</label>
+												<input type="text" class="form-control" name="todate" id="todate" placeholder="Select">
+											</div>
+											<button type="button" class="btn green paddingLeft15" onclick="FnSearchAlarmHistory()">Search</button>
+										</form>
+									</div>
+																	
+									<div class="chart-wrapper">
+										<div id="alarmhistorylistsection">
+											<div id="gapp-alarmhistory-list"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				<!-- END PAGE CONTENT-->
+			</div>
+		</div>
+		<!-- END CONTENT -->
+	</div>
+	<!-- END CONTAINER -->
+	
+	
+	<% include(utils.resolvePath('templates/global-footer.jag')); %>
+		
+	<% 
+		include(utils.resolvePath('templates/portal-footer.jag'));
+		include('/controllers/includes/theme-portal-scripts.jag');
+	%>
+	
+		
+	<script type="text/javascript">
+		var VarAlarmHistoryUrl = '<%=APICONF.GAPP_SERVICES.alarm.history%>';
+		var VarAppRootDomain = '<%=APPCONF.GAPP_CONF.MY_DOMAIN_NAME%>';
+		var VarLUDomainName = '<%=usr.domainName()%>';
+		var VarCurrentTenantInfo = $.parseJSON('<%=VarCurrentTenantInfo%>');
+	</script>
+	<script type="text/javascript" src="<%=urlPrefix%><%=utils.resolveUrl('js/alarm/history.js')%>"></script>
+	<script src="<%=urlPrefix%>js/jquery-custom-scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
+</body>
+</html>

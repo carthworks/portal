@@ -1,0 +1,101 @@
+<%
+	var APPCONF = require('/configs/appconfig.jag');
+	var APICONF = require('/configs/apiproperties.jag');
+	var usr = require('/modules/user.js');
+	include(utils.resolvePath('templates/portal-header.jag'));
+	include('/controllers/includes/theme-portal-styles.jag');
+%>
+
+</head>
+<body class="page-md page-header-fixed page-quick-sidebar-over-content page-footer-fixed  page-full-width">
+	<div class="se-pre-con"></div>
+	<% include(utils.resolvePath('templates/global-header.jag')); %>
+	<!-- BEGIN CONTAINER -->
+	<div class="page-container">			
+		<!-- BEGIN CONTENT -->
+		<div class="page-content-wrapper">
+			<div class="page-content">
+				<h3 class="page-title">	Reset Password  <small></small></h3>
+				
+				<!-- BEGIN PAGE CONTENT-->
+				<div class="row">
+					<div class=" container">						
+						<div class="portlet light bordered animated fadeInUp dark" style="background-color: #f7f7f7;">
+							<div class="portlet-title">
+								<div class="caption font-red-sunglo">
+									<i class="icon-plus icons font-red-sunglo"></i>
+									<span class="caption-subject bold uppercase"> Reset the User account password</span>
+								</div>
+							</div>
+							<div class="portlet-body form">
+								<form name="gapp-resetpassword-form" id="gapp-resetpassword-form" role="form" autocomplete="off">
+									<div class="form-body form">											
+											<div class="col-md-6">
+											
+												<!-- BEGIN TYPE PASSWORD -->										
+												<div class="form-group form-md-line-input">
+													<input  type="password" class="form-control" name="pass" id="pass" tabindex="1" required data-required-msg="Please enter new password" />																
+													<label class="col-md-12 control-label" for="name">Password <span class="required" aria-required="true">* </span></label>
+													<div class="form-control-focus"></div>			
+												</div>	
+												<!-- END TYPE PASSWORD -->
+												
+												<!-- BEGIN RETYPE PASSWORD -->										
+												<div class="form-group form-md-line-input">
+													<input  type="password" class="form-control" name="retypepassword" id="retypepassword" tabindex="2" required 	data-required-msg="Please enter retype password" data-matches="#pass" data-matches-msg="Passwords doesn't match" />																
+													<label class="col-md-12 control-label" for="name">Retype Password <span class="required" aria-required="true">* </span></label>
+													<div class="form-control-focus"></div>			
+												</div>	
+												<!-- END ReTYPE PASSWORD -->
+
+												<div class="form-actions">
+													<div class="row">
+													<div class=" col-md-12 align-right pull-right" style="text-align:right">
+															<button type="button" class="btn  btn-raised btn-danger" name="gapp-password-save" id="gapp-password-save" onclick="return FnResetPassword()" tabindex="5">Save Password</button>
+													</div>
+												</div>
+											</div>												
+																								
+										</div>
+										
+										</form>
+										
+										
+								<form id="gapp-device-list" role="form" action="<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/device/list" name="gapp-device-list" method="post">
+									<input type="hidden" id="gapp-tenant-key" name="gapp-tenant-key" value="<%=VarEntityName%>" />
+								</form>
+								<form id="gapp-device-list" role="form" action="<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/device/list" name="gapp-device-list" method="post">
+									<input type="hidden" id="gapp-tenant-key" name="gapp-tenant-key" value="<%=VarEntityName%>" />
+								</form>
+								
+								
+										<div class="clearfix"></div>
+									
+									</div>
+							
+							</div>
+						</div>
+					</div>
+					<!-- END SAMPLE FORM PORTLET-->
+				</div>
+				<!-- END PAGE CONTENT-->
+			</div>
+		</div>
+		<!-- END CONTENT -->
+		
+	</div>
+	<!-- END CONTAINER -->
+	<% include(utils.resolvePath('templates/global-footer.jag')); %>
+	<% 
+		include(utils.resolvePath('templates/portal-footer.jag'));
+		include('/controllers/includes/theme-portal-scripts.jag');
+	%>
+	<script type="text/javascript">
+		var VarResetPasswordUrl = '<%=APICONF.GAPP_SERVICES.users.resetpassword%>';		
+		var VarMyDomain = '<%=VarMyDomain%>';
+		var VarMyEntityName = '<%=VarEntityName%>';
+		var VarIdentifier = '<%=VarIdentifier%>';
+	</script>
+	<script type="text/javascript" src="<%=urlPrefix%><%=utils.resolveUrl('js/resetpassword.js')%>"></script>		
+</body>
+</html>

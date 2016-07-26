@@ -1,0 +1,187 @@
+<%
+	var APICONF = require('/configs/apiproperties.jag');
+	var APPCONF = require('/configs/appconfig.jag');
+	include(utils.resolvePath('templates/portal-header.jag'));
+	include('/controllers/includes/theme-portal-styles.jag');
+%>
+
+<style type="text/css">
+
+	.orange{ background:#00aeef; color:#fff;}
+::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+    color:    #909;
+}
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+   color:    #909;
+   opacity:  1;
+}
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+   color:    #909;
+   opacity:  1;
+}
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+   color:    #909;
+}
+.k-invalid-msg code
+{
+	background-color: transparent;
+    border: 0px;
+    color: #FF8080;
+}
+.has-error .form-control,
+.has-error .form-control:focus{
+border-color: #fff;
+}
+
+.input-icon > i{
+    font-size: 18px!important;
+	color:#fff;
+	}
+</style>
+
+</head>
+
+<body class="outer-wrapper login">
+	<div class="se-pre-con"></div>
+	
+	<!-- BEGIN LOGIN -->
+	<div class="content panel animated pulse col-xs-12 col-md-5 col-sm-8 col-lg-4" style="margin: 5% auto 20px 9%;" id="gapp-login-container">
+		 <div class="logo">
+			<a href="/"><img id="loginlogo" src="<%=urlPrefix%><%=utils.resolveUrl('images/login/galaxy-logo.png')%>" alt=""/>	</a>
+		</div>	
+		<!-- BEGIN LOGIN FORM --> 
+		
+		<div id="ga-login bs-component"> 							
+			<div class="panel-danger">							
+				<div class="panel-body">									
+					<% if (message) { %>
+					<div class="alert alert-danger display-hide" style="display: block;width: 86%;padding: 10px;">
+					 <a href="#" class="close" data-dismiss="alert">&times;</a>
+						<span><%=message%></span>
+					</div>
+					<% } %>
+					
+					<form name="gapp-signin-form" id="gapp-signin-form" class="form-horizontal" action="<%=tenantedUrlPrefix%>login" method="post" role="login" autocomplete="off" >
+						<fieldset>
+						
+						<section class="form-group login-inputbox col-md-12">
+							<div class="input-icon">
+										<i class="fa fa-user"></i>
+										<input type="text" class="form-control placeholder-no-fix" name="username" id="username" placeholder="UserName" required="true" data-required-msg="Please enter username" autofocus tabindex="1" />
+							</div>
+						</section>
+						
+						
+						<section class="form-group login-inputbox col-md-12">
+								<div class="input-icon">
+									<i class="fa fa-lock"></i>
+									<input type="password" class="form-control" name="password" id="password" placeholder="Password" required="true" data-required-msg="Please enter password" tabindex="2" />
+								</div>
+						</section>
+						
+
+							<section class="form-group col-md-12" style="text-align:center">
+									<div >														  
+									  <button type="submit" class="btn btn-raised orange btn-block" name="gapp-signin-submit" id="gapp-signin-submit" onclick="return FnLoginSubmit()" tabindex="4" disabled="disabled">Sign In <i class="m-icon-swapright m-icon-white"></i></button>
+									</div>
+							 </section>
+						
+						<!-- BEGIN PUBLISH CHECKBOX -->	
+							<div class="form-group form-md-checkboxes col-md-12">	
+							
+								<div class="md-checkbox-inline col-md-6 text-left"  >								
+									<div class="md-checkbox">
+										<input type="checkbox" id="remembeMe" name="remembeMe" class="md-check "   tabindex="13"  >
+										<label for="remembeMe" style="font-size: 13px;  color: #fff;">
+											<span></span>
+											<span class="check"></span>
+											<span class="box" style="border-color:#fff"></span>
+											Remember me
+										</label>
+									</div>
+								</div> 
+								
+								<div class="col-md-6 text-right">
+									<a href="Javascript:void(0)" id="gapp-forgotpassword-link" style="color:#fff"><i class="fa fa-lock m-r-5"></i> Forgot your password?</a>
+								</div>
+							</div>						
+							<!--END  PUBLISH CHECKBOX -->
+						
+							
+							
+							
+						</fieldset>
+						<% if (dest) { %>
+							<input type="hidden" name="destination" value="<%=dest%>">
+						<% } %>
+					</form>
+				</div>
+			</div>
+		</div>		
+		<!-- END LOGIN FORM -->
+
+	</div>
+	<!-- END LOGIN -->
+
+	<!-- BEGIN FORGOT PASSWORD FORM --> 
+		<br/>
+		
+	<div class="content panel hide animated pulse col-xs-12 col-md-5 col-sm-8 col-lg-4" style="margin: 5% auto 20px 9%;"  id="gapp-forgotpassword-container">
+	 <div class="logo">
+			<a href="/"><img id="loginlogo" src="<%=urlPrefix%><%=utils.resolveUrl('images/login/galaxy-logo.png')%>" alt=""/>	</a>
+		</div>	
+		<div id="ga-login bs-component">
+			<div class="panel-danger">							
+				<div class="panel-body" style="padding-top:5px;">
+					<form class="form-horizontal" name="gapp-forgorpassword-form" id="gapp-forgorpassword-form" style="display: block;" autocomplete="off">
+						<fieldset>
+							<h3 style="color: #fff;margin-top:0px;font-size:18px;">Forgot Password</h3>
+							<p style="color: #fff;font-size: 12px;">Enter your Username and E-mail address below to reset your password.</p>
+							<p id="forgot_notification" style="color: #fff;" class="col-md-11"></p>
+							
+							<section class="form-group login-inputbox col-md-12">
+									<div class="input-icon">
+										<i class="fa fa-user"></i>
+										<input class="form-control placeholder-no-fix" type="text" placeholder="UserName" name="forgotuserName" id="forgotuserName" required="true" data-required-msg="Please enter username" />
+									</div>
+							</section>
+							<section class="form-group login-inputbox col-md-12">
+									<div class="input-icon">
+										<i class="fa fa-envelope"></i>
+										<input class="form-control placeholder-no-fix" type="email" placeholder="Email" name="forgotemailId" id="forgotemailId" required="true" data-required-msg="Please enter emailid" data-email-msg="Please enter valid emailid" />
+									</div>
+							</section>
+							<section class="form-group col-md-12">
+								<div class="form-actions">
+									<button type="button" class="btn" name="gapp-forgotpass-cancel" id="gapp-forgotpass-cancel">
+									<i class="m-icon-swapleft"></i> Back </button>
+									<button type="button" class="btn blue pull-right" name="gapp-forgotpass-submit" id="gapp-forgotpass-submit" onclick="return FnForgotPassword()">
+									Submit <i class="m-icon-swapright m-icon-white"></i>
+									</button>
+								</div>
+							</section>
+						</fieldset>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+		
+	<!-- END FORGOT PASSWORD FORM -->
+		
+	
+	<footer id="myfooter" class="white opa-text"> &copy; 2016 Galaxy, Pacific Controls.</footer>
+	
+	
+	<% 
+		include(utils.resolvePath('templates/portal-footer.jag'));
+		include('/controllers/includes/theme-portal-scripts.jag');
+	%>
+	<script type="text/javascript">
+		var VarForgotPasswordUrl = '<%=APICONF.GAPP_SERVICES.users.forgotpassword%>';
+		var VarAPPServerPath = '<%=APPCONF.GAPP_CONF.APP_DOMAIN_ROOT_URL%>';
+		var VarAppDomain = '<%=APPCONF.GAPP_CONF.LOGIN_DOMAIN%>';
+	</script>
+	<script type="text/javascript" src="<%=urlPrefix%><%=utils.resolveUrl('js/login.js')%>"></script>   
+</body>
+</html>

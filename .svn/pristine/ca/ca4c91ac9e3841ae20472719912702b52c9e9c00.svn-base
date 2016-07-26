@@ -1,0 +1,54 @@
+<%
+
+(function () {
+
+	var log = new Log();
+	var usr = require('/modules/user.js');
+	var user = usr.current();
+	var method = request.getMethod();
+	
+	if (!user) {
+		var ObjResponse = {"status":"error","errorMessage":"Session Expired.Please Login"};
+		return ObjResponse;
+	}
+	
+	if(method == 'POST'){
+		var APPCONF = require('/configs/appconfig.jag');
+		
+		var matcher = new URIMatcher(request.getRequestURI());
+		if (matcher.match(APPCONF.GAPP_CONF.CONTEXT_PATH + '/childclient/{action}/{tenant}')) {
+			vars = matcher.elements();
+			var VarAction = vars.action;
+			var VarTenantId = vars.tenant;
+			
+			if(VarAction=='verify' && VarTenantId != ''){
+			
+				var ObjChildTenantInfo = session.get('CHILD_CLIENT');
+				
+				if(ObjChildTenantInfo == null){
+					var payload = request.getContent();
+					var ObjDate = new Date();
+					var VarTime = (ObjDate.getTime()).toFixed();
+					payload['time'] = VarTime;
+					session.put('CHILD_CLIENT', payload);
+					var ObjResponse = {"status":"success"};
+					print(ObjResponse);
+				} else {
+					var ObjResponse = {"status":"exist"};
+					print(ObjResponse);
+				}
+			} else if(VarAction=='add' && VarTenantId != ''){
+				var payload = request.getContent();
+				var ObjDate = new Date();
+				var VarTime = (ObjDate.getTime()).toFixed();
+				payload['time'] = VarTime;
+				session.put('CHILD_CLIENT', payload);
+				var ObjResponse = {"status":"success"};
+				print(ObjResponse);
+			}
+		}
+	}
+
+}());
+
+%>

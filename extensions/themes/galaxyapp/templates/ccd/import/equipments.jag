@@ -1,0 +1,164 @@
+<%
+	var APPCONF = require('/configs/appconfig.jag');
+	var APICONF = require('/configs/apiproperties.jag');
+	var usr = require('/modules/user.js');
+	include(utils.resolvePath('templates/portal-header.jag'));	
+	include('/controllers/includes/theme-portal-styles.jag');
+%>
+	<style type="text/css">
+		
+		.portlet-title { min-height: 12px !important; padding:0;}		
+		.ga-wrap {padding:12px; display: block; min-height:460px; }			
+		.form .form-section {margin: 12px 0px 22px 0px;padding-bottom: 12px;}
+		form-group.form-md-line-input {  margin: 0 !important;}
+		.portlet.light {padding: 12px 20px 0px 20px !important;box-shadow:none;}
+		.dark{background-color: #f7f7f7;}
+		select {  font-size: 14px !important; color: #888888 !important}
+		div#tags_help_tagsinput {    height: 136px!important;}
+		.portlet.light {    padding: 6px 20px 0px 20px !important;}	
+		li.k-button {
+				border: 1px solid #a5d24a;
+				-moz-border-radius: 2px;
+				-webkit-border-radius: 2px;
+				display: block;
+				float: left;
+				/* padding: 5px; */
+				text-decoration: none;
+				background: #cde69c;
+				color: #638421;
+				margin-right: 5px;
+				margin-bottom: 5px;
+				font-family: helvetica;
+				font-size: 13px;
+		}
+				
+		 select#event_inputlist,  select#event_outputlist {			
+			height: 320px;			
+			border: 1px solid #cccccc;
+			padding: 5px;
+			background:#f7f7f7;;	
+		}
+		option {
+			border-bottom: 1px solid #cfcfcf;
+			padding: 6px;
+			border-top: 1px solid #FFF;
+			text-transform: capitalize;
+		}
+		.btnfixedwidth80px{width:80px}
+		.borderedgray{   border: 1px solid #e1e1e1 !important; border-top: 4px solid #cfcfcf !important;}
+	</style>
+</head>
+<body class="page-md page-header-fixed page-quick-sidebar-over-content page-footer-fixed  page-full-width" >
+	<% include(utils.resolvePath('templates/global-header.jag')); %>
+	<!-- BEGIN CONTAINER -->
+	<div class="page-container">
+		<!-- BEGIN SIDEBAR -->
+		<div class="page-sidebar-wrapper">
+			<div class="page-sidebar   navbar-collapse collapse">
+				<!-- BEGIN SIDEBAR MENU -->	
+				<ul class="page-sidebar-menu page-sidebar-menu-hover-submenu " data-keep-expanded="false" data-auto-scroll="false" data-slide-speed="200">
+					<li class="sidebar-toggler-wrapper"><div class="sidebar-toggler"></div></li>
+					<li class="nav-item start active open ">
+						<a href="dashboard.html" class="nav-link nav-toggle">
+                            <i class="icon-bar-chart"></i>
+                            <span class="title">Dashboard</span>
+                            <span class="selected"></span>                               
+                        </a>
+                    </li>
+					<li class="">
+						<a href="javascript:;" class="nav-link nav-toggle">
+							<i class="icon-puzzle"></i>
+                            <span class="title">Dashboard Designer</span>
+                            <span class="selected"></span>                               
+                        </a>
+					</li>
+				
+			
+				</ul>
+				<!-- END SIDEBAR MENU -->
+			</div>
+		</div>
+		<!-- END SIDEBAR -->
+		
+		<!-- BEGIN CONTENT -->
+		<div class="page-content-wrapper ">
+			<div class="page-content ">
+				<h3 class="page-title"> Import Assets </h3>
+				<div class="page-bar">
+					<ul class="page-breadcrumb">
+						<li>
+							<i class="fa fa-home"></i>
+							<a href="Javascript:void(0)" onclick="FnBreadCrumbHome()">Home</a>
+							<i class="fa fa-angle-right"></i>
+						</li>
+						<li>
+							<a href="Javascript:void(0)" onclick="FnBreadCrumbAssetList()"> Asset List </a>
+							<i class="fa fa-angle-right"></i>
+						</li>
+						<li>
+							<a href="Javascript:void(0)">Import Assets</a>
+						</li>
+					</ul>
+				</div>
+				<!-- BEGIN PAGE CONTENT-->
+				
+				<div class="row">
+					<div class="col-md-12">	
+												
+						<div class="portlet light bordered">
+							<div class="portlet-title">
+								<div class="caption font-red-sunglo">
+									<i class="icon-settings font-red-sunglo"></i>
+									<span class="caption-subject bold uppercase"> Import Assets </span>
+								</div>
+								<div class="actions">
+									<button type="button" class="btn btn-raised default" name="gapp-importequip-cancel" id="gapp-importequip-cancel" data-toggle="modal"   onclick= "FnImportCancel()" tabindex="30">Cancel</button>							
+									<button type="button" class="btn  btn-raised btn-danger" name="gapp-importequip-save" id="gapp-importequip-save" onclick="FnImportEquipments()" tabindex="29">Save</button>
+								</div>
+							</div>
+							<div class="portlet-body">
+								<div id="gapp-importequip-list"></div>
+								<form id="gapp-equipimported-list" role="form" action="<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/ccd/import/equipmentlist" name="gapp-equipimported-list" method="post">
+									<input type="hidden" id="gapp-tenant-key" name="gapp-tenant-key" value="<%=VarTenantKey%>" />
+								</form>
+								<div style="clear:both"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<!-- END PAGE CONTENT-->
+			</div>
+		</div>
+		<!-- END CONTENT -->
+		
+	</div>
+		
+							
+	<!-- END CONTAINER -->
+	<% include(utils.resolvePath('templates/global-footer.jag')); %>
+	
+	<% 
+		include(utils.resolvePath('templates/portal-footer.jag'));
+		include('/controllers/includes/theme-portal-scripts.jag');
+	%>
+	
+	<script id="import-confirmation" type="text/x-kendo-template">
+		<p class="delete-message">Are you sure?</p>
+		<button class="import-confirm k-button" style="width: 80px;">Yes</button>
+		<button class="import-cancel k-button" style="width: 80px;">No</a>
+	</script>
+	
+	<script type="text/javascript">	
+		var VarListEquipUrl = '<%=APICONF.GAPP_SERVICES.ccd.import.equipmentslist%>';
+		var VarAddEquipUrl = '<%=APICONF.GAPP_SERVICES.ccd.import.addequipments%>';
+		var VarImportedEquipUrl = '<%=APICONF.GAPP_SERVICES.ccd.import.importedequip%>';
+		var VarViewClientUrl = '<%=APICONF.GAPP_SERVICES.clients.view%>';		
+		var VarLUDomainName = '<%=usr.domainName()%>';
+		var VarCurrentTenantInfo = $.parseJSON('<%=VarCurrentTenantInfo%>');
+	</script>
+	
+	<script type="text/javascript" src="<%=urlPrefix%><%=utils.resolveUrl('js/ccd/import/equipments.js')%>"></script>   
+	
+</body>
+</html>

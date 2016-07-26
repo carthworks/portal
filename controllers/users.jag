@@ -1,0 +1,66 @@
+<%
+var pageId;
+var VarUserId;
+var VarTenantKey;
+var VarCurrentTenantInfo;
+var ObjPageAccess;
+
+(function() {
+	
+    if (!user) {
+        sendLogin();
+        return;
+    }
+		
+    var vars;
+	var matcher = new URIMatcher(request.getRequestURI());
+	
+	if (matcher.match('/users/{id}')) {
+        vars = matcher.elements();
+        pageId = (vars.id).toString();
+    } else {
+		response.sendError(404, JSON.stringify({
+					error: true
+				}));
+		return;
+	}
+	
+	var pages = require('/configs/pages.json');
+	
+	if (!pages.users[pageId]) {
+	
+        response.sendRedirect(utils.tenantedPrefix(urlPrefix+"error/404"));
+        return;
+		
+    } else {
+	
+		var usr = require('/modules/user.js');
+		var permission = require('/configs/permissions.json');
+		ObjPageAccess = {'add':'0','list':'0','view':'0','edit':'0','delete':'0','profile':'1'};
+		var ObjPageConf = {'list':['add','view','delete'],'view':['edit']};
+		var VarPageRef = permission.users;		
+		ObjPageAccess = usr.FnGetPageAccessAuthorization(ObjPageAccess,ObjPageConf,pageId,VarPageRef);
+		
+	}
+	
+	var method = request.getMethod();
+	
+	if (method === 'POST') {
+				
+		VarUserId = (pageId=='view') ? request.getParameter("user_id") : '';
+		VarTenantKey = (request.getParameter("gapp-tenant-key") != null) ? request.getParameter("gapp-tenant-key") : '';
+		
+		
+	} else {
+		VarUserId = '';
+		
+		var ObjTenantInfo = session.get('PARENT_CLIENT');
+		if(ObjTenantInfo != null){
+			VarTenantKey = ObjTenantInfo['tenantId'];
+		}
+	}
+	
+	VarCurrentTenantInfo = usr.FnGetCurrentClientInfo(VarTenantKey);
+	
+    include(utils.resolvePath('templates/'+pages.users[pageId]));
+} ()); %>

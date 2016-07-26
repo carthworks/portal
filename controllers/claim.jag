@@ -1,0 +1,64 @@
+<%
+var pageId;
+var VarClaimId;
+var VarTenantKey;
+var VarCurrentTenantInfo;
+var ObjPageAccess;
+
+(function() {
+	
+    if (!user) {
+        sendLogin();
+        return;
+    }
+		
+    var vars;
+	var matcher = new URIMatcher(request.getRequestURI());
+	
+	if (matcher.match('/claim/{id}')) {
+        vars = matcher.elements();
+        pageId = (vars.id).toString();
+    } else {
+		response.sendError(404, JSON.stringify({
+					error: true
+				}));
+		return;
+	}
+	
+	var pages = require('/configs/pages.json');
+	
+	if (!pages.claim[pageId]) {
+	
+        response.sendRedirect(utils.tenantedPrefix(urlPrefix+"error/404"));
+        return;
+		
+    } else {
+	
+		var usr = require('/modules/user.js');
+		var permission = require('/configs/permissions.json');
+		ObjPageAccess = {'list':'0','view':'0'};
+		var ObjPageConf = {'list':['view']};
+		var VarPageRef = permission.claim;		
+		ObjPageAccess = usr.FnGetPageAccessAuthorization(ObjPageAccess,ObjPageConf,pageId,VarPageRef);
+	
+	}
+	
+	var method = request.getMethod();
+	
+	if (method === 'POST') {
+				
+		VarClaimId = (pageId=='view') ? request.getParameter("claim_id") : '';
+		VarTenantKey = (request.getParameter("gapp-tenant-key") != null) ? request.getParameter("gapp-tenant-key") : '';
+		
+	} else {
+		VarClaimId = '';
+		var ObjTenantInfo = session.get('PARENT_CLIENT');
+		if(ObjTenantInfo != null){
+			VarTenantKey = ObjTenantInfo['tenantId'];
+		}
+	}
+	
+	VarCurrentTenantInfo = usr.FnGetCurrentClientInfo(VarTenantKey);
+	
+    include(utils.resolvePath('templates/' + pages.claim[pageId]));
+} ()); %>

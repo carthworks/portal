@@ -1,0 +1,81 @@
+<%
+
+(function () {
+
+	var log = new Log();
+	var usr = require('/modules/user.js');
+	var util = require('/modules/utils.js');
+	var user = usr.current();
+	var VarLUDomain = usr.domainName();
+	var method = request.getMethod();
+	
+	if (!user) {
+		response.sendError(401, 'unauthorized to access');
+		return;
+	}
+	
+	var APPCONF = require('/configs/appconfig.jag');
+	
+	var matcher = new URIMatcher(request.getRequestURI());	
+	if (matcher.match(APPCONF.GAPP_CONF.CONTEXT_PATH+'/getimage/{operation}/{tenantkey}')) {
+		vars = matcher.elements();
+		if (method == 'GET') {		
+			if(vars.operation === 'all') {
+				var VarTenantDomainKey = vars.tenantkey;
+				var VarCurrentTenantInfo = usr.FnGetCurrentClientInfo(VarTenantDomainKey);
+				if(VarCurrentTenantInfo != null){
+					var VarTenantDomainValue = VarCurrentTenantInfo.tenantDomain;
+					var ObjAssetFile = new File(APPCONF.GAPP_CONF.DOMAIN_IMG_PATH+"/"+VarTenantDomainValue+APPCONF.GAPP_CONF.DOMAIN_IMG_ASSET+"/");
+					var ArrAssetImgList = ObjAssetFile.listFiles();
+					var ArrImages = {};
+					ArrImages["asset"] = [];
+					ArrAssetImgList.forEach(function (file) {
+						ArrImages["asset"].push(file.getName());
+					});
+					
+					var ObjAssetTypeFile = new File(APPCONF.GAPP_CONF.DOMAIN_IMG_PATH+"/"+VarTenantDomainValue+APPCONF.GAPP_CONF.DOMAIN_IMG_ASSETTYPE+APPCONF.GAPP_CONF.DOMAIN_IMG_ASSETTYPE_MARKER+"/");
+					var ArrAssetTypeImgList = ObjAssetTypeFile.listFiles();
+					ArrImages["assetType"] = [];
+					ArrAssetTypeImgList.forEach(function (file) {
+						ArrImages["assetType"].push(file.getName());
+					});
+					
+					var ObjUserFile = new File(APPCONF.GAPP_CONF.DOMAIN_IMG_PATH+"/"+VarTenantDomainValue+APPCONF.GAPP_CONF.DOMAIN_IMG_USERS+"/");
+					var ArrUserImgList = ObjUserFile.listFiles();
+					ArrImages["user"] = [];
+					ArrUserImgList.forEach(function (file) {
+						ArrImages["user"].push(file.getName());
+					});
+					
+					var ObjClientFile = new File(APPCONF.GAPP_CONF.DOMAIN_IMG_PATH+"/"+VarTenantDomainValue+APPCONF.GAPP_CONF.DOMAIN_IMG_LOGO+"/");
+					var ArrClientImgList = ObjClientFile.listFiles();
+					ArrImages["client"] = [];
+					ArrClientImgList.forEach(function (file) {
+						ArrImages["client"].push(file.getName());
+					});
+					
+					var ObjImageList = ArrImages;
+				}
+				print(ObjImageList);
+			} else if(vars.operation === 'client'){
+			
+			} else if(vars.operation === 'user'){
+			
+			} else if(vars.operation === 'assettype'){
+			
+			} else if(vars.operation === 'asset'){
+			
+			}		
+		}
+		return;
+	} else {
+	
+		response.sendRedirect(util.tenantedPrefix(urlPrefix+"error/404"));
+        return;
+	
+	}
+	
+
+}());
+
+%>

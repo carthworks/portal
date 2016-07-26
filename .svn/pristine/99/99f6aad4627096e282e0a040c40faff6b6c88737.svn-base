@@ -1,0 +1,283 @@
+<%
+	var APPCONF = require('/configs/appconfig.jag');
+	var APICONF = require('/configs/apiproperties.jag');
+	var usr = require('/modules/user.js');
+	include(utils.resolvePath('templates/portal-header.jag'));
+	include('/controllers/includes/theme-portal-styles.jag');
+%>
+	<link rel="stylesheet" href="<%=urlPrefix%>plugins/croppie/croppie.css" type="text/css"/>
+	<style type="text/css">
+		.portlet.light.bordered{
+		min-height:490px}
+		.portlet-title { min-height: 12px !important; padding:0; }
+		.ga-wrap {padding:12px; display: block; min-height:460px;  }
+		.form .form-section {
+			margin: 12px 0px 22px 0px;
+			padding-bottom: 12px;
+		}
+		.myportlet{ display: inline-block;width: 100%;}
+		form-group.form-md-line-input {margin: 0 !important;}
+		.portlet.light {padding: 12px 20px 0px 20px !important;	}
+		.formelement_addition a{
+				float: right;
+		position: relative;
+		top: -33px;
+		right: 1px;
+		width: 30px;
+		height: 32px;
+		background-color: #E0E0E0;
+		padding: 9px 5px 5px 6px;
+		}
+		
+		.formelement_addition a i{font-size: 22px!important;
+    color: #929292;}
+	
+	.form-control{border: 1px solid #D4CCCC;}
+	.field_wrapper
+	{
+	padding: 3px 0px 10px 0px;
+	}
+	
+	.field_container{
+	 min-height: 100px;
+    max-height: 379px;
+    overflow-y: auto;
+	 overflow-x: hidden;
+	}
+	
+	.field_category{ 
+	background-color: #f1f1f1;
+    padding-top: 15px;
+    padding-bottom: 15px;
+	}
+	small{
+		clear: both;
+		float: left;
+		width: 100%;
+		position: relative;
+		top: 3px;
+		left: 14px;
+		color: #B5B3B3;
+	}
+	.md-radio.has-error label > .check {
+	  background: #26A69A !important;
+	}
+	.md-radio.has-error label > .box {
+		border-color: #26A69A !important;
+	}
+			
+	.upload-demo #upload-demo, .upload-demo .upload-result, .upload-demo.ready .upload-msg {
+		display: none;
+	}
+	
+	.croppie-container {
+		padding: 30px;
+	}
+	
+	.cr-boundary {
+		margin: 0px !important;
+	}
+	
+	.croppie-container .cr-slider-wrap {
+		width: 48%;
+		margin: 10px 0 0 0;
+	}
+	
+	</style>
+</head>
+<body class="page-md page-header-fixed page-quick-sidebar-over-content page-footer-fixed  page-full-width">
+	<% include(utils.resolvePath('templates/global-header.jag')); %>
+	<!-- BEGIN CONTAINER -->
+	<div class="page-container">
+		
+		<!-- BEGIN CONTENT -->
+		<div class="page-content-wrapper">
+			<div class="gapp-header">
+				<% include(utils.resolvePath('templates/leftnavigation.jag')); %>
+					<h3 class="page-title">	POI Management  </h3>
+					<div class="page-bar">
+						<ul class="page-breadcrumb">
+							<li>
+								<i class="fa fa-home"></i>
+								<a href="Javascript:void(0)" onclick="FnBreadCrumbHome()">Home</a>
+								<i class="fa fa-angle-right"></i>
+							</li>
+							<li>
+								<a href="Javascript:void(0)" onclick="FnNavigateTemplateList()">POI Types</a>
+								<i class="fa fa-angle-right"></i>
+							</li>
+							<li>
+								<a href="Javascript:void(0)"><a href="Javascript:void(0)"><% if(VarEntityId != '') { %> View Type <% } else { %> Create Type <% } %></a></a>
+							</li>
+						</ul>
+					</div>
+				</div>
+			<div class="page-content">
+			
+				<!-- BEGIN PAGE CONTENT-->
+				<div class="row">
+					<div class="col-md-12">			
+						
+						<div class="portlet light bordered">
+							<div class="portlet-title">
+								<div class="caption font-red-sunglo">
+									<i class="pageheadericon pageheader-assettypeicon"></i>
+									<span class="caption-subject bold uppercase"> <% if(VarEntityId != '') { %> View POI Type <% } else { %> Create POI Type <% } %> </span>
+								</div>
+								<div class="actions">
+									<% if(ObjPageAccess['edit']=='1') { %>	
+									<span id="gapp-template-edit">
+										<a class="btn btn-raised btn-edit red" href="Javascript:void(0)" onclick="FnEditAssetType()">
+											<i class="icon-note icons"></i>Edit
+										</a>		
+									</span>
+									<% } %>
+									<button type="button" class="btn btn-raised default" name="gapp-template-cancel" id="gapp-template-cancel" data-toggle="modal"   onclick= "FnCancelAssetType()" tabindex="15"><i class="icon-close icons" aria-hidden="true"></i>Cancel</button>							
+									<button type="button" class="btn  btn-raised btn-danger" name="gapp-template-save" id="gapp-template-save" onclick="FnSaveAssetType()" tabindex="16"><i class="icon-check icons" aria-hidden="true"></i>Save</button>
+								</div>
+							</div>
+							<!-- END title-->
+							
+							<div class="portlet-body form">
+								<form name="gapp-template-form" id="gapp-template-form" method="post" role="form" autocomplete="off" enctype="multipart/form-data">							
+									<div class="form-body">
+										<div class=" ">								
+											<div class="col-md-4">										
+												<div class="form-group form-md-line-input">
+													<input class="form-control" name="categoryName" id="categoryName" required="true" data-required-msg="Please enter category name" autofocus tabindex="1" title="Please enter template name" onkeypress="return FnAllowAlphabetsOnly(event)"/>
+													<label for="form_control_1">Category Name <span class="required" aria-required="true">*</span></label>
+												</div>
+												
+										
+												<!-- BEGIN STATUS -->													
+												<div class="form-group form-md-line-input">
+													<label class="col-md-2" for="form_control_1">Status</label>
+													<div class="col-md-10">
+														<div class="md-radio-inline">										
+															<div class="md-radio has-error">
+																<input type="radio" id="status_active" name="status" class="md-radiobtn" checked value="ACTIVE">
+																<label for="status_active" style="color:#26A69A">
+																<span></span>
+																<span class="check"></span>
+																<span class="box"></span>
+																Active </label>
+															</div>
+															<div class="md-radio has-warning">
+																<input type="radio" id="status_inactive" name="status" class="md-radiobtn green" value="INACTIVE">
+																<label for="status_inactive" >
+																<span></span>
+																<span class="check"></span>
+																<span class="box"></span>
+																In Active</label>
+															</div>
+														</div>
+													</div>
+												</div>
+												<!-- END STATUS -->
+												
+												<!-- BEGIN PROFILE IMAGE UPLOAD -->
+												<div class="form-group ">
+													<label class="col-md-12 control-label" for="form_control_1">Upload
+														<!--<span class="required" aria-required="true">* </span> -->
+													</label>
+													<a class='btn grey' href='javascript:;'>
+													   <i class="fa fa-plus"></i>  <span> POI Type Logo </span>
+														<input type="file" style='position:absolute;z-index:2;top:0;left:0;filter: alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";opacity:0;background-color:transparent;color:transparent;' name="assettype-logo" id="assettype-logo" size="40"  onchange='$("#assettype-logo-info").html($(this).val());' accept="image/*" />
+													</a>&nbsp;<span class='label label-info' id="assettype-logo-info"></span>
+												</div>
+												<!-- END PROFILE IMAGE UPLOAD -->
+												
+												<div id="upload-demo" class="croppie-container"></div>
+												
+												<% if(VarEntityId!='') { 
+													var ObjFile = new File(APPCONF.GAPP_CONF.DOMAIN_IMG_PATH+"/"+VarCurrentTenantInfo.tenantDomain+APPCONF.GAPP_CONF.DOMAIN_IMG_ASSETTYPE+APPCONF.GAPP_CONF.DOMAIN_IMG_ASSETTYPE_SOURCE+"/"+VarEntityId+".png");
+													var VarImgSrc = '';
+													if(ObjFile.isExists()){
+														var VarImgSrc = APPCONF.GAPP_CONF.APP_DOMAIN_ROOT_URL+APPCONF.GAPP_CONF.DOMAIN_IMG_PATH+"/"+VarCurrentTenantInfo.tenantDomain+APPCONF.GAPP_CONF.DOMAIN_IMG_ASSETTYPE+APPCONF.GAPP_CONF.DOMAIN_IMG_ASSETTYPE_SOURCE+"/"+VarEntityId+".png";
+													}
+												} %>
+																								
+											</div>
+											<div class="col-md-8 field_category">	
+												<label for="form_control_1"><strong>Category Fields</strong></label>
+												<a href="javascript:void(0);" class="add_button" title="Add field" style="margin-left:10px;position: relative;top: -1px;"><img src="<%=urlPrefix%><%=utils.resolveUrl('images/add-icon.png')%>"/></a>
+												
+												<section class="field_container">
+													<div class="field_wrapper" style="display:block;clear: both;" id="fieldsContainer">
+														<div class="col-md-6">
+															<input type="text" class="form-control" name="categoryFields[]" value="" onkeypress="return FnAllowAlphabetsOnly(event)"/>
+														</div>													
+													</div>
+												</section>
+											</div>										
+										</div>
+										<div class="clearfix"></div>
+									</div>
+									<input type="hidden" id="gapp-tenant-domain" name="gapp-tenant-domain" value="<%=VarTenantKey%>" />
+								</form>
+								<form id="gapp-template-list" role="form" action="<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/pointofinterest/template/list" name="gapp-template-list" method="post">
+									<input type="hidden" id="gapp-tenant-key" name="gapp-tenant-key" value="<%=VarTenantKey%>" />
+								</form>
+							</div>
+							
+						</div><!-- END portlet bordered-->
+							
+					</div><!-- END col-md-12-->
+				</div>
+				<!-- END PAGE CONTENT-->
+			</div>
+		</div>
+		<!-- END CONTENT -->
+		
+	</div>
+	<!-- END CONTAINER -->
+	<% include(utils.resolvePath('templates/global-footer.jag')); %>
+	<% 
+		include(utils.resolvePath('templates/portal-footer.jag'));
+		include('/controllers/includes/theme-portal-scripts.jag');
+	%>
+	<script type="text/javascript">				
+		var VarCreateTemplateUrl = '<%=APICONF.GAPP_SERVICES.pointofinterest.template.create%>';
+		var VarViewTemplateUrl = '<%=APICONF.GAPP_SERVICES.pointofinterest.template.view%>';
+		
+		var VarEditEntityId = '<%=VarEntityId%>';		
+		var VarEditImage = '<%=VarImgSrc%>';
+		var VarLUDomainName = '<%=usr.domainName()%>';
+		var VarLUTenantName = '<%=usr.tenantName()%>';
+		var VarCurrentTenantInfo = $.parseJSON('<%=VarCurrentTenantInfo%>');
+		var VarAppImagePath = '<%=APPCONF.GAPP_CONF.DOMAIN_IMG_PATH%>';
+		var VarAppAssetImagePath = '<%=APPCONF.GAPP_CONF.DOMAIN_IMG_ASSET%>';
+		var VarAppAssetTypeImagePath = '<%=APPCONF.GAPP_CONF.DOMAIN_IMG_ASSETTYPE%>';
+		var VarAppMarkerImagePath = '<%=APPCONF.GAPP_CONF.DOMAIN_IMG_ASSETTYPE_MARKER%>';
+		var VarAppDefaultImagePath = '<%=APPCONF.GAPP_CONF.DOMAIN_IMG_DEFAULT%>';
+		var VarAppRootDomain = '<%=APPCONF.GAPP_CONF.MY_DOMAIN_NAME%>';
+	</script>
+	<script type='text/javascript' src="<%=urlPrefix%>plugins/croppie/croppie.js"></script>
+	<script type='text/javascript' src="<%=urlPrefix%>plugins/jquery.form.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+				
+			$('.add_button').click(function(){
+				if($('.add_button').attr('disabled') == 'disabled'){
+					return;
+				}
+								
+				var fieldHTML = '<div class="formelement_addition col-md-6"><input type="text" class="form-control" name="categoryFields[]" value="" onkeypress="return FnAllowAlphabetsOnly(event)"/><a href="javascript:void(0);" class="remove_button" title="Remove field"><i class="fa fa-minus-circle"></i></a></div>'; 
+				$('.field_wrapper').append(fieldHTML);
+			});
+			
+			$('.field_wrapper').on('click', '.remove_button', function(e){
+				if($('.remove_button').attr('disabled') == 'disabled'){
+					return;
+				}
+				e.preventDefault();
+				$(this).parent('div').remove();
+				
+			});
+			
+		});
+	</script>
+	<script type="text/javascript" src="<%=urlPrefix%><%=utils.resolveUrl('js/pointofinterest/template/add.js')%>"></script>
+	<script src="<%=urlPrefix%>js/jquery-custom-scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>	
+</body>
+</html>

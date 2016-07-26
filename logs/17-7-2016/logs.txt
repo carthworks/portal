@@ -1,0 +1,20 @@
+
+=========================================================================================================
+SYSTEM IP: 0:0:0:0:0:0:0:1
+TIME : 15:47:43
+METHOD : POST
+URL : http://10.234.31.158:9763/avocado-user-management-1.0.0/services/um/authenticate
+PAYLOAD : {"userName" : "DE@galaxy", "password" : "SD"}
+RESPONSE : {"roleNames" : [], "premissions" : [], "errorMessage" : "Invalid credentials. Please try again."}
+
+=========================================================================================================
+
+=========================================================================================================
+SYSTEM IP: 0:0:0:0:0:0:0:1
+TIME : 15:51:5
+METHOD : POST
+URL : http://10.234.31.158:9763/avocado-user-management-1.0.0/services/um/authenticate
+PAYLOAD : {"userName" : "DE@galaxy", "password" : "SD"}
+RESPONSE : {"roleNames" : [], "premissions" : [], "errorMessage" : "Invalid credentials. Please try again."}
+
+=========================================================================================================

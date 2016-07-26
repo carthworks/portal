@@ -1,0 +1,38 @@
+<%
+var VarTenantKey;
+(function() {
+	
+    if (!user) {
+        sendLogin();
+        return;
+    }
+	
+	var vars;
+	var matcher = new URIMatcher(request.getRequestURI());
+	
+	if (!matcher.match('/userhome')) {
+		response.sendError(404, JSON.stringify({
+					error: true
+				}));
+		return;
+	}
+		
+	var method = request.getMethod();
+	if (method === 'POST') {
+		var ObjChildTenantInfo = session.get('CHILD_CLIENT');
+		var VarTenantInfo = parse(request.getParameter('gapp-tenant-info'));
+		var ObjDate = new Date();
+		var VarTime = (ObjDate.getTime()).toFixed();
+		var ObjChild = {"tenantName":VarTenantInfo['tenantName'],"tenantDomain":VarTenantInfo['tenantDomain'],"parentDomain":VarTenantInfo['parentDomain'],"time":VarTime,"tenantId":VarTenantInfo['tenantId']};
+		session.put('CHILD_CLIENT', ObjChild);
+		VarTenantKey = VarTenantInfo.tenantId;
+		
+	} else {
+	
+		var ObjTenantInfo = session.get('PARENT_CLIENT');
+		VarTenantKey = ObjTenantInfo['tenantId'];
+		
+	}
+
+	include(utils.resolvePath('templates/userhome.jag'));
+} ()); %>

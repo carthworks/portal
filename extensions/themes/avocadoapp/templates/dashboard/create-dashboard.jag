@@ -1,0 +1,164 @@
+<%
+	var APPCONF = require('/configs/appconfig.jag');
+	var APICONF = require('/configs/apiproperties.jag');
+	var usr = require('/modules/user.js');
+	include(utils.resolvePath('templates/portal-header.jag'));
+	include('/controllers/includes/theme-portal-styles.jag');
+	
+%>
+	<style type="text/css">		
+		.portlet-title {    min-height: 12px !important; padding:0;}
+	</style>
+</head>
+<body class="page-md page-header-fixed page-quick-sidebar-over-content page-footer-fixed  page-full-width">
+	<div class="se-pre-con"></div>
+	<% include(utils.resolvePath('templates/global-header.jag')); %>
+	<!-- BEGIN CONTAINER -->
+	<div class="page-container">
+		<!-- BEGIN SIDEBAR -->
+		<div class="page-sidebar-wrapper">
+			<div class="page-sidebar   navbar-collapse collapse">
+				<!-- BEGIN SIDEBAR MENU -->	
+				<ul class="page-sidebar-menu page-sidebar-menu-hover-submenu " data-keep-expanded="false" data-auto-scroll="false" data-slide-speed="200">
+					<li class="sidebar-toggler-wrapper"><div class="sidebar-toggler"></div></li>
+					<li class="nav-item start active open ">
+						<a href="dashboard.html" class="nav-link nav-toggle">
+                            <i class="icon-bar-chart"></i>
+                            <span class="title">Dashboard</span>
+                            <span class="selected"></span>                              
+                        </a>
+                    </li>
+					<li class="">
+						<a href="javascript:;" class="nav-link nav-toggle">
+							<i class="icon-puzzle"></i>
+                            <span class="title">Dashboard Designer</span>
+                            <span class="selected"></span>                               
+                        </a>
+					</li>
+					<li class="heading">
+						<h3 class="uppercase">Device Management</h3>
+					</li>
+					<li class="open">
+						<a href="javascript:;">
+							<i class="icon-diamond"></i>
+							<span class="title">Device </span>
+							<span class="arrow "></span>
+						</a>
+						<ul class="sub-menu">						
+							<li>
+								<a href="ui_icons.html">
+								<span class="badge badge-roundless badge-danger">new</span>Create Device</a>
+							</li>		
+						
+							<li>
+								<a href="ui_tabs_accordions_navs.html">
+								List Device</a>
+							</li>
+							<li>
+								<a href="ui_tabs_accordions_navs.html">
+								Update Device</a>
+							</li>					
+						</ul>
+					</li>
+				</ul>
+				<!-- END SIDEBAR MENU -->
+			</div>
+		</div>
+		<!-- END SIDEBAR -->
+		
+		<!-- BEGIN CONTENT -->
+		<div class="page-content-wrapper">
+			<div class="page-content">
+				<h3 class="page-title">	Dashboard  <small></small></h3>
+				<div class="page-bar">
+					<ul class="page-breadcrumb">
+						<li>
+							<i class="fa fa-home"></i>
+							<a href="Javascript:void(0)" onclick="FnBreadCrumbHome()">Home</a>
+							<i class="fa fa-angle-right"></i>
+						</li>
+						<li>
+							<a href="Javascript:void(0)" onclick="FnNavigateDashboardList()">Dashboards</a>
+							<i class="fa fa-angle-right"></i>
+						</li>
+						<li>
+							<a href="Javascript:void(0)"> Create Dashboard </a>
+						</li>
+					</ul>
+				</div>
+				<!-- BEGIN PAGE CONTENT-->
+				<div class="row">
+					<div class="col-md-12">
+						<div class="portlet light bordered animated fadeInUp dark" style="background-color: #f7f7f7;">
+							<div class="portlet-title">
+								<div class="caption font-red-sunglo">
+									<i class="icon-plus icons font-red-sunglo"></i>
+									<span class="caption-subject bold uppercase"> Create Dashboard </span>
+								</div>									
+								<div class="actions">									
+									<div class="form-actions">
+										<button type="button" class="btn btn-raised default" name="gapp-dashboard-cancel" id="gapp-dashboard-cancel" onclick="FnCancelDashboard()" tabindex="5">Cancel</button>
+										<button type="button" class="btn  btn-raised btn-danger" name="ues-dashboard-create" id="ues-dashboard-create" tabindex="5" onclick="FnCreateDashboard()">Next</button>
+									</div>
+								</div>
+							</div>
+							<div class="portlet-body form">
+								<form name="ues-dashboard-form" id="ues-dashboard-form" action="<%=tenantedUrlPrefix%>dashboards" method="post" role="form" autocomplete="off">
+									<div class="form-body">
+										<div class="">
+											<div class="col-md-6">
+												<!-- BEGIN NAME -->													
+												<div class="form-group form-md-line-input">
+													<input type="text" class="form-control" name="ues-dashboard-title" id="ues-dashboard-title" autofocus tabindex="1" required data-required-msg="Dashboard Name not specified" />							
+													<label class="col-md-12 control-label" for="form_control_1">Name of your Dashboard 
+														<span class="required" aria-required="true">* </span>
+													</label>
+													<div class="form-control-focus"></div>
+												</div>													
+												<!-- END NAME -->
+
+												<div class="form-group form-md-line-input">
+													<textarea class="form-control" name="ues-dashboard-description" id="ues-dashboard-description" rows="3" style="border: 1px solid #e5e5e5;"></textarea>
+													<label for="form_control_1">Description</label>
+												</div>
+																		
+											</div>
+										</div>
+										<div class=" col-md-offset-1 col-md-5">
+											<!-- BEGIN URL -->
+											<div class="form-group form-md-line-input">
+												<input type="text" class="form-control" name="ues-dashboard-id" id="ues-dashboard-id" required data-required-msg="URL not specified" tabindex="2" />									
+												<label class="col-md-12 control-label" for="form_control_1">URL<span class="required" aria-required="true">* </span></label>
+												<div class="form-control-focus"></div>
+											</div>
+											<!-- END URL -->							
+											
+										</div>										
+									</div>
+									<div class="clearfix"></div>
+									<input type="hidden" id="gapp-tenant-key" name="gapp-tenant-key" value="<%=VarTenantKey%>" />
+								</form>
+								<form id="gapp-dashboard-list" role="form" action="<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/dashboard/list" name="gapp-dashboard-list" method="post">
+									<input type="hidden" id="gapp-tenant-key" name="gapp-tenant-key" value="<%=VarTenantKey%>" />
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- END PAGE CONTENT-->
+			</div>
+		</div>
+		<!-- END CONTENT -->
+	
+	</div>
+	<!-- END CONTAINER -->
+	<% include(utils.resolvePath('templates/global-footer.jag')); %>
+	<% 
+		include(utils.resolvePath('templates/portal-footer.jag'));
+		include('/controllers/includes/theme-portal-scripts.jag');
+	%>
+	<script src="<%=urlPrefix%>js/ues.js"></script>
+	<script src="<%=urlPrefix%>js/ues-store.js"></script>
+	<script type="text/javascript" src="<%=urlPrefix%><%=utils.resolveUrl('js/dashboard/create.js')%>"></script>
+</body>
+</html>

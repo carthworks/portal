@@ -1,0 +1,344 @@
+<%
+	var APPCONF = require('/configs/appconfig.jag');
+	var APICONF = require('/configs/apiproperties.jag');
+	var usr = require('/modules/user.js');
+	include(utils.resolvePath('templates/portal-header.jag'));
+	include('/controllers/includes/theme-portal-styles.jag');
+	
+%>
+	<!-- Style sheet for Tag(Geo Map) section -->
+	<link rel="stylesheet" type="text/css" href="<%=urlPrefix%><%=utils.resolveUrl('css/jquery-gmaps-latlon-picker.css')%>" />
+	
+	<style type="text/css">		
+		.portlet-title {    min-height: 12px !important; padding:0;}
+		.md-radio.has-error label > .check {
+			  background: #26A69A !important;
+			}
+		.md-radio.has-error label > .box {
+			border-color: #26A69A !important;
+			}
+		.form-group.form-md-line-input .help-block{left: 0;}
+	
+	.custom-para{    font-family: arial;
+    /* font-weight: bold; */
+    font-size: 13px;
+    color: #fff;
+    text-align: left;
+    float: left;
+    margin: 0;
+    padding: 0px 6px;}
+	
+	.panel {
+		position: relative;
+		margin-bottom: 25px;
+		border-radius: 4px;
+		border: 0;
+		box-shadow: none;
+	}
+	
+	.panel-primary > .panel-heading {
+		color: #ffffff;
+		background-color: #75b9e6;
+		border-color: #75b9e6;
+	}
+	.panel-heading {
+		padding: 0 15px;
+		min-height: 4px;
+		border-top-left-radius: 4px;
+		border-top-right-radius: 4px;
+	}
+	
+	.panel-heading .panel-title {
+		font-size: 14px;
+		font-weight: normal;
+		margin-right: 10px;
+		padding: 12px 0;
+	}
+	
+	.panel-primary > .panel-body {
+		border: 1px solid #75b9e6;
+		border-top: none;
+	}
+	.panel-body {
+		padding: 15px;
+	}
+	
+	.portlet.light > .portlet-title > .actions {
+		margin-right: 15px;
+	}
+	
+	.k-list > .k-state-selected.k-state-focused {
+		 color: #FFFFFF;
+	}
+				
+	/*--- Start:Styles for Tag section ---*/
+	.tag-wrapper{
+		display:none;
+		position:relative;
+		background-color:#fff;
+		clear:both;
+		
+	}    
+	.tag-wrapper hr{
+		border: 0;
+		height: 0;
+		border-top: 1px solid rgba(0, 0, 0, 0.1);
+		border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+	}    
+	.gllpMap {   
+		width: 100% !important;
+	}
+	.geo-tag-inputs input{
+		border: none;
+        height: 25px;
+        text-align: center;
+        margin-left: 10px;
+        margin-right: 10px;
+	}
+	
+	.tag-wrapper .k-multiselect.k-header{
+		margin-left: 12px;
+		margin-right: 12px;
+		padding-top: 10px;
+		background-color: #e5e5e5;
+		border: none;
+	}
+	
+	.tag-wrapper .k-multiselect-wrap{
+		padding: 0px 10px 8px 10px;
+		/*border-radius: 5px;*/
+	}
+	
+	.tag-wrapper .k-multiselect-wrap li.k-button {
+			background-color: #f44336;
+			color: #FFFFFF;
+			border-radius: 5px;
+			font-size:13px;
+			margin-top: 9px;
+		}
+	/*--- End: Styles for Tag Section  ---*/
+	</style>
+</head>
+<body class="page-md page-header-fixed page-quick-sidebar-over-content page-footer-fixed  page-full-width">
+	<div class="se-pre-con"></div>
+	<% include(utils.resolvePath('templates/global-header.jag')); %>
+	<!-- BEGIN CONTAINER -->
+	<div class="page-container">
+		<!-- BEGIN CONTENT -->
+		<div class="page-content-wrapper">
+			<div class="gapp-header">
+				<% include(utils.resolvePath('templates/leftnavigation.jag')); %>
+				<h3 class="page-title">	Configuration Templates  </h3>
+				<div class="page-bar">
+					<ul class="page-breadcrumb">
+						<li>
+							<i class="fa fa-home"></i>
+							<a href="Javascript:void(0)" onclick="FnBreadCrumbHome()">Home</a>
+							<i class="fa fa-angle-right"></i>
+						</li>
+						<li>
+							<a href="Javascript:void(0)" onclick="FnNavigateConfTemplateList()">Configuration Templates</a>
+							<i class="fa fa-angle-right"></i>
+						</li>
+						<li>
+							<a href="Javascript:void(0)" class="pageTitleTxt"> Create Template </a>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="page-content">
+				<!-- BEGIN PAGE CONTENT-->
+					<div class="row">
+						<div class="col-md-12">						
+							<div class="portlet light bordered animated fadeInUp dark">
+								<div class="portlet-title">
+									<div class="caption font-red-sunglo">
+										<i class="pageheadericon pageheader-clienticon"></i>
+										<span class="caption-subject bold uppercase pageTitleTxt"> Create Template </span>
+									</div>
+									
+									<div class="actions">									
+										<div class="form-actions">
+											<% if(ObjPageAccess['edit']=='1') { %>
+												<a class="btn btn-raised btn-edit red" href="Javascript:void(0)"  id="gapp-conftemplate-edit" title="Edit the Template" onclick="FnEditTemplate()"><i class="icon-note icons"></i> Edit</a>
+											<% } %>
+											<button type="button" class="btn btn-raised default " name="gapp-conftemplate-cancel" id="gapp-conftemplate-cancel" onclick="FnCancelConfTemplate()" tabindex="9"><i class="icon-close icons" aria-hidden="true"></i>Cancel</button>
+											<button type="button" class="btn  btn-raised btn-danger ladda-button" name="gapp-conftemplate-save" id="gapp-conftemplate-save" data-style="slide-up" data-size="l" onclick="return FnSaveConfTemplate()" tabindex="8">
+											<span class="ladda-label"><i class="icon-check icons" aria-hidden="true"></i>Save</span></button>
+									
+										</div>
+									</div>
+								</div>
+								<div class="portlet-body form">
+									<div class="form-body">
+										<form id="gapp-conftemplate-form" role="form" action="" name="gapp-conftemplate-form" method="post">
+											<div class="panel panel-primary">
+												<div class="panel-heading">
+													<h4 class="panel-title">Template Details</h4>
+												</div>
+												<div class="panel-body">
+													<div class="col-md-4">
+													
+														<div class="form-group form-md-line-input">
+															<input type="text" class="form-control" name="name" id="name" autofocus  required data-required-msg="Template Name not specified" onkeypress="return FnAllowAlphaNumericOnlyWithSpace(event)" tabindex="1" />							
+															<label class="col-md-12 control-label" for="name">Template Name 
+																<span class="required" aria-required="true">* </span>
+															</label>
+															<div class="form-control-focus"></div>
+														</div>
+														
+														<div class="form-group form-md-line-input">
+															<select class="form-control" name="deviceMake" id="deviceMake" required="true" data-required-msg="Please select make" tabindex="2" placeholder="select the make" onchange="FnGetDeviceTypeList(1)"><option value="">Select Make</option></select>
+															<label class="col-md-12 control-label for="deviceMake"> Make <span class="required" aria-required="true">*</span></label>
+															<div class="form-control-focus"></div>
+														</div>
+														
+														<div class="form-group form-md-line-input">
+															<select class="form-control" name="deviceType" id="deviceType" required="true" data-required-msg="Please select device type" tabindex="3" placeholder="Select a device type" onchange="FnGetModelList(1)"><option value="">Select a device type</option></select>
+															<label class="col-md-12 control-label for="deviceType"> Device type <span class="required" aria-required="true">*</span></label>
+															<div class="form-control-focus"></div>
+														</div>
+														
+													</div>
+													<div class="col-md-4">
+													
+														<div class="form-group form-md-line-input">
+															<select class="form-control" name="deviceModel" id="deviceModel" required="true" data-required-msg="Please select model" tabindex="2" placeholder="Select a model" onchange="FnGetProtocolList(1)"><option value="">Select model</option></select>
+															<label class="col-md-12 control-label for="deviceModel"> Model <span class="required" aria-required="true">*</span></label>
+															<div class="form-control-focus"></div>
+														</div>
+														
+														<div class="form-group form-md-line-input">
+															<select class="form-control" name="deviceProtocol" id="deviceProtocol" required="true" data-required-msg="Please select protocol" tabindex="2" onchange="FnGetProtocolVersionList(1)"><option value="">Select model</option></select>
+															<label class="col-md-12 control-label for="deviceProtocol"> Protocol <span class="required" aria-required="true">*</span></label>
+															<div class="form-control-focus"></div>
+														</div>
+														
+														<div class="form-group form-md-line-input">
+															<select class="form-control" name="deviceProtocolVersion" id="deviceProtocolVersion" required="true" data-required-msg="Please select protocol version" tabindex="2" onchange="FnGetDeviceIOList()"><option value="">Select Protocol version</option></select>
+															<label class="col-md-12 control-label for="deviceProtocolVersion"> Protocol version <span class="required" aria-required="true">*</span></label>
+															<div class="form-control-focus"></div>
+														</div>
+													
+													</div>
+													<div class="col-md-4">
+													
+														<div class="form-group form-md-line-input">
+															<textarea type="text"  rows="5" class="form-control " name="description" id="description"   tabindex="5" style="border: 1px solid #D4CCCC;" placeholder=" Please enter description"/></textarea>																
+															<label class="col-md-12 control-label" for="description">Description</label>
+															<div class="form-control-focus"></div>
+														</div>
+													
+													</div>
+												</div>
+											</div>
+										</form>
+										<form id="gapp-confdevice-form" role="form" action="" name="gapp-confdevice-form" method="post">
+											<div class="panel panel-primary">
+												<div class="panel-heading">
+													<h4 class="panel-title">Map Device I/O</h4>
+												</div>
+												<div class="panel-body">
+													<div class="col-md-4">
+														
+														<div class="form-group form-md-line-input">
+															<select class="form-control" name="deviceIO" id="deviceIO" required="true" data-required-msg="Please select Device I/O" placeholder="select the Device I/O"><option value="">Select Device I/O</option></select>
+															<label class="col-md-12 control-label for="deviceIO"> Device I/O <span class="required" aria-required="true">*</span></label>
+															<div class="form-control-focus"></div>
+														</div>
+														
+														<div class="form-group form-md-line-input">
+															<input type="text" class="form-control" name="displayName" id="displayName" required data-required-msg="Display Name not specified" />							
+															<label class="col-md-12 control-label" for="displayName">Display Name 
+																<span class="required" aria-required="true">* </span>
+															</label>
+															<div class="form-control-focus"></div>
+														</div>
+														
+													</div>
+													<div class="col-md-4">
+													
+														<div class="form-group form-md-line-input">
+															<select class="form-control" name="dataType" id="dataType" required="true" data-required-msg="Please select Data Type" placeholder="select the Data Type" onchange="FnGetPhysicalQuantityList()"><option value="">Select Data Type</option></select>
+															<label class="col-md-12 control-label for="dataType"> Data Type <span class="required" aria-required="true">*</span></label>
+															<div class="form-control-focus"></div>
+														</div>
+														
+														<div class="form-group form-md-line-input">
+															<select class="form-control" name="physicalQuantity" id="physicalQuantity" required="true" data-required-msg="Please select Physical Quantity" placeholder="select the Physical Quantity" onchange="FnGetUnitList()"><option value="">Select Physical Quantity</option></select>
+															<label class="col-md-12 control-label for="physicalQuantity"> Physical Quantity <span class="required" aria-required="true">*</span></label>
+															<div class="form-control-focus"></div>
+														</div>
+													
+													</div>
+													<div class="col-md-4">
+													
+														<div class="form-group form-md-line-input">
+															<select class="form-control" name="unit" id="unit" required="true" data-required-msg="Please select Unit" placeholder="select the Unit"><option value="">Select Unit</option></select>
+															<label class="col-md-12 control-label for="unit"> Unit of Measurement <span class="required" aria-required="true">*</span></label>
+															<div class="form-control-focus"></div>
+														</div>
+														
+														<div class="form-group form-md-line-input">
+															<input type="text" class="form-control" name="expression" id="expression" />							
+															<label class="col-md-12 control-label" for="displayName">Expression</label>
+															<div class="form-control-focus"></div>
+														</div>
+													
+													</div>
+													
+													<div class="col-md-12">
+														<div class="form-actions" style="float:right;">
+															<button type="button" class="btn btn-raised default " name="gapp-confdevice-cancel" id="gapp-confdevice-cancel" onclick="FnCancelConfDevice()" tabindex="9"><i class="icon-close icons" aria-hidden="true"></i>Cancel</button>
+															<button type="button" class="btn  btn-raised btn-danger ladda-button" name="gapp-confdevice-save" id="gapp-confdevice-save" data-style="slide-up" data-size="l" onclick="return FnSaveConfDevice()" tabindex="8">
+															<span class="ladda-label"><i class="icon-check icons" aria-hidden="true"></i>Add</span></button>													
+														</div>
+													</div>
+													
+													<div class="col-md-12">
+														<div id="templateconfgrid"></div>
+													</div>
+												</div>
+											</div>									
+										</form>
+										<form id="gapp-congtemplate-list" role="form" action="<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/configurationTemplates/list" name="gapp-congtemplate-list" method="post">
+											<input type="hidden" id="gapp-tenant-key" name="gapp-tenant-key" value="<%=VarTenantKey%>" />
+										</form>
+									</div>
+								</div>	
+							</div>
+						</div>
+					</div>
+				<!-- END PAGE CONTENT-->
+			</div>
+		</div>
+		<!-- END CONTENT -->
+		
+	</div>
+	<!-- END CONTAINER -->
+	<% include(utils.resolvePath('templates/global-footer.jag')); %>
+	<% 
+		include(utils.resolvePath('templates/portal-footer.jag'));
+		include('/controllers/includes/theme-portal-scripts.jag');
+	%>
+	<script type="text/javascript">
+		var VarPopulateMakeListUrl = '<%=APICONF.GAPP_SERVICES.device.makes%>';
+		var VarPopulateDeviceType= '<%=APICONF.GAPP_SERVICES.device.types%>';
+		var VarPopulateModelListUrl = '<%=APICONF.GAPP_SERVICES.device.models%>';
+		var VarPopulateDeviceProtocolListUrl = '<%=APICONF.GAPP_SERVICES.device.protocols%>';
+		var VarPopulateVersionsListUrl = '<%=APICONF.GAPP_SERVICES.device.versions%>';
+		var VarProtocolPointsUrl = '<%=APICONF.GAPP_SERVICES.confTemplates.protocolpoints%>';
+		var VarGetAllDataTypeUrl = '<%=APICONF.GAPP_SERVICES.confTemplates.getalldatatype%>';
+		var VarGetPhysicalQuantityUrl = '<%=APICONF.GAPP_SERVICES.confTemplates.physicalquantity%>';
+		var VarGetUnitsUrl = '<%=APICONF.GAPP_SERVICES.confTemplates.getallunits%>';
+		var VarCreateConfTemplatesUrl = '<%=APICONF.GAPP_SERVICES.confTemplates.create%>';
+		var VarViewConfTemplatesUrl = '<%=APICONF.GAPP_SERVICES.confTemplates.view%>';
+		var VarUpdateConfTemplatesUrl = '<%=APICONF.GAPP_SERVICES.confTemplates.create%>';
+		var VarLUDomainName = '<%=usr.domainName()%>';	
+		var VarCurrentTenantInfo = $.parseJSON('<%=VarCurrentTenantInfo%>');
+		var VarEditTemplateName = '<%=VarTemplateName%>';
+	</script>
+		
+	<script type="text/javascript" src="<%=urlPrefix%><%=utils.resolveUrl('js/configurationTemplates/add.js')%>"></script>
+</body>
+</html>

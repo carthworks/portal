@@ -1,0 +1,129 @@
+<%
+var VarIdentifier;
+var urlPrefix;
+var originalURI;
+var user;
+var VarTenantKey;
+var VarMyDomain;
+var VarIsValid;
+var VarUserEmail;
+
+(function() {
+	
+	if(user != null){
+	
+		print('Unable to create user, please logout from the session and refresh this page.');
+		return;
+	}
+	
+	var VarUriStr = request.getRequestURI();
+	VarUriStr = VarUriStr.replace("/clientadmin/","");	
+	if(VarUriStr != null && VarUriStr != ''){
+		var VarDecodeStr = utils.base64decode(VarUriStr);
+		if(VarDecodeStr != ''){
+			var ArrKeys = VarDecodeStr.split(':');
+			VarIdentifier = ArrKeys[0];
+			VarMyDomain = ArrKeys[1];
+			
+			var APICONF = require('/configs/apiproperties.jag');
+			var APPCONF = require('/configs/appconfig.jag');
+			include('commonservicefunctions.jag');
+			
+			var VARAPIMNGRKEY = APPCONF.GAPP_CONF.CLIENT_ID +":"+ APPCONF.GAPP_CONF.CLIENT_SECRET;
+			var ObjAccessInfo = parse(FnGetAuthCode(VARAPIMNGRKEY));	
+	
+			if(ObjAccessInfo['error'] == null){
+		
+				var VarAccessToken = ObjAccessInfo['access_token'];
+					if(VarAccessToken != ''){
+						var VarEndPointUrl = (APICONF.GAPP_SERVICES.server.scheme) + "://" + (APICONF.GAPP_SERVICES.server.host) + ":" + (APICONF.GAPP_SERVICES.server.port);
+						var VarClientInfoUrl = VarEndPointUrl + APICONF.GAPP_SERVICES.common.find;
+						var VarPostData = {"domain":{"domainName": VarMyDomain},"entityTemplate":{"entityTemplateName":"TenantAdminUser"},"identifier":{"key": "identifier","value": VarIdentifier}};
+						
+						try {
+						
+							var ObjClientInfo = parse(FnMakeRequestCall('POST',VarClientInfoUrl,VarAccessToken,'application/json','application/json',VarPostData));
+							
+							if(ObjClientInfo.fieldValues != null){
+							var ObjFieldValues = ObjClientInfo.fieldValues;
+							
+								for each (variable in ObjFieldValues) {
+									if(variable['key'] == 'valid'){
+										VarIsValid = variable['value'];
+									} else if(variable['key'] == 'myDomain'){
+										VarMyDomain = variable['value'];
+									} else if(variable['key'] == 'emailId'){
+										VarUserEmail = variable['value'];
+									}
+								}
+								
+								if(VarIsValid == 'true'){
+									
+									VarTenantKey = '';														
+									include(utils.resolvePath('templates/clientadmin.jag'));
+									
+								} else {
+								
+									response.sendError(498, JSON.stringify({
+												error: true
+											}));
+									return;
+									
+								}
+							} else {
+							
+								response.sendError(500, JSON.stringify({
+											error: true
+										}));
+								return;
+								
+							}
+						
+						} catch(err){
+						
+							response.sendError(500, JSON.stringify({
+										error: true
+									}));
+							return;
+							
+						}
+			
+					} else {
+					
+						response.sendError(401, JSON.stringify({
+								error: true
+							}));
+						return;
+						
+					}
+		
+			} else {
+				
+				response.sendError(401, JSON.stringify({
+							error: true
+						}));
+				return;
+				
+			}
+			
+		} else {
+		
+			response.sendError(500, JSON.stringify({
+						error: true
+					}));
+			return;
+			
+		}
+	} else {
+	
+		response.sendError(404, JSON.stringify({
+					error: true
+				}));
+		return;
+		
+	}
+				
+	
+}()); %>
+
+%>

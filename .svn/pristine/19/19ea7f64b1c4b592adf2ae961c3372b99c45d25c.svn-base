@@ -1,0 +1,51 @@
+<%
+
+	function FnWriteLog(VarMethod,VarUrl,VarPayload,VarResponse){
+		var APPCONF = require('/configs/appconfig.jag');
+		var ObjDate = new Date();
+		var VarDate = String(ObjDate.getDate());
+		var VarMonth = String(ObjDate.getMonth() + 1);
+		var VarYear = String(ObjDate.getFullYear());
+		var VarCurDate = VarDate +"-"+ VarMonth +"-"+ VarYear;
+		
+		var VarTime = String(ObjDate.getHours())+ ":" +String(ObjDate.getMinutes())+ ":" +String(ObjDate.getSeconds());
+		
+		var ObjLogPath = APPCONF.GAPP_CONF.APP_LOGS_PATH;
+		createDir(ObjLogPath);
+		
+		var ObjLogFile = new File(APPCONF.GAPP_CONF.APP_LOGS_PATH+"/"+VarCurDate);
+		if(!ObjLogFile.isExists()){
+			ObjLogFile.mkdir();
+			ObjLogFile = new File(APPCONF.GAPP_CONF.APP_LOGS_PATH+"/"+VarCurDate+APPCONF.GAPP_CONF.APP_LOGS_FILE);
+			ObjLogFile.open('a+');
+			ObjLogFile.close();
+		}
+		
+		var ObjLogFile = new File(APPCONF.GAPP_CONF.APP_LOGS_PATH+"/"+VarCurDate+APPCONF.GAPP_CONF.APP_LOGS_FILE);
+		ObjLogFile.open('a+');
+		var message = '';
+		message += '\n=========================================================================================================\n';
+		message += 'SYSTEM IP: '+request.getRemoteAddr()+'\n';
+		message += 'TIME : '+VarTime+'\n';
+		message += 'METHOD : '+VarMethod+'\n';
+		message += 'URL : '+VarUrl+'\n';
+		message += 'PAYLOAD : '+stringify(VarPayload)+'\n';
+		message += 'RESPONSE : '+stringify(VarResponse)+'\n';
+		message += '\n=========================================================================================================\n';
+		ObjLogFile.write(message);
+		ObjLogFile.close();
+		
+	}
+	
+	
+	function createDir(path) {
+        var file = new File(path);
+        if (!file.isExists()) {
+             file.mkdir();
+        }
+       
+    }
+	
+	
+	
+%>

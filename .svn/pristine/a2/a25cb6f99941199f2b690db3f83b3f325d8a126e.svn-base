@@ -1,0 +1,81 @@
+<%
+var equiptype;
+var pageId;
+var VarEquipId;
+var VarEntityId;
+var VarTenantKey;
+var VarCurrentTenantInfo;
+var ObjPageAccess;
+var VarGensetDashboardId;
+
+(function() {
+
+	if (!user) {
+        sendLogin();
+        return;
+    }
+	
+	var vars;
+	var matcher = new URIMatcher(request.getRequestURI());
+	
+	if (matcher.match('/equipments/{equipmenttype}/{id}')) {
+	
+		vars = matcher.elements();
+		equiptype = (vars.equipmenttype).toString();
+		pageId = (vars.id).toString();
+		
+	} else {
+	
+		response.sendError(404, JSON.stringify({
+					error: true
+				}));
+		return;
+		
+	}
+	
+	var pages = require('/configs/pages.json');
+	
+	if (!pages.equipments[equiptype][pageId]) {
+	
+		response.sendRedirect(utils.tenantedPrefix(urlPrefix+"error/404"));
+        return;
+		
+	} else {
+	
+		var usr = require('/modules/user.js');
+		var permission = require('/configs/permissions.json');
+		ObjPageAccess = {'add':'0','list':'0','view':'0','edit':'0','mappoint':'0','dashboard':'0','details':'0'};
+		var ObjPageConf = {'list':['add','view','mappoint','dashboard'],'view':['edit']};
+		var VarPageRef = permission.equipments[equiptype];
+		ObjPageAccess = usr.FnGetPageAccessAuthorization(ObjPageAccess,ObjPageConf,pageId,VarPageRef);
+		
+	}
+	
+	var method = request.getMethod();
+	
+	if (method === 'POST') {				
+		
+		VarEntityId = (request.getParameter("entity_id") != null) ? request.getParameter("entity_id") : '';
+		VarTenantKey = (request.getParameter("gapp-tenant-key") != null) ? request.getParameter("gapp-tenant-key") : '';
+		VarEquipId = (request.getParameter("equip_id") != null) ? request.getParameter("equip_id") : '';
+		VarGensetDashboardId = (pageId=='dashboard') ? request.getParameter("dashboard_equip_id") : '';
+		
+	} else {
+	
+		VarEntityId = '';
+		VarEquipId = '';
+		VarGensetDashboardId ='';
+				
+		var ObjTenantInfo = session.get('PARENT_CLIENT');
+		if(ObjTenantInfo != null){
+			VarTenantKey = ObjTenantInfo['tenantId'];
+		}
+	}
+	
+	VarCurrentTenantInfo = usr.FnGetCurrentClientInfo(VarTenantKey);
+
+	include(utils.resolvePath('templates/'+pages.equipments[equiptype][pageId]));
+	
+} ());
+
+%>

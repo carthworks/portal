@@ -1,0 +1,453 @@
+<%
+	var APPCONF = require('/configs/appconfig.jag');
+	var APICONF = require('/configs/apiproperties.jag');
+	var usr = require('/modules/user.js');
+	include(utils.resolvePath('templates/portal-header.jag'));
+	include('/controllers/includes/theme-portal-styles.jag');
+%>
+	<style type="text/css">
+		
+		.portlet-title { min-height: 12px !important; padding:0; }
+	
+		.ga-wrap {padding:12px; display: block; min-height:460px;  }
+	
+			
+		.form .form-section {
+			margin: 12px 0px 22px 0px;
+			padding-bottom: 12px;
+		}
+		.myportlet{ display: inline-block;    width: 100%;}
+			
+		form-group.form-md-line-input {margin: 0 !important;}
+		.portlet.light {padding: 12px 20px 0px 20px !important;	}
+		.dark{background-color: #f7f7f7;}
+		.gapp-fanRating .form-md-line-input{margin-bottom:10px;padding-left: 0px;}
+		.gapp-fanRating{background-color: #f7f7f7;padding: 10px;border: 1px solid #f7f7f7;margin-bottom: 15px;}
+		.boxTextbox{margin-top: 24px;}
+	</style>
+</head>
+<body class="page-md page-header-fixed page-quick-sidebar-over-content page-footer-fixed  page-full-width"  >
+	<% include(utils.resolvePath('templates/global-header.jag')); %>
+<!-- BEGIN CONTAINER -->
+	<div class="page-container">
+		<!-- BEGIN SIDEBAR -->
+		<div class="page-sidebar-wrapper">
+			<div class="page-sidebar   navbar-collapse collapse">
+				<!-- BEGIN SIDEBAR MENU -->	
+				<ul class="page-sidebar-menu page-sidebar-menu-hover-submenu " data-keep-expanded="false" data-auto-scroll="false" data-slide-speed="200">
+					<li class="sidebar-toggler-wrapper"><div class="sidebar-toggler"></div></li>
+					<li class="nav-item start active open ">
+						<a href="dashboard.html" class="nav-link nav-toggle">
+                            <i class="icon-bar-chart"></i>
+                            <span class="title">Dashboard</span>
+                            <span class="selected"></span>                              
+                        </a>
+                    </li>
+					<li class="">
+						<a href="javascript:;" class="nav-link nav-toggle">
+							<i class="icon-puzzle"></i>
+                            <span class="title">Dashboard Designer</span>
+                            <span class="selected"></span>                               
+                        </a>
+					</li>
+					<li class="heading">
+						<h3 class="uppercase">Device Management</h3>
+					</li>
+					<li class="open">
+						<a href="javascript:;">
+							<i class="icon-diamond"></i>
+							<span class="title">Device </span>
+							<span class="arrow "></span>
+						</a>
+						<ul class="sub-menu">						
+							<li>
+								<a href="ui_icons.html">
+								<span class="badge badge-roundless badge-danger">new</span>Create Device</a>
+							</li>		
+						
+							<li>
+								<a href="ui_tabs_accordions_navs.html">
+								List Device</a>
+							</li>
+							<li>
+								<a href="ui_tabs_accordions_navs.html">
+								Update Device</a>
+							</li>					
+						</ul>
+					</li>
+				</ul>
+				<!-- END SIDEBAR MENU -->
+			</div>
+		</div>
+		<!-- END SIDEBAR -->
+		
+		<!-- BEGIN CONTENT -->
+		<div class="page-content-wrapper">
+			<div class="page-content">
+				<h3 class="page-title">	Package Unit </h3>
+				<div class="page-bar">
+					<ul class="page-breadcrumb">
+						<li>
+							<i class="fa fa-home"></i>
+							<a href="Javascript:void(0)" onclick="FnBreadCrumbHome()">Home</a>
+							<i class="fa fa-angle-right"></i>
+						</li>
+						<li>
+							<a href="Javascript:void(0)" onclick="FnNavigatePUList()">Package Unit</a>
+							<i class="fa fa-angle-right"></i>
+						</li>
+						<li>
+							<a href="Javascript:void(0)"><a href="Javascript:void(0)"><% if(VarEquipId!='') { %> View Package Unit <% } else { %> Create Package Unit <% } %></a></a>
+						</li>
+					</ul>
+				</div>
+				<!-- BEGIN PAGE CONTENT-->
+				<div class="row">
+					<div class="col-md-12">	
+						<!--<div id="" class="Metronic-alerts alert alert-danger fade in">
+							<button type="button" class="close" data-dismiss="alert" aria-hidden="true"> </button>						
+							<i class="fa-lg fa fa-warning"></i>Could not complete request. Please check your internet connection
+						</div>-->					
+						
+						<div class="portlet light bordered">
+							<div class="portlet-title">
+								<div class="caption font-red-sunglo">
+									<i class="icon-settings font-red-sunglo"></i>
+									<span class="caption-subject bold uppercase"> <% if(VarEquipId!='') { %> View Package Unit <% } else { %> Create Package Unit <% } %> </span>
+								</div>
+								<div class="actions">
+								<% if(ObjPageAccess['edit']=='1') { %>
+													<span id="gapp-pu-edit">
+														<a class="btn btn-circle btn-icon-only red" href="Javascript:void(0)" onclick="FnEditPU()" tabindex="30">
+															<i class="icon-note icons"></i> 
+														</a>		
+													</span>
+													<% } %>
+									<button type="button" class="btn btn-raised default" name="gapp-pu-cancel" id="gapp-pu-cancel" data-toggle="modal" onclick= "FnCancelPU()" tabindex="29">Cancel</button>							
+									<button type="button" class="btn  btn-raised btn-danger" name="gapp-pu-save" id="gapp-pu-save" onclick="FnSavePU()" tabindex="28">Save</button>
+								</div>
+							</div>
+							<!-- END title-->
+							
+							<div class="portlet-body form">
+								<form name="gapp-pu-form" id="gapp-pu-form" method="post" role="form" autocomplete="off">
+									<div class="row">
+										<div class="col-md-12">
+											<div class="myportlet">
+												<!-- Begin: Col-1 -->
+												<div class="col-md-4 ">												
+													<!-- BEGIN Name -->
+													<div class="form-group form-md-line-input">
+														<input type="text" class="form-control input-sm" name="name" id="name" required data-required-msg="Name not specified" tabindex="1" />																												
+														<label class="col-md-12 control-label" for="name"> Name <span class="required" aria-required="true"> * </span></label>
+														<div class="form-control-focus"></div>			
+													</div>
+													<!-- END Name -->
+													
+													<!-- BEGIN Equipment Id -->
+													<div class="form-group form-md-line-input">
+														<input type="text" class="form-control input-sm" name="equipmentId" id="equipmentId" required data-required-msg="Please enter equipment id" data-available data-available-url="<%=APICONF.GAPP_SERVICES.equipments.airhandler.equipidunique%>" data-available-msg="Equipment already exists" tabindex="2" />																												
+														<label class="col-md-12 control-label" for="name"> Equipment Id <span class="required" aria-required="true"> * </span></label>
+														<div class="form-control-focus"></div>			
+													</div>
+													<!-- END Equipment Id -->
+													
+													<!-- Facility -->
+													<div class="form-group form-md-line-input">
+														<select class="form-control" name="facility" id="facility" required data-required-msg="Facility not specified" tabindex="3" onchange="FnSetTimeZone()">
+															<option value="">Select Facility</option>													
+														</select>															
+														<label class="col-md-12 control-label" for="facility"> Facility <span class="required" aria-required="true"> * </span></label>
+														<div class="form-control-focus"></div>			
+													</div>									
+													<!-- END Facility -->
+														
+													<!-- BEGIN Make -->
+													<div class="form-group form-md-line-input">		
+														<input type="text" class="form-control input-sm" name="make" id="make" tabindex="4"/>	
+														<label class="col-md-12 control-label" for="make">Make </label>
+														<div class="form-control-focus"></div>
+													</div>	
+													<!-- END Make -->
+														
+													<!-- Model -->
+													<div class="form-group form-md-line-input">
+														<input type="text" class="form-control input-sm" name="model" id="model" tabindex="5"/>																
+														<label class="col-md-12 control-label" for="model"> Model </label>
+														<div class="form-control-focus"></div>			
+													</div>
+													<!-- END Model -->
+														
+													<!-- Feeding Area -->
+													<div class="form-group form-md-line-input">		
+														<input type="text" class="form-control input-sm" name="feedingArea" id="feedingArea" tabindex="6"/>		
+														<label class="col-md-12 control-label" for="feedingArea">Feeding Area</label>
+														<div class="form-control-focus"></div>
+													</div>
+													<!-- END Feeding Area -->
+													
+													
+													<!-- BEGIN PUBLISH EES -->	
+													<div class="form-group form-md-checkboxes">									
+														<div class="md-checkbox-inline" style="margin:0;">								
+															<div class="md-checkbox">
+																<input type="checkbox" id="ees" name="ees" class="md-check"  tabindex="7">
+																<label for="ees">
+																	<span></span>
+																	<span class="check"></span>
+																	<span class="box"></span>
+																	EES
+																</label>
+															</div>
+														</div>
+													</div>						
+													<!--END  PUBLISH EES -->	
+												
+												</div>			
+												<!-- End: Col-1 -->
+											
+												<!-- Begin: Col-2 -->
+												<div class="col-md-4 ">	
+													<!-- Cooling Valve type -->
+													<div class="form-group form-md-line-input">
+														<select class="form-control" name="coolingValueType" id="coolingValueType" tabindex="8">
+															<option value="">Select Cooling Valve Type</option>
+															<option value="Modulating">Modulating</option>
+															<option value="Open Close type">Open Close type</option>
+															<option value="Floating">Floating</option>															
+														</select>															
+														<label class="col-md-12 control-label" for="coolingValueType"> Cooling Valve type </label>
+														<div class="form-control-focus"></div>			
+													</div>									
+													<!-- END Cooling Valve type -->
+																										
+													<!-- BEGIN Floor -->
+													<div class="form-group form-md-line-input">		
+														<input type="text" class="form-control input-sm" name="floor" id="floor" tabindex="9"/>	
+														<label class="col-md-12 control-label" for="floor">Floor</label>
+														<div class="form-control-focus"></div>
+													</div>	
+													<!-- END Floor -->
+														
+													<!-- BEGIN Time Zone -->
+													<div class="form-group form-md-line-input">		
+														<select class="form-control" name="timeZone" id="timeZone" tabindex="10" disabled>
+															<option value="">Select Time Zone</option>
+															<option value="Dubai">Dubai</option>
+															<option value="Muscat">Muscat</option>												
+														</select>	
+														<label class="col-md-12 control-label" for="timeZone">Time Zone</label>
+														<div class="form-control-focus"></div>
+													</div>	
+													<!-- END Time Zone -->
+														
+													<!-- BEGIN Connectivity Type -->
+													<div class="form-group form-md-line-input">		
+														<select class="form-control" name="connectivityType" id="connectivityType" tabindex="11">
+															<option value="">Select Connectivity Type</option>
+															<option value="CCN">CCN</option>
+															<option value="Hardware">Hardware</option>
+															<option value="BACnet MSTP">BACnet MSTP</option>																			
+															<option value="BACnet IP">BACnet IP</option>	
+															<option value="Lon">Lon</option>	
+															<option value="Modbus">Modbus</option>
+														</select>	
+														<label class="col-md-12 control-label" for="timeZone">Connectivity Type</label>
+														<div class="form-control-focus"></div>
+													</div>	
+													<!-- END Connectivity Type -->
+														
+													<!-- BEGIN No of Compressors -->
+													<div class="form-group form-md-line-input">
+														<input type="text" class="form-control input-sm" name="noOfCompressors" id="noOfCompressors" tabindex="12"/>																
+														<label class="col-md-12 control-label" for="noOfCompressors"> No of Compressors</label>
+														<div class="form-control-focus"></div>			
+													</div>
+													<!-- END No of Compressors -->
+														
+													<!-- Refrigerant Type -->
+													<div class="form-group form-md-line-input">
+														<select class="form-control" name="refrigentType" id="refrigentType" tabindex="13">
+															<option value="">Select Refrigerant Type</option>
+															<option value="R232">R232</option>
+															<option value="R134">R134</option>
+															<option value="R134A">R134A</option>
+															<option value="R134AA">R134AA</option>
+														</select>															
+														<label class="col-md-12 control-label" for="refrigerantType">Refrigerant Type</label>
+														<div class="form-control-focus"></div>			
+													</div>									
+													<!-- END Refrigerant Type -->														
+												</div>			
+												<!-- End: Col-2 -->
+											
+												<!-- Begin: Col-3 -->
+												<div class="col-md-4 ">
+													<!-- Supply Fan Rating -->
+													<section class="gapp-fanRating">
+														<section class="pull-left col-sm-12">
+															<div class="form-group form-md-line-input col-md-7 col-sm-7">
+																<input type="text" class="form-control" name="supplyFanRating" id="supplyFanRating" tabindex="14"/>
+																<label class="col-md-12 control-label" for="supplyFanRating"> Supply Fan Rating </label>
+																<div class="form-control-focus"></div>			
+															</div>
+															<div class="col-md-4 col-sm-4 boxTextbox">
+																<input type="text" class="form-control" name="sfrUnit" id="sfrUnit" tabindex="15"/>															
+																<div class="form-control-focus"></div>			
+															</div>
+														</section>
+														
+														<section style="display: inline-block;">
+															<div class="form-group form-md-checkboxes">								
+																<div class="md-checkbox-inline" style="margin:0;">								
+																	<div class="md-checkbox">
+																		<input type="checkbox" id="sfrVFD" name="sfrVFD" class="md-check"  tabindex="16" onchange="FnsupplyFanRatingChecked();" >
+																		<label for="sfrVFD">
+																			<span></span>
+																			<span class="check"></span>
+																			<span class="box"></span>
+																			VFD
+																		</label>
+																	</div>
+																</div>
+															</div>
+															<aside class="gapp-sfcMakeModel">
+																<div class="form-group form-md-line-input col-md-6">
+																	<input type="text" class="form-control input-sm" name="sfrVFDMake" id="sfrVFDMake"  tabindex="17"/>																										
+																	<label class="col-md-12 control-label" for="sfrVFDMake"> Make </label>
+																	<div class="form-control-focus"></div>			
+																</div>
+																<div class="form-group form-md-line-input col-md-6">
+																	<input type="text" class="form-control input-sm" name="sfrVFDModel" id="sfrVFDModel"  tabindex="18"/>																										
+																	<label class="col-md-12 control-label" for="sfrVFDModel"> Model </label>
+																	<div class="form-control-focus"></div>			
+																</div>
+															</aside>
+														</section>
+													</section>
+													<!-- END Supply Fan Rating -->
+														
+													<!-- Return Fan Rating -->
+													<section class="gapp-fanRating">
+														<section class="pull-left col-sm-12">
+															<div class="form-group form-md-line-input col-md-7 col-sm-7">
+																<input type="text" class="form-control input-sm" name="returnFanRating" id="returnFanRating" tabindex="19"/>	
+																<label class="col-md-12 control-label" for="returnFanRating"> Return Fan Rating </label>
+																<div class="form-control-focus"></div>			
+															</div>
+															<div class="col-md-4 col-sm-4 boxTextbox">
+																<input type="text" class="form-control" name="rfrUnit" id="rfrUnit" tabindex="20"/>															
+																<div class="form-control-focus"></div>			
+															</div>
+														</section>	
+																
+														<section style="display: inline-block;">
+															<div class="form-group form-md-checkboxes">									
+																<div class="md-checkbox-inline" style="margin:0;">								
+																	<div class="md-checkbox">
+																		<input type="checkbox" id="rfrVFD" name="rfrVFD" class="md-check"  tabindex="21" onchange="FnreturnFanRatingChecked();" >
+																		<label for="rfrVFD">
+																			<span></span>
+																			<span class="check"></span>
+																			<span class="box"></span>
+																			VFD
+																		</label>
+																	</div>
+																</div>
+															</div>
+															<aside class="gapp-rfcMakeModel">
+																<div class="form-group form-md-line-input col-md-6">
+																	<input type="text" class="form-control input-sm" name="rfrVFDMake" id="rfrVFDMake" tabindex="22"/>																										
+																	<label class="col-md-12 control-label" for="rfrVFDMake"> Make </label>
+																	<div class="form-control-focus"></div>			
+																</div>
+																<div class="form-group form-md-line-input col-md-6">
+																	<input type="text" class="form-control input-sm" name="rfrVFDModel" id="rfrVFDModel"  tabindex="23"/>																										
+																	<label class="col-md-12 control-label" for="rfrVFDModel"> Model </label>
+																	<div class="form-control-focus"></div>			
+																</div>
+															</aside>
+														</section>
+													</section>
+													<!-- END Return Fan Rating -->
+														
+													<!-- Heat Recovery Wheel Rating -->
+													<section class="pull-left col-sm-12" ">
+														<div class="form-group form-md-line-input col-md-7 col-sm-7 " style="padding-left:0px;">
+															<input type="text" class="form-control input-sm" name="heatRecoveryWheelRating" id="heatRecoveryWheelRating" tabindex="24"/>		
+															<label class="col-md-12 control-label" for="heatRecoveryWheelRating"> Heat Recovery Wheel Rating </label>
+															<div class="form-control-focus"></div>			
+														</div>
+														<div class="col-md-4 col-sm-4 boxTextbox">
+															<input type="text" class="form-control" name="hrwrUnit" id="hrwrUnit" tabindex="25"/>															
+															<div class="form-control-focus"></div>			
+														</div>
+													</section>													
+													<!-- END Return Heat Rating -->
+														
+													<!-- BEGIN Extract Fan Rating -->
+													<section class="pull-left col-sm-12">
+														<div class="form-group form-md-line-input col-md-7 col-sm-7" style="padding-left:0px;">
+															<input type="text" class="form-control input-sm" name="extractFanRating" id="extractFanRating" tabindex="26"/>		
+															<label class="col-md-12 control-label" for="extractFanRating"> Extract Fan Rating </label>
+															<div class="form-control-focus"></div>			
+														</div>
+														<div class="col-md-4 col-sm-4 boxTextbox">
+															<input type="text" class="form-control" name="efrUnit" id="efrUnit" tabindex="27"/>															
+															<div class="form-control-focus"></div>			
+														</div>
+													</section>
+														
+													<!-- END Extract Fan Rating -->
+												</div>			
+												<!-- End: Col-3 -->
+										
+												<div style="clear:both"></div>
+												<% if(VarEquipId != ''){ %>
+												<div class="animated slideInUp">
+													<div id="gapp-pupoint-list"></div>
+												</div>
+												<div class="clearfix"></div>
+												<% } %>
+											</div> <!-- END portlet -->
+										</div> <!-- END col-md-12 -->
+									</div> <!-- END row -->
+									<input type="hidden" name="equip_id" id="equip_id" value="<%=VarEquipId%>" />
+								</form>
+								<form id="gapp-pu-list" role="form" action="/portal/equipments/pu/list" name="gapp-pu-list" method="post">
+									<input type="hidden" id="gapp-tenant-key" name="gapp-tenant-key" value="<%=VarTenantKey%>" />
+								</form>
+							</div> <!-- END portlet-body -->
+						</div><!-- END portlet bordered-->
+							
+					</div><!-- END col-md-12-->
+				</div>
+				<!-- END PAGE CONTENT-->
+			</div>
+		</div>
+		<!-- END CONTENT -->
+		
+	</div>
+	<!-- END CONTAINER -->
+	<% include(utils.resolvePath('templates/global-footer.jag')); %>
+	<% 
+		include(utils.resolvePath('templates/portal-footer.jag'));
+		include('/controllers/includes/theme-portal-scripts.jag');
+	%>
+	<script type="text/javascript">
+		var VarCreateEquipUrl = '<%=APICONF.GAPP_SERVICES.equipments.airhandler.create%>';
+		var VarListFacilityUrl = '<%=APICONF.GAPP_SERVICES.facility.list%>';
+		var VarViewEquipUrl = '<%=APICONF.GAPP_SERVICES.equipments.airhandler.view%>';
+		var VarUpdateEquipUrl = '<%=APICONF.GAPP_SERVICES.equipments.airhandler.update%>';
+		var VarAttachParentUrl = '<%=APICONF.GAPP_SERVICES.hierarchy.attachparent%>';
+		var VarPointTagsUrl = '<%=APICONF.GAPP_SERVICES.common.filterlist%>';
+		var VarEditEquipId = '<%=VarEquipId%>';
+		var VarLUDomainName = '<%=usr.domainName()%>';
+		var VarLUTenantName = '<%=usr.tenantName()%>';
+		var VarCurrentTenantInfo = $.parseJSON('<%=VarCurrentTenantInfo%>');
+		var VarAppRootDomain = '<%=APPCONF.GAPP_CONF.MY_DOMAIN_NAME%>';
+	</script>
+	<script type="text/javascript" src="<%=urlPrefix%><%=utils.resolveUrl('js/equipments/pu/add.js')%>"></script>
+	<script src="<%=urlPrefix%>js/jquery-custom-scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>	
+</body>
+</html>

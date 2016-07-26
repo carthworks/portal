@@ -1,0 +1,91 @@
+<%
+	if(VarTenantKey != ''){
+		var APPCONF = require('/configs/appconfig.jag');
+		var ObjUser = session.get('user');
+		if(utils.allowed(ObjUser['roles'],[APPCONF.GAPP_CONF.SUPER_ADMIN_ROLE])){ // SUPER ADMIN
+			var VarHomeUrl = './';
+		} else if(utils.allowed(ObjUser['roles'],[APPCONF.GAPP_CONF.CLIENT_ADMIN_ROLE])){ // CLIENT ADMIN
+			var VarHomeUrl = './clienthome';
+		} else {
+			var VarHomeUrl = './userhome';
+		}
+	}
+	
+	var usr = require('/modules/user.js');
+	include(utils.resolvePath('templates/portal-header.jag'));
+	include('/controllers/includes/theme-portal-styles.jag');
+	
+%>
+<link rel="stylesheet" type="text/css" href="<%=urlPrefix%><%=utils.resolveUrl('css/error.css')%>" />
+
+	<style type="text/css">
+		#grid-view .k-grid-header .k-header {
+			background-color: #f44336;
+		}
+
+		#grid-view .k-header a.k-link, .k-grid-header th{
+			color: #000 !important;
+		}
+
+		.alert-danger {
+			background-color: #f2dede;
+			border-color: #ebccd1;
+			color: #a94442;
+		}
+		body{
+		    background-color: #F9E8D3;
+			}
+		.page-content{min-height:360px!important}
+		h2{margin-top: 30px; color: #C1544B;}
+		h4{color: #6D6B6B;
+    font-weight: bold;}
+	</style>
+</head>
+<body class="page-md page-header-fixed page-quick-sidebar-over-content page-footer-fixed  page-full-width">
+	<div class="se-pre-con"></div>
+	<% include(utils.resolvePath('templates/global-header.jag')); %>
+	<!-- BEGIN CONTAINER -->
+	<div class="page-container">
+				
+		<!-- BEGIN CONTENT -->
+		<div class="page-content-wrapper">
+			<div class="page-content">
+				<h3 class="page-title">	Page Not Authorized  </h3>
+				<!-- BEGIN PAGE CONTENT-->
+					<div class="row">
+						<div class="col-md-12 page-404">
+							<div class="container center-block">
+							<div class="col-md-2 col-md-offset-2" style="top:18px">
+								<img src="<%=urlPrefix%><%=utils.resolveUrl('images/error-1.png')%>" />
+							</div>
+							<div class="col-md-5 text-left" style="top: 173px;">
+							<div class="number">403</div>
+								<h2><strong>Forbidden</strong></h2>
+								<h4>You don’t have permission to access this page.</h4>
+								<button class="btn brn-default" onclick="FnBreadCrumbHome()">Return Home</button>
+							</div>
+							
+							</div>
+					
+						</div>
+					</div>
+				<!-- END PAGE CONTENT-->
+				
+			</div>
+		</div>
+		<!-- END CONTENT -->
+	</div>
+	<!-- END CONTAINER -->
+	
+	
+	<% include(utils.resolvePath('templates/global-footer.jag')); %>
+	<% 
+		include(utils.resolvePath('templates/portal-footer.jag'));
+		include('/controllers/includes/theme-portal-scripts.jag');
+	%>
+	<script type="text/javascript">
+		var VarLUDomainName = '<%=usr.domainName()%>';
+		var VarCurrentTenantInfo = $.parseJSON('<%=VarCurrentTenantInfo%>');
+	</script>
+</body>
+</html>

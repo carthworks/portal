@@ -1,0 +1,98 @@
+<%
+	var VarCurHome = request.getRequestURI();
+	var VarIsHome = true;
+	if(VarCurHome === '/clienthome'){
+		var ObjChild = session.get('CHILD_CLIENT');
+		if(ObjChild != null){
+			if(ObjChild.tenantId == VarTenantKey){
+				var VarIsHome = false;				
+				var APPCONF = require('/configs/appconfig.jag');
+				var ObjUser = session.get('user');
+				if(utils.allowed(ObjUser['roles'],[APPCONF.GAPP_CONF.SUPER_ADMIN_ROLE])){ // SUPER ADMIN
+					var VarHomeUrl = './';
+				} else if(utils.allowed(ObjUser['roles'],[APPCONF.GAPP_CONF.CLIENT_ADMIN_ROLE])){ // CLIENT ADMIN
+					var VarHomeUrl = './clienthome';
+				} else {
+					var VarHomeUrl = './userhome';
+				}				
+			}		
+		}
+	} else if(VarCurHome === '/ccdhome'){
+		var VarIsHome = false;
+		var APPCONF = require('/configs/appconfig.jag');
+		var ObjUser = session.get('user');
+		if(utils.allowed(ObjUser['roles'],[APPCONF.GAPP_CONF.SUPER_ADMIN_ROLE])){ // SUPER ADMIN
+			var VarHomeUrl = './';
+		} else if(utils.allowed(ObjUser['roles'],[APPCONF.GAPP_CONF.CLIENT_ADMIN_ROLE])){ // CLIENT ADMIN
+			var VarHomeUrl = './clienthome';
+		} else {
+			var VarHomeUrl = './userhome';
+		}
+	}
+%>
+<style type="text/css">
+.nav>li>a:focus, .nav>li>a:hover ,.nav .open>a, .nav .open>a:focus, .nav .open>a:hover{
+    text-decoration: none;
+    background-color: #4d7386;
+	}
+	
+	.username{
+	font-family: Segoe UI;
+    font-weight: normal;
+	}
+		.GAP_home .dropdown-user a span.img_svg{    
+		background-color: #535353;
+    padding: 2px;
+    border-radius: 0px;
+    width: 35px;
+    height: 35px;
+	display:inline-block;
+    border-radius: 50%;
+	overflow:hidden}
+	
+	.GAP_home .dropdown-user a svg{
+    width: 100%;
+    height: 100%;
+        PADDING: 6px 0px 5px 0px;}
+	
+	.GAP_home .dropdown-user a svg path{fill:#fff}
+
+	
+@media screen and (-webkit-min-device-pixel-ratio:0) { 
+/* Safari only override */
+::i-block-chrome,.GAP_home .dropdown-user a svg {
+	width: 80%;
+    height: 80%;
+	padding: 6px 3px;
+}
+::i-block-chrome, .username{position:relative;top: -5px!important;}
+}
+
+</style>
+<!-- BEGIN RESPONSIVE MENU TOGGLER -->
+		<a href="javascript:;" class="menu-toggler responsive-toggler" data-toggle="collapse" data-target=".navbar-collapse"></a>
+		<!-- END RESPONSIVE MENU TOGGLER -->
+		<% if (user) { %>
+		<!-- BEGIN TOP NAVIGATION MENU -->
+		<div class="top-menu GAP_home">
+			<ul class="nav navbar-nav pull-right">
+					<li class="dropdown dropdown-user">
+						<a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+							<span class="username username-hide-on-mobile" style="position: relative;top: -14px;"><%=user.username%> </span>
+							<span class="img_svg"><img alt="" src="<%=urlPrefix%><%=utils.resolveUrl('images/home/users/user_2.svg')%>" class="svg"></span>
+						</a>
+					</li>
+					<% if(VarIsHome != true){ %>
+					<li class="logout_icon">
+						<a href="<%=tenantedUrlPrefix%><%=VarHomeUrl%>"><span class="glyphicon glyphicon-home"></span></a>
+					</li>
+					<% } %>
+					<li class="home_icon">
+						<a href="<%=urlPrefix%>logout?destination=<%=dest%>"><span class="glyphicon glyphicon-log-out"></span></a>
+					</li>
+			<!-- END USER LOGIN DROPDOWN -->	
+			</ul>
+
+		</div>
+		<!-- END TOP NAVIGATION MENU -->
+		<% } %>

@@ -1,0 +1,327 @@
+<%
+	var APPCONF = require('/configs/appconfig.jag');
+	var APICONF = require('/configs/apiproperties.jag');
+	var usr = require('/modules/user.js');
+	include(utils.resolvePath('templates/portal-header.jag'));
+	include('/controllers/includes/theme-portal-styles.jag');
+%>
+	<link href="<%=urlPrefix%>css/jquery-custom-scrollbar/jquery.mCustomScrollbar.css" rel="stylesheet" type="text/css" />
+	<link href="<%=urlPrefix%><%=utils.resolveUrl('css/chart.css')%>" rel="stylesheet" type="text/css" />
+	<style type="text/css">
+		#grid-view .k-grid-header .k-header {
+			background-color: #f44336;
+		}
+
+		#grid-view .k-header a.k-link, .k-grid-header th{
+			color: #000 !important;
+		}
+
+		.alert-danger {
+			background-color: #f2dede;
+			border-color: #ebccd1;
+			color: #a94442;
+		}
+		
+		.form-control-custom {
+			height: 20px;
+			padding: 6px 12px;
+			font-size: 14px;
+			color: #555;
+			border: 1px solid #ccc;
+			border-radius: 4px;
+			width: 85%;
+		}
+		
+		.diviceactions a {
+			margin: 2px;
+		}
+		
+		.k-grid-norecords {
+				text-align: center;
+				margin: 6% 0 0 0;
+				color: #f44336 !important;
+			}
+		.k-header.k-grid-toolbar {
+			background: transparent;
+		}
+
+.clientlistToggle{position:relative}
+
+.GBL_loading{position: absolute;display: flex;align-items: center;justify-content: center;width: 100%;height: 100%;background: rgba(247,247,247,0.5);z-index: 99999;top:0;}
+		
+	</style>
+</head>
+<body class="page-md page-header-fixed page-quick-sidebar-over-content page-footer-fixed  page-full-width">
+	<div class="se-pre-con"></div>
+	<% include(utils.resolvePath('templates/global-header.jag')); %>
+	<!-- BEGIN CONTAINER -->
+	<div class="page-container">
+		<!-- BEGIN SIDEBAR -->
+		<div class="page-sidebar-wrapper">
+			<div class="page-sidebar   navbar-collapse collapse">
+				<!-- BEGIN SIDEBAR MENU -->	
+				<ul class="page-sidebar-menu page-sidebar-menu-hover-submenu " data-keep-expanded="false" data-auto-scroll="false" data-slide-speed="200">
+					<li class="sidebar-toggler-wrapper"><div class="sidebar-toggler"></div></li>
+					<li class="nav-item start active open ">
+						<a href="dashboard.html" class="nav-link nav-toggle">
+                            <i class="icon-bar-chart"></i>
+                            <span class="title">Dashboard</span>
+                            <span class="selected"></span>                              
+                        </a>
+                    </li>
+					<li class="">
+						<a href="javascript:;" class="nav-link nav-toggle">
+							<i class="icon-puzzle"></i>
+                            <span class="title">Dashboard Designer</span>
+                            <span class="selected"></span>                               
+                        </a>
+					</li>
+			
+				
+				</ul>
+				<!-- END SIDEBAR MENU -->
+			</div>
+		</div>
+		<!-- END SIDEBAR -->
+		
+		<!-- BEGIN CONTENT -->
+		<div class="page-content-wrapper">
+			<div class="page-content">
+				<h3 class="page-title pull-left">Device Management</h3>
+				<div class="pull-right view-switch btn-group"><a href="<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/device/list" class="switchlist btn-default"><i class="fa fa-list" style="position: relative;top: 2px;"></i></a><a href="#" class="switchchart btn-primary"><i class="fa fa-tachometer"></i></a></div>
+			<!--	<div class="page-bar">
+					<ul class="page-breadcrumb">
+						<li>
+							<i class="fa fa-home"></i>
+							<a href="Javascript:void(0)" onclick="FnBreadCrumbHome()">Home</a>
+							<i class="fa fa-angle-right"></i>
+						</li>
+						<li>
+							<a href="Javascript:void(0)">Devices</a>
+						</li>
+						
+					</ul>
+					
+				</div> -->
+				<!-- BEGIN PAGE CONTENT-->
+				<div class="row">
+					<div class="col-md-12">	
+						<!--<div id="" class="Metronic-alerts alert alert-danger fade in">
+							<button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>						
+							<i class="fa-lg fa fa-warning"></i>Could not complete request. Please check your internet connection
+						</div>-->					
+						
+						<!-- List View -->
+						<div class="portlet dark device-listview" style="    background-color: transparent;">
+							<!--<div class="portlet-title">
+								<div class="caption font-red-sunglo ">
+									<i class="icon-settings font-red-sunglo"></i>
+									<span class="caption-subject bold uppercase">Devices</span>
+								</div>
+							</div>-->
+							<div class="portlet-body container-fluid zeromargin animate-panel">
+								<div class="col-md-12 zeromargin">
+									<!-- Left box -->
+									<div class="col-md-8 zeromargin">
+										<div class="row">
+											<section class="dc_gadgetoutercontainer">
+													<div class="col-md-4">
+														<section class="device_devicecnt md-shadow animateZoom" title="Devices">
+															<p id="usersCount">0</p>
+															<h3>Claimed</h3>
+															<i class="fa fa-cog"></i>
+														</section>
+													</div>
+													<div class="col-md-4">
+														<section class="device_statuscnt md-shadow animateZoom" title="Active Devices">
+															<p id="devicesCount">0</p>
+															<h3>Active</h3>
+															<i class="fa fa-signal"></i>
+														</section>
+													</div>
+													<div class="col-md-4">
+														<section class="device_tenantcnt md-shadow animateZoom" title="Unclaimed Devices">
+															<p id="unclaimedDevicesCount">0</p>
+															<h3>Unclaimed</h3>
+															<i class="fa fa-globe"></i>
+														</section>
+													</div>
+											</section>
+										</div>
+										<div class="col-md-12  outer-contentbox borderradius clientlistToggle" style="padding-left:0px;padding: 10px; margin-top:20px;">
+										<h3 class=" text-left" style="padding-left:10px;margin-top:10px" >Client List - <span id="tenant_name"></span></h3>
+											
+											<div class="client_summary_wrapper">
+											
+											
+												<div class="col-md-3 zeromargin">
+													<div class="row zeromargin">
+															<section class="dc_gadgetcontainerbg">
+																<div class="clientlistblock animateZoom">
+																	<ul id="clientlist" class="md-border-light">
+																		
+																	</ul>
+																</div>
+															</section>
+													</div>
+												</div>
+											
+												<div class="col-md-9 ">
+													<section class="dc_gadgetoutercontainer dc_gadgetcontainerbg bg-white">
+														<div class="row">
+															<div class="col-md-6 clientdevicestatus">
+															<div class="row">
+																<div class="chart-wrapper">
+																	<div class="col-md-12">
+																		<div class=" md-border-light animateZoom">											
+																			<div id="clientdevicestatus-label" class="overlay"></div>
+																			<svg id="fillgauge1" width="100%" height="160" ></svg>
+																			<div style="font: 16px Arial,Helvetica,sans-serif;color:rgb(255,255,255);text-align:center">Active Device</div>
+																			<section class="md-deviceInnercount"> 
+																				<div>
+																					<span>Total - </span>
+																					<span id="devicetotalcnt"></span></div>
+																				<div>
+																					<span>Active - </span>
+																					<span id="deviceactivecnt"></span>
+																				</div>
+																			</section>
+																		</div>
+																	</div>
+																</div>
+															</div>	
+															</div>
+															<div class="col-md-6 clientnetworkprotocol ">
+																<div class="chart-wrapper">
+																	<div class="md-border-light animateZoom">
+																		<div id="clientnetworkprotocol" style="height:180px"></div>
+																		<div id="clientnetworkprotocol-label" class="overlay"></div>
+																	</div>
+																</div>
+															</div>
+														</div>
+														
+														<div class="row">
+														<div class="chart-wrapper md-shadow">
+																<div class="col-md-12">
+																	<div id="clientBarChart" class="md-border-light animateZoom" style="height:280px;margin-top:20px;"></div>												
+																</div>
+														</div>
+														</div>
+														
+													</section>
+												</div>
+											
+											
+											
+											
+											</div> <!-- End Client Summmary Wrapper-->
+											
+										</div>
+									</div><!-- End: Left box -->
+									<!-- Right box -->
+									<div class="col-md-4">
+										<div class="row">
+											<div class="col-md-12">
+												<section class="dc_gadgetoutercontainer-2 dc_gadgetcontainerbg outer-contentbox borderradius" style="height:285px;padding: 15px;margin-top: 15px;box-sizing: content-box;">
+													<h3 class="text-left" style="margin-top:0px" >Device type count</h3>
+													<div class="chart-wrapper">
+														<div id="devicetypechart" class="animateZoom" style="height:230px; margin:0 auto"></div>
+													</div>	
+												</section>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-md-12">
+												<section class="dc_gadgetoutercontainer-3 dc_gadgetcontainerbg outer-contentbox borderradius" style="height:370px;padding: 15px;margin-top: 15px;box-sizing: content-box;">							
+													<div class="chart-wrapper">
+														<h3 class="text-left" style="margin-top:0px">Client device count</h3>
+														<div class="chart-wrapper">
+															<div id="deviceusagechart" class="animateZoom" style="height:230px"></div>
+														</div>
+													</div>
+												</section>
+											</div>
+										</div>
+									</div>
+									<!-- End: Right box -->
+								</div>
+							</div>
+						</div><!--End: List View -->
+						
+					</div>
+				</div>
+				<!-- END PAGE CONTENT-->
+			</div>
+		</div>
+		<!-- END CONTENT -->
+		
+	</div>
+	<!-- END CONTAINER -->
+	
+		
+	
+	<% include(utils.resolvePath('templates/global-footer.jag')); %>
+	
+	<script type="text/x-kendo-template" id="clientSearchtemplate">
+		<div class="toolbar" >
+			<input type="text" id="searchClientId" class="form-control-custom" placeholder="Search Client"/>
+		</div>
+	</script>
+	<% 
+		include(utils.resolvePath('templates/portal-footer.jag'));
+		include('/controllers/includes/theme-portal-scripts.jag');
+	%>
+	<script type="text/javascript">
+		var VarListClientsUrl = '<%=APICONF.GAPP_SERVICES.clients.list%>';
+		var VarListDeviceUrl = '<%=APICONF.GAPP_SERVICES.device.list%>';
+		var VarListDeviceConfUrl = '<%=APICONF.GAPP_SERVICES.device.configuration%>';
+		var VarLUDomainName = '<%=usr.domainName()%>';	
+		var VarCurrentTenantInfo = $.parseJSON('<%=VarCurrentTenantInfo%>');
+		var ObjPageAccess = $.parseJSON('<%=ObjPageAccess%>');
+		var VarAppRootDomain = '<%=APPCONF.GAPP_CONF.MY_DOMAIN_NAME%>';
+		
+		// Api : Get Tenants Count
+		var VarTenantsCountUrl = '<%=APICONF.GAPP_SERVICES.clients.childrencount%>';
+		
+		// Api : Get Devices Count
+		var VarDevicesCountUrl = '<%=APICONF.GAPP_SERVICES.device.devicescount%>';
+		
+		// Api : Get Active Devices count
+		var VarActiveDevicesCountUrl = '<%=APICONF.GAPP_SERVICES.device.activedevicescount%>';
+		
+		// Api : Get Client List
+		var VarListingClientsUrl = '<%=APICONF.GAPP_SERVICES.clients.listing%>';
+		
+		// Api : Get Client Devices List
+		var VarTenantsDeviceListUrl = '<%=APICONF.GAPP_SERVICES.clients.deviceslist%>';
+		
+		// Api : Get Unclaimed Devices
+		var VarUnclaimedDeviceListUrl = '<%=APICONF.GAPP_SERVICES.claim.unsubscribed%>';
+		
+	</script>
+	
+	<script type='text/javascript' src="<%=urlPrefix%>js/d3.min.js"></script>
+	<script type='text/javascript' src="<%=urlPrefix%>js/liquidFillGauge.js"></script>
+	<script src="<%=urlPrefix%>js/jquery-custom-scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
+	<script type="text/javascript" src="<%=urlPrefix%><%=utils.resolveUrl('js/device/chart.js')%>"></script>
+	<script type="text/javascript">	
+		/*
+		var GBL_loading_DIV;
+		GBL_loading_DIV = "<img id='loading-image' src='<%=urlPrefix%><%=utils.resolveUrl("images/loading32x32.gif")%>' alt='Loading...'>";
+		*/
+		window.onload = function(){
+			FnGetUnclaimedDevicesCount();//Unclaimed Devices
+			FnGetDevicesCount();  		 //Claimed Devices
+			FnGetActiveDevicesCount(); 	 //Active Devices
+			FnGetTotalDeviceTypeStatus();//Device Type Count
+			FnGetDeviceUsageList();      //Client Device Count
+			FnGetClientList();
+		};
+		
+		
+		
+	</script>
+	
+</body>
+</html>

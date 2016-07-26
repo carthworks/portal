@@ -1,0 +1,137 @@
+{
+	"roles" : {
+				"add" : "roles/add.jag",
+				"list" : "roles/list.jag",
+				"view" : "roles/add.jag"
+			},
+	"clients" : {
+				"add" : "clients/add.jag",
+				"list" : "clients/list.jag",
+				"view" : "clients/add.jag",
+				"sendemail" : "clients/sendemail.jag"
+			},
+	"device" : {
+				"add" : "device/add.jag",
+				"list" : "device/list.jag",
+				"view" : "device/add.jag",
+				"assign" : "device/assign.jag",
+				"chart" : "device/chart.jag",
+				"writeback" : "device/writeback.jag",
+				"info" : "device/info.jag",
+				"mapping" : "device/mapping.jag"
+			},
+	"claim" : {			
+				"list" : "claim/list.jag",
+				"view" : "claim/add.jag"
+			},
+	"facility" : {
+				"add" : "facility/add.jag",
+				"list" : "facility/list.jag",
+				"view" : "facility/add.jag",
+			},
+	"users" : {
+				"add" : "users/add.jag",
+				"list" : "users/list.jag",
+				"view" : "users/add.jag",
+				"profile" : "users/myprofile.jag"
+			},
+	
+	"equipments" : {
+					"ahu" : {
+						"add" : "equipments/ahu/add.jag",
+						"list" : "equipments/ahu/list.jag",
+						"view" : "equipments/ahu/add.jag"
+					},
+					"fahu" : {
+						"add" : "equipments/fahu/add.jag",
+						"list" : "equipments/fahu/list.jag",
+						"view" : "equipments/fahu/add.jag"
+					},
+					"fcu" : {
+						"add" : "equipments/fcu/add.jag",
+						"list" : "equipments/fcu/list.jag",
+						"view" : "equipments/fcu/add.jag"
+					},
+					"su" : {
+						"add" : "equipments/su/add.jag",
+						"list" : "equipments/su/list.jag",
+						"view" : "equipments/su/add.jag"
+					},
+					"pu" : {
+						"add" : "equipments/pu/add.jag",
+						"list" : "equipments/pu/list.jag",
+						"view" : "equipments/pu/add.jag"
+					},
+					"genset" : {
+						"add" : "equipments/genset/add.jag",
+						"list" : "equipments/genset/list.jag",
+						"view" : "equipments/genset/add.jag",
+						"dashboard" : "equipments/genset/dashboard.jag",
+					},
+					"chiller" : {
+						"add" : "equipments/chiller/add.jag",
+						"list" : "equipments/chiller/list.jag",
+						"view" : "equipments/chiller/add.jag"
+					},
+					"template" : {
+						"add" : "equipments/template/add.jag",
+						"list" : "equipments/template/list.jag",
+						"view" : "equipments/template/add.jag"
+					},
+					"asset" : {
+						"add" : "equipments/asset/add.jag",
+						"list" : "equipments/asset/list.jag",
+						"view" : "equipments/asset/add.jag",
+						"dashboard" : "equipments/asset/dashboard.jag",
+						"details" : "equipments/asset/details.jag"
+					}
+				},		
+	"pointsmapping" :{
+						"airhandler" : "pointsmapping/airhandler.jag",
+						"genset" : "pointsmapping/genset.jag",
+						"asset" : "pointsmapping/asset.jag"
+					},
+	"dashboard" : {
+						"create" : "dashboard/create-dashboard.jag",
+						"list" : "dashboard/dashboard-list.jag",
+						"settings" : "dashboard/dashboard-settings.jag"
+				},
+	"alarm" : {
+				"console" : "alarm/console.jag",
+				"history" : "alarm/history.jag"
+			},
+	"alarmdefinition" : {
+				"add" : "alarmdefinition/add.jag",
+				"list" : "alarmdefinition/list.jag"
+			},
+	"ccd" : {
+		"contact" : {
+				"add" : "ccd/contact/add.jag",
+				"list" : "ccd/contact/list.jag",
+				"view" : "ccd/contact/add.jag",
+				"map" : "ccd/contact/map.jag"
+			},
+		"import" : {
+			"equipments" : "ccd/import/equipments.jag",
+			"equipmentlist" : "ccd/import/equipmentlist.jag"
+		},
+		"faults" : {
+			"list" : "ccd/faults/list.jag"
+		}
+	},
+	"assets" : {
+			"history" : "assets/history.jag",
+			"monitoring" : "assets/monitoring.jag",
+			"historyasset" : "assets/historyasset.jag",
+			"historytracks" : "assets/historytracks.jag"
+	},
+	"error" : {
+		"404" : "error/error404.jag",
+		"403" : "error/error403.jag"
+	},
+	"geofence" : {
+		"create" : "geofence/add.jag",
+		"list" : "geofence/list.jag",
+		"view" : "geofence/add.jag",
+	}
+}

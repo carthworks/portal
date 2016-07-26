@@ -1,0 +1,132 @@
+{
+	"clients" : {
+				"add" : "client_management/create",
+				"list" : "client_management/list",
+				"view" : "client_management/view",
+				"sendemail" : "client_management/create admin",
+				"edit" : "client_management/edit"
+			},
+	"users" : {
+				"add" : "user_management/create",
+				"list" : "user_management/list",
+				"view" : "user_management/view",
+				"edit" : "user_management/edit",
+				"delete" : "user_management/delete"
+			},
+	"roles" : {
+				"add" : "role_management/create",
+				"list" : "role_management/list",
+				"view" : "role_management/view",
+				"edit" : "role_management/edit"
+			},
+	"device" : {
+				"add" : "device_management/create",
+				"list" : "device_management/list",
+				"view" : "device_management/view",
+				"edit" : "device_management/edit",
+				"assign" : "device_management/assign devices to tenants",
+				"dashboard" : "device_management/dashboard",
+				"mapping" : "device_management/mapping",
+				"info" : "device_management/status"
+			},
+	"equipments" : {
+				"ahu" : {
+						"add" : "ahu_management/create",
+						"list" : "ahu_management/list",
+						"view" : "ahu_management/view",
+						"edit" : "ahu_management/edit",
+						"mappoint" : "ahu_management/map points"
+					},
+				"fahu" : {
+						"add" : "fahu_management/create",
+						"list" : "fahu_management/list",
+						"view" : "fahu_management/view",
+						"edit" : "fahu_management/edit",
+						"mappoint" : "fahu_management/map points"
+				},
+				"fcu" : {
+						"add" : "fcu_management/create",
+						"list" : "fcu_management/list",
+						"view" : "fcu_management/view",
+						"edit" : "fcu_management/edit",
+						"mappoint" : "fcu_management/map points"
+				},
+				"su" : {
+						"add" : "split_unit_management/create",
+						"list" : "split_unit_management/list",
+						"view" : "split_unit_management/view",
+						"edit" : "split_unit_management/edit",
+						"mappoint" : "split_unit_management/map points"
+				},
+				"pu" : {
+						"add" : "package_unit_management/create",
+						"list" : "package_unit_management/list",
+						"view" : "package_unit_management/view",
+						"edit" : "package_unit_management/edit",
+						"mappoint" : "package_unit_management/map points"
+				},
+				"genset" : {
+						"add" : "genset_management/create",
+						"list" : "genset_management/list",
+						"view" : "genset_management/view",
+						"edit" : "genset_management/edit",
+						"mappoint" : "genset_management/map points",
+						"dashboard" : "genset_management/genset dashboard"
+				},
+				"template" : {
+						"add" : "asset_types/create",
+						"list" : "asset_types/list",
+						"view" : "asset_types/view",
+						"edit" : "asset_types/edit"
+				},
+				"asset" : {
+					"add" : "asset_management/create",
+					"list" : "asset_management/list",
+					"view" : "asset_management/view",
+					"edit" : "asset_management/edit",
+					"mappoint" : "asset_management/map points",
+					"dashboard" : "asset_management/asset dashboard"
+				}
+			},
+	"facility" : {
+				"add" : "facility_management/create",
+				"list" : "facility_management/list",
+				"view" : "facility_management/view",
+				"edit" : "facility_management/edit"
+	},
+	"claim" : {
+		"list" : "claim_device/list unclaimed",
+		"view" : "claim_device/claim device"
+	},
+	"assets" : {
+			"monitoring" : "asset_monitoring/view",
+			"historyasset" : "asset_history/view",
+			"historyexport" : "asset_history/export"
+	},
+	"alarm" : {
+				"console" : "alarm_console/view",
+				"history" : "alarm_logs/view"
+			},
+	"ccd" : {
+		"contact" : {
+				"add" : "connected_diagnostics/all",
+				"list" : "connected_diagnostics/all",
+				"view" : "connected_diagnostics/all",
+				"map" : "connected_diagnostics/all"
+			},
+		"import" : {
+			"equipments" : "connected_diagnostics/all",
+			"equipmentlist" : "connected_diagnostics/all"
+		},
+		"faults" : {
+			"list" : "connected_diagnostics/all"
+		}
+	},
+	"geofence" : {
+		"create" : "geofence_management/create",
+		"list" : "geofence_management/list",
+		"view" : "geofence_management/view",
+		"edit" : "geofence_management/edit",
+		"delete" : "geofence_management/delete"
+	}
+}

@@ -1,0 +1,83 @@
+<%
+var equiptype;
+
+var poitype;
+var pageId;
+var VarEquipId;
+var VarEntityId;
+var VarTenantKey;
+var VarCurrentTenantInfo;
+var ObjPageAccess;
+var VarGensetDashboardId;
+
+(function() {
+
+	if (!user) {
+        sendLogin();
+        return;
+    }
+	
+	var vars;
+	var matcher = new URIMatcher(request.getRequestURI());
+	
+	if (matcher.match('/pointofinterest/{pointofinteresttype}/{id}')) {
+	
+		vars = matcher.elements();
+		poitype = (vars.pointofinteresttype).toString();
+		pageId = (vars.id).toString();
+		
+	} else {
+	
+		response.sendError(404, JSON.stringify({
+					error: true
+				}));
+		return;
+		
+	}
+	
+	var pages = require('/configs/pages.json');
+	
+	if (!pages.pointofinterest[poitype][pageId]) {
+	
+		response.sendRedirect(utils.tenantedPrefix(urlPrefix+"error/404"));
+        return;
+		
+	} else {
+	
+		var usr = require('/modules/user.js');
+		var permission = require('/configs/permissions.json');
+		ObjPageAccess = {'add':'0','list':'0','view':'0','edit':'0','delete':'1','mappoint':'0','dashboard':'0'};
+		var ObjPageConf = {'list':['add','view','mappoint','dashboard'],'view':['edit']};
+		var VarPageRef = permission.pointofinterest[poitype];
+		ObjPageAccess = usr.FnGetPageAccessAuthorization(ObjPageAccess,ObjPageConf,pageId,VarPageRef);
+		
+	}
+	
+	var method = request.getMethod();
+	
+	if (method === 'POST') {				
+		
+		VarEntityId = (request.getParameter("entity_id") != null) ? request.getParameter("entity_id") : '';
+		VarTenantKey = (request.getParameter("gapp-tenant-key") != null) ? request.getParameter("gapp-tenant-key") : '';
+		VarEquipId = (request.getParameter("equip_id") != null) ? request.getParameter("equip_id") : '';
+		VarGensetDashboardId = (pageId=='dashboard') ? request.getParameter("dashboard_equip_id") : '';
+		//print(VarTenantKey);return;
+	} else {
+	
+		VarEntityId = '';
+		VarEquipId = '';
+		VarGensetDashboardId ='';
+				
+		var ObjTenantInfo = session.get('PARENT_CLIENT');
+		if(ObjTenantInfo != null){
+			VarTenantKey = ObjTenantInfo['tenantId'];
+		}
+	}
+	
+	VarCurrentTenantInfo = usr.FnGetCurrentClientInfo(VarTenantKey);
+
+	include(utils.resolvePath('templates/'+pages.pointofinterest[poitype][pageId]));
+	
+} ());
+
+%>

@@ -1,0 +1,137 @@
+<%
+	var APPCONF = require('/configs/appconfig.jag');
+	var APICONF = require('/configs/apiproperties.jag');
+	var usr = require('/modules/user.js');
+	include(utils.resolvePath('templates/portal-header.jag'));
+	include('/controllers/includes/theme-portal-styles.jag');
+%>
+	<link href="<%=urlPrefix%>css/jquery-custom-scrollbar/jquery.mCustomScrollbar.css" rel="stylesheet" type="text/css" />
+	<style type="text/css">	
+		#tenantSection {
+			background-color: #F3F3F3;
+			box-shadow: -8px -3px 17px -10px #797979 inset;
+		}
+		
+		.leftbar-clientlist{
+			padding: 5px 10px;
+		}
+	
+		.search-client{
+			height: 20px;
+			padding: 6px 12px;
+			font-size: 14px;
+			color: #555;
+			border: 1px solid #ccc;
+			border-radius: 4px;
+			width: 85%;
+			margin-bottom:15px;
+		}
+	
+		span.k-in > span.highlight {
+			background: #7EA700;
+			color: #ffffff;
+			border: 1px solid green;
+			padding: 1px;
+		}
+
+		span.k-in > span.highlight {
+			background:orange
+		}
+
+		.health-count{
+			text-align: center;
+		   margin: 13px 0px 13px;
+		}
+	
+		#gapp-device-status .k-header.k-grid-toolbar {
+			display: block;
+			background: transparent;
+			text-align: right;
+		}
+
+	</style>
+</head>
+<body class="page-md page-header-fixed page-quick-sidebar-over-content page-footer-fixed  page-full-width">
+	<div class="se-pre-con"></div>
+	<% include(utils.resolvePath('templates/global-header.jag')); %>
+	<!-- BEGIN CONTAINER -->
+	<div class="page-container">		
+		<!-- BEGIN CONTENT -->
+		<div class="page-content-wrapper">
+				<div class="gapp-header">
+				<% include(utils.resolvePath('templates/leftnavigation.jag')); %>
+				<h3 class="page-title">	Device Management  </h3>
+				<div class="page-bar">
+					<ul class="page-breadcrumb">
+						<li>
+							<i class="fa fa-home"></i>
+							<a href="Javascript:void(0)" onclick="FnBreadCrumbHome()">Home</a>
+							<i class="fa fa-angle-right"></i>
+						</li>
+						<li>
+							<a href="Javascript:void(0)">Device Status</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="page-content">
+				<!-- BEGIN PAGE CONTENT-->
+				<div class="row">
+					<div class="col-md-12">
+						<!-- List View -->
+						<div class="portlet dark  light bordered device-listview">
+							<div class="portlet-title">
+								<div class="caption font-red-sunglo ">
+									<i class="pageheadericon pageheader-deviceicon"></i>
+									<span class="caption-subject bold uppercase">Devices</span>
+								</div>
+							</div>							
+							<div class="portlet-body">
+								<div id="splitter" style="height: 510px;">
+									<div id="tenantSection">
+										<div class="leftbar-clientlist">
+											<input id="treeViewSearchInput" class="search-client" placeholder="Search Client"></input>
+											<div id="gapp-clients-list"></div>
+										</div>
+									</div>
+									<div id="deviceSection">
+										<section class="health-count">
+											<div id="profileCompleteness"></div>
+										</section>
+										<section id="deviceStatusSection">
+											<div id="gapp-device-status"></div>
+										</section>
+									</div>
+								</div>
+																																				
+							</div>
+						</div><!--End: List View -->
+						
+					</div>
+				</div>
+				<!-- END PAGE CONTENT-->
+			</div>
+		</div>
+		<!-- END CONTENT -->
+		
+	</div>
+	<!-- END CONTAINER -->
+	<% include(utils.resolvePath('templates/global-footer.jag')); %>
+	
+	<% 
+		include(utils.resolvePath('templates/portal-footer.jag'));
+		include('/controllers/includes/theme-portal-scripts.jag');
+	%>
+	<script type="text/javascript">
+		var VarHierarchyChildrenUrl = '<%=APICONF.GAPP_SERVICES.hierarchy.immediatechildren%>';
+		var VarListDeviceUrl = '<%=APICONF.GAPP_SERVICES.device.list%>';
+		var VarDeviceStatusUrl = '<%=APICONF.GAPP_SERVICES.device.status%>';
+		var VarLUDomainName = '<%=usr.domainName()%>';	
+		var VarCurrentTenantInfo = $.parseJSON('<%=VarCurrentTenantInfo%>');
+		var ObjPageAccess = $.parseJSON('<%=ObjPageAccess%>');
+		var VarAppRootDomain = '<%=APPCONF.GAPP_CONF.MY_DOMAIN_NAME%>';
+	</script>
+	<script type="text/javascript" src="<%=urlPrefix%><%=utils.resolveUrl('js/device/info.js')%>"></script>
+	<script src="<%=urlPrefix%>js/jquery-custom-scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
+</body>
+</html>

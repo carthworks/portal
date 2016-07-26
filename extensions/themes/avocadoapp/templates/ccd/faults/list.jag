@@ -1,0 +1,130 @@
+<%
+	var APPCONF = require('/configs/appconfig.jag');
+	var APICONF = require('/configs/apiproperties.jag');
+	include(utils.resolvePath('templates/portal-header.jag'));
+	include('/controllers/includes/theme-portal-styles.jag');
+%>
+	<style type="text/css">
+		#grid-view .k-grid-header .k-header {
+			background-color: #f44336;
+		}
+		#grid-view .k-header a.k-link, .k-grid-header th{
+			color: #000 !important;
+		}
+		.alert-danger {
+			background-color: #f2dede;
+			border-color: #ebccd1;
+			color: #a94442;
+		}
+		<!--//-->
+		.view-switch{padding: 9px 25px 9px 9px;}
+		.view-switch,h3,a{color:#fff;}
+		.view-switch{padding: 9px 25px 9px 9px;}
+		.view-switch a{padding: 8px;margin: 1px;}
+		.view-switch .fa{font-size:18px;color:#000;}
+		.rowpadding{padding:10px;border-bottom: 1px solid #d3d3d3;height:50px;}
+		.rowbold{font-weight:bold;}
+		.btn-link{color:#1BBC9B !important;font-weight:bold;}
+		.btn-link-list{color:#017dab !important;font-weight:bold;}
+		
+	</style>
+	
+</head>
+<body class="page-md page-header-fixed page-quick-sidebar-over-content page-footer-fixed  page-full-width">
+	<div class="se-pre-con"></div>
+	<% include(utils.resolvePath('templates/global-header.jag')); %>
+	<!-- BEGIN CONTAINER -->
+	<div class="page-container">
+		<!-- BEGIN CONTENT -->
+		<div class="page-content-wrapper">
+			<div class="gapp-header">
+				<% include(utils.resolvePath('templates/leftnavigation.jag')); %>
+				<h3 class="page-title">	Fault Logs </h3>
+				<div class="page-bar">
+					<ul class="page-breadcrumb">
+						<li>
+							<i class="fa fa-home"></i>
+							<a href="Javascript:void(0)" onclick="FnBreadCrumbHome()">Home</a>
+							<i class="fa fa-angle-right"></i>
+						</li>
+						<li>
+							<i class="fa fa-home"></i>
+							<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/ccdhome')">CCD</a>
+							<i class="fa fa-angle-right"></i>
+						</li>
+						<li>
+							<a href="Javascript:void(0)">Fault Logs</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="page-content">
+				<!-- BEGIN PAGE CONTENT-->
+					<div class="row">
+						<div class="col-md-12">								
+							<div class="portlet light bordered">
+								<div class="portlet-title">
+									<div class="caption font-red-sunglo t-header">
+										<i class="fa fa-list font-red-sunglo"></i>
+										<span class="caption-subject bold uppercase"> Fault Logs </span>
+									</div>
+								</div>
+								<div class="portlet-body">
+									<div id="gapp-faults-list"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				<!-- END PAGE CONTENT-->
+			</div>
+		</div>
+		<!-- END CONTENT -->
+	</div>
+	<!-- END CONTAINER -->
+	
+	<!-- BEGIN MODAL DIALOG -->
+	<div class="modal fade" id="draggable" tabindex="-1" role="draggable" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header bg-green-meadow">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+						<h4 class="modal-title">Fault Details&nbsp;-&nbsp;<span id="modal-asset-id"></span></h4>
+					</div>
+					<div class="modal-body">
+						<form>
+							<fieldset class="gllpLatlonPicker">
+								<div class="col-md-12" >
+									<div class="row" >	
+										<div class="span4 collapse-group" id="id-fault-details">
+										</div>
+									</div>									
+								</div>
+							</fieldset>
+						</form>
+					</div>
+					<div class="modal-footer">
+						 <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button> 
+					</div>
+				</div>
+				<!-- /.modal-content -->
+			</div>
+			<!-- /.modal-dialog -->
+	</div>
+	<!-- END MODAL DIALOG -->
+	
+	<% 
+	include(utils.resolvePath('templates/global-footer.jag')); 
+	include(utils.resolvePath('templates/portal-footer.jag'));
+	include('/controllers/includes/theme-portal-scripts.jag');
+	%>
+
+	<script type="text/javascript">
+		var VarFindFaultsUrl 	 = '<%=APICONF.GAPP_SERVICES.ccd.faults.findallfalts%>';
+		var VarFaultDetailsUrl 	 = '<%=APICONF.GAPP_SERVICES.ccd.faults.findfaultdetails%>';
+		var VarCurrentTenantInfo = $.parseJSON('<%=VarCurrentTenantInfo%>');
+		var ObjPageAccess 		 = $.parseJSON('<%=ObjPageAccess%>');
+		
+	</script>
+	<script type="text/javascript" src="<%=urlPrefix%><%=utils.resolveUrl('js/ccd/faults/list.js')%>"></script>
+</body>
+</html>

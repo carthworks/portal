@@ -1,0 +1,251 @@
+<%
+	var APPCONF = require('/configs/appconfig.jag');
+	
+%>
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="UI for IOT platform">
+        <meta name="author" content="galaxy app">
+		<title>Galaxy App</title>
+		<link rel="shortcut icon" href="<%=urlPrefix%><%=utils.resolveUrl('images/favicon.ico')%>">
+		<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" />
+		<link rel="stylesheet" type="text/css" href="<%=urlPrefix%><%=utils.resolveUrl('css/font-awesome.min.css')%>" />
+		<link rel="stylesheet" type="text/css" href="<%=urlPrefix%>plugins/bootstrap/css/bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="<%=urlPrefix%><%=utils.resolveUrl('css/metroJs.css')%>" />
+		<link rel="stylesheet" type="text/css" href="<%=urlPrefix%><%=utils.resolveUrl('css/animate.css')%>" />			
+		<link rel="stylesheet" type="text/css" href="<%=urlPrefix%><%=utils.resolveUrl('css/gapp.css')%>" />  
+		<link rel="stylesheet" type="text/css" href="<%=urlPrefix%>css/jquery-custom-scrollbar/jquery.mCustomScrollbar.css" />  
+		<link rel="stylesheet" type="text/css" href="<%=urlPrefix%><%=utils.resolveUrl('css/home.css')%>" />	
+			
+	
+
+</head>
+<body class="outer-wrapper">
+	<div id="wrapper">
+		<header>   
+			<div class="container-fluid">
+			<div class="col-md-12">
+				<div class="col-md-8 col-xs-6"><h3 class="capitalize homeHeaderTxt"><%=VarTenantKey%></h3></div>
+				<div class="col-md-4 col-xs-6"> 
+					<% include(utils.resolvePath('templates/socialmedia-links.jag')); %>
+				</div>
+			</div>
+			</div> 
+		</header>
+		<section id="wrap">
+			
+			<div class="main-content dynamicTile pt-page-scaleUpDown pt-page-delay300">
+				<div class="content-wrapper tiles panorama-sections">
+			
+					<section class="tile-group four-wide first tilescategoryOne panorama-section">
+						<div class="container-ss tile-category1 get-width">
+							<!-- Category 1 -->
+							<div data-ss-colspan="3">
+								<div class="live-tile tile exclude" data-mode="fade-list" data-bounce="true">
+									<div class="tile_style">
+										<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/users/list')">
+											<ul class="flip-list nineTiles" data-mode="flip-list" data-delay="2000">
+												<li>
+													<div><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/users/user_2.svg')%>" class="svg" alt="Less"></div>
+													<div ><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/users/user_2.svg')%>" class="svg" alt="MCSD"></div>
+												</li>
+												<li>
+													<div ><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/users/user_3.svg')%>" class="svg" alt="CSS 3"></div>
+													<div><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/users/user_5.svg')%>" class="svg" alt="MCSD"></div>
+												</li>
+												<li>
+													<div ><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/users/user_6.svg')%>" class="svg" alt="MonoDevelop"></div>
+													<div ><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/users/user_6.svg')%>" class="svg" alt="MCSD"></div>
+												</li>                        
+												<li>
+													<div ><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/users/user_5.svg')%>" class="svg" alt="XCode"></div>
+													<div ><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/users/user_3.svg')%>" class="svg" alt="MCSD"></div>
+												</li>
+												<li>
+													<div ><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/users/user_2.svg')%>" class="svg" alt="XCode"></div>
+													<div ><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/users/user_2.svg')%>" class="svg" alt="MCSD" ></div>
+												</li>
+												<li>
+													<div ><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/users/user_1.svg')%>" class="svg" alt="XCode"></div>
+													<div ><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/users/user_6.svg')%>" class="svg" alt="MCSD"></div>
+												</li>
+											</ul>
+										</a>
+										<section class="tilecaptionbox">
+										<div class="tilecaption"><a href="#">User Management</a></div>
+											<div class="tileactions">
+												<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/users/add')"><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/plus.png')%>"/></a>
+												<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/users/list')"><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/three_lines.png')%>"/></a>
+											</div>
+											
+										</section>
+									</div>
+								</div>
+							</div>
+							
+							<div data-ss-colspan="3">
+								<div class="live-tile tile2 exclude" data-mode="fade-list" data-bounce="true">
+									<div class="tile_style">
+										<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/device/list')">
+											<div class="carousel slide" data-ride="carousel">
+												<!-- Wrapper for slides -->
+												<div class="carousel-inner">
+													<div class="item active">
+													  <img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/device_banner1.png')%>" class="img-responsive"/>
+													</div>
+													<div class="item">
+													  <img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/device_banner2.png')%>" class="img-responsive"/>
+													</div>
+												</div>
+											</div>
+										</a>
+										<section class="tilecaptionbox">
+										<div class="tilecaption">Device Management</div>
+											<div class="tileactions">
+												<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/device/add')"><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/plus.png')%>"/></a>
+												<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/device/list')"><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/three_lines.png')%>"/></a>
+											</div>
+											
+										</section>
+									</div>
+								</div>
+							</div>
+
+							<!--<div data-ss-colspan="2">
+								<div class="live-tile exclude tile2" data-mode="flip" data-delay="8000" data-pause-onhover="true" >
+									<a href="#">
+										<div class="tile_style" style="background-color: #af1a40;">
+											<aside><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/org.png')%>" /></aside>
+											<section class="tilecaptionbox noaction">
+												<div class="tilecaption" style="color:#fff">Organisation Chart</div>
+											</section>
+										</div>
+									</a>
+									<a href="#">
+										<div class="tile_style" style="background-color:#af1a40">
+											<aside><p> Hierarchy view of your link the organization</p></aside>
+										</div>
+									</a>		
+								</div>								
+							</div>-->
+						
+							<!--<div data-ss-colspan="2">
+								<div class="live-tile tile2" data-mode="slide" data-stops="50%,100%,0px" data-bounce="false" data-stack="true" data-delay="4250" style="cursor: pointer;">
+									<a href="#">
+										<div class="tile_style">
+											<aside class="svg_profile"><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/users/user_2.svg')%>" class="svg" /></aside>
+											<section class="tilecaptionbox noaction" style="background-color: #fff;">
+												<div class="tilecaption">User Profile</div>
+											</section>
+										</div>
+									</a>
+									<a href="#" >
+										<div class="tile_style" style="background-color: green;">
+											<section class="tilecaptionbox noaction">
+												<div class="tilecaption" style="color: #fff;font-size: 16px;"><%=user.username%> </div>
+											</section>
+										</div>
+									</a>
+								</div>
+							</div>-->
+							
+							<div data-ss-colspan="2">
+								<div class="live-tile tile2 exclude" data-mode="fade-list" data-bounce="true" >
+									<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/roles/list')">
+										<div class="tile_style" style="background-color: #d58808;">
+											<aside><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/roles.png')%>"  class="tile_image img-responsive"/></aside>
+										</div>
+									</a>
+									<section class="tilecaptionbox whitebar">
+											<div class="tilecaption"><a href="#">Role Management</a></div>
+											<div class="tileactions">
+												<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/roles/add')"><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/plus.png')%>"/></a>
+												<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/roles/list')"><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/three_lines.png')%>"/></a>
+											</div>
+										</section>
+								</div>
+							</div>
+							
+							<div data-ss-colspan="2">
+								<div class="live-tile tile exclude" data-mode="none" data-bounce="false">
+									<div class="tile_style" style="background-color: #163D58;">
+										<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/clients/list')" >
+											<div class="carousel slide client_scroll" data-ride="carousel">
+												<!-- Wrapper for slides -->
+												<div class="carousel-inner">
+													<div class="item active">
+														<img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/client_icon.png')%>" class="tile_image img-responsive"/>
+													</div>
+													
+												</div>
+											</div>
+										</a>
+										<section class="tilecaptionbox whitebar">
+										<div class="tilecaption">Client Management</div>
+											<div class="tileactions">
+												<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/clients/add')"><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/plus.png')%>"/></a>
+												<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/clients/list')"><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/three_lines.png')%>"/></a>
+											</div>
+											
+										</section>
+									</div>							 
+								</div>
+							</div>
+							
+							<div data-ss-colspan="2">
+								<div class="live-tile tile2" data-mode="fade-list" data-bounce="true" >
+									<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/claim/list')">
+										<div class="tile_style" style="background-color: #494b62;">
+											<aside ><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/G2021_device.png')%>"  class="tile_image img-responsive"  style="padding-top: 8%;"/></aside>
+											<section class="tilecaptionbox noaction">
+												<div class="tilecaption" style="color:#fff">Unclaimed Device</div>
+											</section>
+										</div>
+									</a>
+								</div>
+							</div>
+							
+						</div>
+					</section>
+					<!-- End: Category 1 -->
+	
+				</div>
+
+			</div>			
+
+	
+		</section>
+
+		<div  id="myfooter" class="page-footer-inner">&copy; 2016 Galaxy, Pacific Controls.</div>
+	</div>
+	
+	<form action="" name="gapp-tenant-info" id="gapp-tenant-info" method="post">
+		<input type="hidden" name="gapp-tenant-key" id="gapp-tenant-key" value="<%=VarTenantKey%>" />
+	</form>
+	
+</body>
+
+	<% 
+		include('/controllers/includes/theme-portal-scripts.jag');
+	%>
+	
+	<script type='text/javascript' src="<%=urlPrefix%>plugins/jquery.min.js"></script>
+	<script type='text/javascript' src="<%=urlPrefix%>plugins/jquery-ui/jquery-ui.min.js"></script>
+	<script type='text/javascript' src="<%=urlPrefix%>plugins/bootstrap/js/bootstrap.min.js"></script>  
+	<script type='text/javascript' src="<%=urlPrefix%><%=utils.resolveUrl('js/metroJs.min.js')%>"></script>
+	<script type='text/javascript' src="<%=urlPrefix%><%=utils.resolveUrl('js/material.min.js')%>"></script>
+	<script type='text/javascript' src="<%=urlPrefix%><%=utils.resolveUrl('js/ripples.min.js')%>"></script>
+	<script type='text/javascript' src="<%=urlPrefix%><%=utils.resolveUrl('js/modernizr.js')%>"></script>
+	<script type='text/javascript' src="<%=urlPrefix%><%=utils.resolveUrl('js/bootmetro-panorama.js')%>"></script>
+	<script type='text/javascript' src="<%=urlPrefix%><%=utils.resolveUrl('js/jquery.shapeshift.min.js')%>"></script>
+	<script type='text/javascript' src="<%=urlPrefix%><%=utils.resolveUrl('js/jquery.mousewheel.min.js')%>"></script>
+	<script type='text/javascript' src="<%=urlPrefix%><%=utils.resolveUrl('js/jquery.touchSwipe.min.js')%>"></script>
+	<script type='text/javascript' src="<%=urlPrefix%>js/jquery-custom-scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
+	<script type='text/javascript' src="<%=urlPrefix%><%=utils.resolveUrl('js/home.js')%>"></script>
+	<script type='text/javascript' src="<%=urlPrefix%><%=utils.resolveUrl('js/home-common.js')%>"></script>
+	
+</body>
+</html>

@@ -1,0 +1,314 @@
+<%
+	var APPCONF = require('/configs/appconfig.jag');
+	var APICONF = require('/configs/apiproperties.jag');
+	var usr = require('/modules/user.js');
+	include(utils.resolvePath('templates/portal-header.jag'));
+	include('/controllers/includes/theme-portal-styles.jag');
+%>
+	<!-- Style sheet for Tag(Geo Map) section -->
+	<link rel="stylesheet" type="text/css" href="<%=urlPrefix%><%=utils.resolveUrl('css/jquery-gmaps-latlon-picker.css')%>" />
+	
+	<style type="text/css">
+		.portlet-title { min-height: 12px !important; padding:0; }
+		.form .form-section {
+			margin: 12px 0px 22px 0px;
+			padding-bottom: 12px;
+		}
+					
+		form-group.form-md-line-input {margin: 0 !important;}
+		.portlet.light {padding: 12px 20px 0px 20px !important;	}
+		.dark{background-color: #f7f7f7;}
+		
+		div.fileUpload {
+			position: relative;
+			overflow: hidden;
+			margin: 10px;
+			background-image: url("<%=APPCONF.GAPP_CONF.APP_DOMAIN_ROOT_URL+APPCONF.GAPP_CONF.DOMAIN_IMG_PATH+APPCONF.GAPP_CONF.DOMAIN_IMG_DEFAULT+APPCONF.GAPP_CONF.DOMAIN_IMG_ASSET+"/"%>/asset_placeholder.png");
+			background-size: 200px 200px;
+			background-color: #BDBDBD;
+			height: 200px;
+			width: 200px;
+			text-align: center;
+		}
+		div.fileUpload input.upload {
+			position: absolute;
+			top: 0;
+			right: 0;
+			margin: 0;
+			padding: 0;
+			font-size: 20px;
+			cursor: pointer;
+			opacity: 0;
+			filter: alpha(opacity=0);
+			height: 100%;
+			text-align: center;
+			    z-index: 99;
+		}
+		
+	  div.fileUpload input.upload + img  {position: absolute;
+		top: 0;
+		left: 0;
+		z-index: 9;}
+			.custom-span{  font-family: Arial;
+		font-weight: bold;
+		font-size: 25px;
+		color: #fff;
+		/* padding: 10px; */
+		float: left;
+	}
+	#uploadFile{border: none;margin-left: 10px; width: 200px;}
+	.custom-para{    font-family: arial;
+    /* font-weight: bold; */
+    font-size: 13px;
+    color: #fff;
+    text-align: left;
+    float: left;
+    margin: 0;
+    padding: 0px 6px;}
+		
+	.upload-addicon	{
+	    display: inline-block;
+    position: absolute;
+    bottom: 0;
+    width: 40px;
+    /* height: 40px; */
+    width: 100%;
+    z-index: 99;
+    left: 0;
+    text-align: left;
+    background: rgba(0, 0, 0, 0.7);
+    height: 32px;
+    line-height: 30px;
+    padding: 0px 10px;
+	}
+	
+	
+
+		
+	</style>
+</head>
+<body class="page-md page-header-fixed page-quick-sidebar-over-content page-footer-fixed  page-full-width"  >
+<div class="se-pre-con"></div>
+	<% include(utils.resolvePath('templates/global-header.jag')); %>
+<!-- BEGIN CONTAINER -->
+	<div class="page-container">
+		<!-- BEGIN CONTENT -->
+		<div class="page-content-wrapper">
+			<div class="gapp-header">
+				<% include(utils.resolvePath('templates/leftnavigation.jag')); %>
+				<h3 class="page-title">	Asset Management  </h3>
+				<div class="page-bar">
+					<ul class="page-breadcrumb">
+						<li>
+							<i class="fa fa-home"></i>
+							<a href="Javascript:void(0)" onclick="FnBreadCrumbHome()">Home</a>
+							<i class="fa fa-angle-right"></i>
+						</li>
+						<li>
+							<a href="Javascript:void(0)" onclick="FnNavigateAssetList()">Assets</a>
+							<i class="fa fa-angle-right"></i>
+						</li>
+						<li>
+							<a href="Javascript:void(0)" class="pageTitleTxt"><% if(VarEntityId != '') { %> View Asset <% } else { %> Create Asset <% } %></a>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="page-content">
+				<!-- BEGIN PAGE CONTENT-->
+				<div class="row">
+					<div class="col-md-12">	
+						<div class="portlet light bordered">
+							<div class="portlet-title">
+								<div class="caption font-red-sunglo">
+									<i class="pageheadericon pageheader-assetsicon"></i>
+									<span class="caption-subject bold uppercase pageTitleTxt"> <% if(VarEntityId != '') { %> View Asset <% } else { %> Create Asset <% } %> </span>
+								</div>
+								<div class="actions">
+									<!-- Tag Header -->
+										<% include(utils.resolvePath('templates/tagtemplate-header.jag')); %>
+									<!-- End Tag Header -->
+									
+								<% if(ObjPageAccess['edit']=='1') { %>
+										<a id="gapp-asset-edit" class="btn btn-raised btn-edit red" href="Javascript:void(0)" onclick="FnEditAsset()">
+											<i class="icon-note icons"></i>Edit
+										</a>
+									
+								<% } %>												
+									<button type="button" class="btn btn-raised default" name="gapp-asset-cancel" id="gapp-asset-cancel" data-toggle="modal"   onclick= "FnCancelAsset()" tabindex="15"><i class="icon-close icons" aria-hidden="true"></i>Cancel</button>							
+									<button type="button" class="btn  btn-raised btn-danger" name="gapp-asset-save" id="gapp-asset-save" onclick="FnSaveAsset()" tabindex="16"><i class="icon-check icons" aria-hidden="true"></i>Save</button>
+								</div>
+							</div>
+							<!-- END title-->							
+														
+							<div class="portlet-body form" style="min-height: 540px;">
+								<form name="gapp-asset-form" id="gapp-asset-form" method="post" role="form" autocomplete="off" enctype="multipart/form-data">
+									<div class="row">
+										<div class="col-md-12">										
+											<!-- Begin: Col-1 -->
+											<div class="col-md-2">
+												<!-- BEGIN PROFILE IMAGE UPLOAD -->
+												<div class="form-group">
+													<div class="fileUpload">
+														<div class="upload-addicon">
+															<span class="custom-span">+</span>
+															<p class="custom-para">Add Image</p>
+														</div>
+														<input type="file" name="asset-logo" id="asset-logo" class="upload" accept="image/*" />
+														<img src="" id="asset-logo-preview" width="200" height="200"  />
+														
+													</div>
+												</div>
+												<!-- END PROFILE IMAGE UPLOAD -->
+											</div>
+											<!-- End: Col-1 -->
+											<!-- Begin: Col-2 -->
+											<div class="col-md-5">												
+												<!-- BEGIN Asset Name -->
+												<div class="form-group form-md-line-input">
+													<input type="text" class="form-control input-sm" name="assetName" id="assetName" required="true" 
+													data-required-msg="Please enter asset name" data-available data-available-url="<%=APICONF.GAPP_SERVICES.equipments.asset.equipidunique%>" data-available-msg="Asset already exists" tabindex="1" 
+													placeholder=" Please enter VIN" onkeypress="return FnAllowAlphaNumericOnly(event)"/>																
+													<label class="col-md-12 control-label" for="assetName"> Asset Name <span class="required" aria-required="true"> * </span></label>
+													<div class="form-control-focus"></div>			
+												</div>
+												<!-- END Asset Name -->
+												
+												<!-- Type -->
+												<div class="form-group form-md-line-input">		
+													<select class="form-control" name="assetType" id="assetType" required="true" data-required-msg="Please select a category"  placeholder=""Please select a category" tabindex="2" onchange="FnGetAssetFields()">
+														<option value=""> Please select a category</option>																		
+													</select>		
+													<label class="col-md-12 control-label" for="assetType">Asset Type <span class="required" aria-required="true"> * </span></label>
+													<div class="form-control-focus"></div>
+												</div>	
+												<!-- END Type -->
+												
+												<!-- BEGIN Asset Id -->
+												<div class="form-group form-md-line-input">
+													<input type="text" class="form-control input-sm" name="assetId" id="assetId" tabindex="3" 
+													placeholder=" Please enter asset id" required="true" 
+													data-required-msg="Please enter asset id" />															
+													<label class="col-md-12 control-label" for="assetId"> Asset Id <span class="required" aria-required="true"> * </span></label>
+													<div class="form-control-focus"></div>			
+												</div>
+												<!-- END Asset Id -->
+																																															
+											</div>			
+											<!-- End: Col-2 -->
+											
+											<!-- Begin: Col-3 -->
+											<div class="col-md-5">	
+												<!-- BEGIN Asset Id -->
+												<div class="form-group form-md-line-input">
+													<input type="text" class="form-control input-sm" name="serialNumber" id="serialNumber" tabindex="4" 
+													placeholder=" Please enter serialNumber" />																
+													<label class="col-md-12 control-label" for="serialNumber"> Serial Number </label>
+													<div class="form-control-focus"></div>			
+												</div>
+												<!-- END Asset Id -->
+												
+												<!-- BEGIN Chiller Rating -->
+												<div class="form-group form-md-line-input">
+													<textarea type="text"  rows="5" class="form-control " name="description" id="description"   tabindex="5" style="border: 1px solid #D4CCCC;" placeholder=" Please enter description"/></textarea>																
+													<label class="col-md-12 control-label" for="description">Description</label>
+													<div class="form-control-focus"></div>
+												</div>	
+												<!-- END Chiller Rating -->
+												
+											</div>
+											<!-- End: Col-3 -->											
+											<div class="col-md-12" id="fieldsSection" style="display:none">									
+												<div class="portlet1 dark bordered">
+													<div class="portlet-body form">
+														<div class="form-body">							
+															<div class="col-md-12" id="fieldsContainer"></div>
+															<div class="clearfix"></div>									
+														</div>
+													</div>
+												</div>									
+											</div>
+											
+											<div style="clear:both"></div>
+											
+											
+										</div> 										
+									</div>
+									<input type="hidden" id="gapp-tenant-domain" name="gapp-tenant-domain" value="<%=VarTenantKey%>" />					
+								</form>
+								
+								<% if(VarEntityId != ''){ %>
+											<div class="col-md-12">
+												<!-- Asset Point's Grid -->
+												<div id="gapp-assetpoint-list1"></div>
+												
+												<button type="button" class="btn btn-danger" style="margin-top:10px;" name="btn-asset-points" id="btn-asset-points" title="View Point Details" onclick="FnShowAssetPointDetails()" disabled><i class="fa fa-bars" aria-hidden="true"></i>Points</button>
+											</div>
+											<% } %>
+								
+								<!-- Tag Template -->
+									<% include(utils.resolvePath('templates/tagtemplate.jag')); %>
+									<div class="clearfix"></div>
+									<br>	
+								<!-- End Tag Template -->
+								
+								<form id="gapp-asset-list" role="form" action="<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/equipments/asset/list" name="gapp-asset-list" method="post">
+									<input type="hidden" id="gapp-tenant-key" name="gapp-tenant-key" value="<%=VarTenantKey%>" />
+								</form>
+								
+								<form id="form-asset-points" role="form" action="<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/equipments/asset/points" name="form-asset-points" method="post">
+									<input type="hidden" id="entity_id" name="entity_id" value="<%=VarEntityId%>"/>
+									<input type="hidden" id="gapp-tenant-key" name="gapp-tenant-key" value="<%=VarTenantKey%>" />
+									
+								</form>
+							</div>
+						</div><!-- END portlet bordered-->
+					</div><!-- END col-md-12-->
+				</div>
+				<!-- END PAGE CONTENT-->
+			</div>
+		</div>
+		<!-- END CONTENT -->
+		
+	</div>
+	<!-- END CONTAINER -->
+	<% include(utils.resolvePath('templates/global-footer.jag')); %>
+	<% 
+		include(utils.resolvePath('templates/portal-footer.jag'));
+		include('/controllers/includes/theme-portal-scripts.jag');
+	%>
+	<script type="text/javascript">
+		
+		var VarCreateAssetUrl = '<%=APICONF.GAPP_SERVICES.equipments.asset.create%>';
+		var VarListTemplateUrl = '<%=APICONF.GAPP_SERVICES.equipments.template.list%>';
+		var VarViewTemplateUrl = '<%=APICONF.GAPP_SERVICES.equipments.template.view%>';
+		var VarViewAssetUrl = '<%=APICONF.GAPP_SERVICES.equipments.asset.view%>';
+		var VarUpdateAssetUrl = '<%=APICONF.GAPP_SERVICES.equipments.asset.update%>';
+		var VarEditAssetId = '<%=VarEntityId%>';		
+		var VarLUDomainName = '<%=usr.domainName()%>';
+		var VarLUTenantName = '<%=usr.tenantName()%>';
+		var VarCurrentTenantInfo = $.parseJSON('<%=VarCurrentTenantInfo%>');
+		var VarAppImagePath = '<%=APPCONF.GAPP_CONF.DOMAIN_IMG_PATH%>';
+		var VarAppAssetImagePath = '<%=APPCONF.GAPP_CONF.DOMAIN_IMG_ASSET%>';
+		var VarAppAssetTypeImagePath = '<%=APPCONF.GAPP_CONF.DOMAIN_IMG_ASSETTYPE%>';
+		var VarAppMarkerImagePath = '<%=APPCONF.GAPP_CONF.DOMAIN_IMG_ASSETTYPE_MARKER%>';
+		var VarAppDefaultImagePath = '<%=APPCONF.GAPP_CONF.DOMAIN_IMG_DEFAULT%>';
+		var VarAppRootDomain = '<%=APPCONF.GAPP_CONF.MY_DOMAIN_NAME%>';
+		
+		
+		
+	</script>
+	<script type='text/javascript' src="<%=urlPrefix%>plugins/jquery.form.js"></script>
+	
+	<!-- Tag Footer -->
+	<% include(utils.resolvePath('templates/tagtemplate-footer.jag')); %>
+	<!-- End Tag Footer -->
+	
+	<script type="text/javascript" src="<%=urlPrefix%><%=utils.resolveUrl('js/equipments/asset/add.js')%>"></script>
+	
+	<!-- Tag Scripts -->
+	<!-- <script type="text/javascript" src="<%=urlPrefix%><%=utils.resolveUrl('js/tagtemplate-scripts.js')%>"></script> -->
+	<!-- End Tag Scripts -->
+	
+</body>
+</html>

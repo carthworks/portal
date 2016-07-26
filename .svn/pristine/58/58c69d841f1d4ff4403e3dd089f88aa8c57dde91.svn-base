@@ -1,0 +1,281 @@
+<%	
+	var APPCONF = require('/configs/appconfig.jag');
+	var APICONF = require('/configs/apiproperties.jag');
+	var usr = require('/modules/user.js');
+	include(utils.resolvePath('templates/portal-header.jag'));
+	include('/controllers/includes/theme-portal-styles.jag');
+%>	
+	<style type="text/css">		
+		.portlet-title {min-height: 12px !important; padding:0;}
+			.md-radio.has-error label > .check {
+			background: #26A69A !important;
+		}
+		.md-radio.has-error label > .box {
+			border-color: #26A69A !important;
+		}
+		.form-group.form-md-line-input .help-block{left: 0;}
+		.daterange-formcontrol div,.daterange-formcontrol select{float:left;margin-right:15px;}
+		.daterange-formcontrol select{
+			padding-left: 0;
+			padding-right: 0;
+			transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+			background: none;
+			border: 0;
+			border-bottom: 1px solid #D0C6C6;
+			font-size: 14px !important;
+			color: #888888 !important;
+		}
+		.daterange-formcontrol select option{
+			font-size: 14px !important;
+			color: #323232!important;
+		}
+		
+		#splitter{border: 0;}
+		.daterange-formcontrol{padding-left:15px;margin-top: 16px;padding: 0px 15px 0px 15px;}
+		.portlet.light{min-height:550px;}
+		.asset_splitter{    
+			background-color: #F3F3F3;
+			height: 875px;
+			border-right: 1px solid rgba(158, 158, 158, 0.14);
+			/*
+			border-right: 5px solid #F5F2F2;
+			box-shadow: -8px -3px 17px -10px #797979 inset;
+			*/
+		}
+		.form-body{padding: 0px!important;}
+		
+		/*
+		span.k-in{
+			border-bottom: 1px solid #ccc!important;
+		}
+		span.k-icon.k-plus{
+		  background-color:#f44336!important; 
+		}
+		*/
+		
+		span.k-in.k-state-hover{cursor: pointer!important;}
+		
+		/* Style for Assets Border Bottom 
+		.k-group li {
+			border-bottom: 1px solid #ccc!important;
+		}
+		.k-group li:last-child { 
+			border-bottom: none!important; 
+		}*/
+		
+		.k-top.k-bot span.k-in {
+			/*
+			pointer-events: none;
+			cursor: default;
+			border: 1px solid #fff;
+			background-color: #ccc;
+			border-radius: 5px;
+			margin-top:4px;
+			*/
+			cursor: pointer!important;
+			font-weight:bold;
+		}
+		.k-in.k-state-selected{
+			background-color: #205081!important;
+			color: #fff;
+		}
+
+		/*select#asset-points option:checked {
+			background: #26A69A!important;
+			color:#fff!important;
+			background: #26A69A repeat url(data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7)!important;
+		}*/
+		/*	
+		select#asset-points option:checked, option:hover {
+			color: white!important;
+			background: #488f8f repeat url("data:image/gif;base64,R0lGO...")!important;
+		}
+		*/	
+
+		/* Styles for Map play,pause,stop */
+		
+		button[disabled=disabled], button:disabled {
+			background-color: #dbdbdb;
+			text-decoration: none;
+			border: 1px solid #ccc;
+			text-shadow: -1px -1px 0 rgba(0,0,0,0.3);
+			text-align: center;
+			color: rgb(56, 50, 50);
+		}
+		button{ 
+			border: none;
+			background-color: #205081;
+		}
+		button:hover:enabled{
+			background: #205081; /* For browsers that do not support gradients */
+			background: linear-gradient(#205081, #000); /* Standard syntax */
+		}
+		button i{
+			color:#ffffff;
+		}	
+		button:disabled i{
+			color:rgba(0, 0, 0, 0.41);
+		}
+		button[disabled=disabled]:hover {
+			background-color: #dbdbdb;
+			text-decoration: none;
+			border: 1px solid #ccc;
+			text-shadow: -1px -1px 0 rgba(0,0,0,0.3);
+			text-align: center;
+			color: rgb(56, 50, 50);
+		}
+		#gapp-assetshistory-location-map-section span{
+			position: absolute;
+			margin-top: 9px;
+			margin-left: 9px;
+			z-index: 9999;
+			padding: 7px;
+			background: #fff;
+			border-radius: 5px;
+			opacity: 0.9; 
+			height: 38px;
+			text-align: center;
+			box-shadow: 0 1px 5px rgba(0,0,0,0.4);
+		}  		
+	</style>
+	
+	<link rel="stylesheet" href="<%=urlPrefix%>plugins/leaflet/beta/leaflet.css" type="text/css"/>
+</head>
+
+<body class="page-md page-header-fixed page-quick-sidebar-over-content page-footer-fixed  page-full-width">
+	<div class="se-pre-con"></div>
+	<% include(utils.resolvePath('templates/global-header.jag')); %>
+	<!-- BEGIN CONTAINER -->
+	<div class="page-container">
+		<!-- BEGIN CONTENT -->
+		<div class="page-content-wrapper">
+			<div class="gapp-header">
+				<% include(utils.resolvePath('templates/leftnavigation.jag')); %>
+				<h3 class="page-title">	Asset History  </h3>
+				<div class="page-bar">
+					<ul class="page-breadcrumb">
+						<li>
+							<i class="fa fa-home"></i>
+							<a href="Javascript:void(0)" onclick="FnBreadCrumbHome()">Home</a>
+							<i class="fa fa-angle-right"></i>
+						</li>
+						<li>
+							<a href="Javascript:void(0)" onclick="FnNavigateClientList()">History</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="page-content">
+				<!-- BEGIN PAGE CONTENT-->
+					<div class="row">
+						<div class="col-md-12">						
+							<div class="portlet light bordered animated fadeInUp dark">
+							<div class="portlet-title">
+								<div class="caption font-red-sunglo ">
+									<i class="pageheadericon pageheader-assethistoryicon"></i>
+									<span class="caption-subject bold uppercase">Asset History</span>
+								</div>
+							</div>		
+								<div class="portlet-body form">
+									<form name="gapp-addclient-form" id="gapp-addclient-form" method="post" role="form" autocomplete="off" enctype="multipart/form-data" style="border: 1px solid #DCDADA;">
+										<div class="form-body">
+											<div>
+													<div class="col-md-2 asset_splitter">
+														<h4><strong> </strong></h4>
+														<div id="treeview" style="height: 585px;overflow: auto;"></div>
+													</div>
+													
+													<div class="col-md-10">
+													
+														<section class="row" id="MyForm">
+															<div class="daterange-formcontrol">
+															<select id="asset-points" class="pull-left col-md-2" style="margin-bottom:10px;height:29px;cursor: pointer;" onchange="fnChangePoints()" tabindex="1">
+																<option selected value=""> No Data </option>
+															</select>
+															<div class="form-group">
+															<label>Start Date </label>	
+															<input type="text" class="form-control date-picker" name="startDate" id="startDate" tabindex="2"  placeholder="Select Date" required/>
+															</div>	
+															
+															<div class="form-group">
+															<label>End Date </label>
+															<input type="text" class="form-control date-picker" name="endDate" id="endDate" tabindex="3" placeholder="Select Date" required/>
+															</div>
+															<button type="button" class="btn  btn-raised green" name="gapp-facility-save" id="gapp-facility-save" onclick="return FnAssetPointHistory();" tabindex="4">Search</button>	
+															<% if(ObjPageAccess['historyexport']=='1') { %>
+															<button id="btnExport" name="btnExport" onclick="return ExportToCsvAsset();" class="btn  btn-raised green pull-right" disabled>Export to CSV</button>
+															<% } %>
+															</div>																	
+														</section>
+														 
+														<section class="row" style="margin-bottom:15px;padding-left:15px;padding-right: 15px;">
+															<div id="gapp-assetshistory-list"></div>
+														</section>
+														
+														<section class="row" style="padding-left:15px;padding-right: 15px;">
+															<div id="gapp-assetshistory-chart" style="height:400px"></div>
+														</section>
+											
+														<section class="row" id="gapp-assetshistory-location-map-section" style="padding-left:15px;padding-right: 15px;">
+															<span style="">
+																<button id="play" type="button" class="button" value="Play" onclick="fnPlay();"/>
+																	<i class="fa fa-play" aria-hidden="true"></i></button>&nbsp;
+																<button id="pause" type="button" class="button" value="Pause"  onclick="fnPause();" disabled/>
+																	<i class="fa fa-pause" aria-hidden="true"></i></button>&nbsp;
+																<button id="stop" type="button" class="button" value="Stop"  onclick="fnStop();" disabled/>
+																	<i class="fa fa-stop" aria-hidden="true"></i></button>
+															</span>
+															<div id="gapp-assetshistory-location-map" style="height:415px"></div>
+														</section>
+														
+													</div>
+										</div>	
+										</div>
+										<div class="clearfix"></div>
+									</form>
+									<form id="gapp-client-list" role="form" action="<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/clients/list" name="gapp-client-list" method="post">
+										<input type="hidden" id="gapp-tenant-key" name="gapp-tenant-key" value="<%=VarTenantKey%>" />
+									</form>
+								</div>
+							</div>	
+						</div>
+					</div>
+				<!-- END PAGE CONTENT-->
+			</div>
+		</div>
+		<!-- END CONTENT -->
+	</div>
+	<!-- END CONTAINER -->
+	<% include(utils.resolvePath('templates/global-footer.jag')); %>
+	<% 
+		include(utils.resolvePath('templates/portal-footer.jag'));
+		include('/controllers/includes/theme-portal-scripts.jag');
+	%>
+	<script type="text/javascript">
+		var VarListClientsUrl = '<%=APICONF.GAPP_SERVICES.clients.list%>';
+		/*var VarListAssetsUrl = '<%=APICONF.GAPP_SERVICES.assets.filterlist%>';*/
+		var VarListAssetsUrl = '<%=APICONF.GAPP_SERVICES.equipments.asset.list%>';
+		
+		var VarLUDomainName = '<%=usr.domainName()%>';
+		var VarCurrentTenantInfo = $.parseJSON('<%=VarCurrentTenantInfo%>');
+		var ObjPageAccess = $.parseJSON('<%=ObjPageAccess%>');
+		var VarAssetsPointsUrl = '<%=APICONF.GAPP_SERVICES.hierarchy.immediatechildren%>';
+		var VarAssetsHistoryUrl = '<%=APICONF.GAPP_SERVICES.assets.findhistory%>';
+		
+	</script>
+	<!--<script type='text/javascript' src="<%=urlPrefix%>js/moment.min.js"></script>-->
+	<script type='text/javascript' src="<%=urlPrefix%>js/mask.js"></script>
+	
+	<script type='text/javascript' src="<%=urlPrefix%>plugins/leaflet/beta/leaflet-src.js"></script>
+	<script type='text/javascript' src="<%=urlPrefix%>plugins/leaflet/L.Polyline.SnakeAnim.Customized.js"></script>
+	
+	<script type="text/javascript" src="<%=urlPrefix%><%=utils.resolveUrl('js/assets/historyasset.js')%>"></script>
+		<script type="text/javascript">	
+			window.onload = function(){
+				FnGetAssetsList();
+				FnDefaultInitialGridChart();
+			};
+
+	</script>
+</body>
+</html>

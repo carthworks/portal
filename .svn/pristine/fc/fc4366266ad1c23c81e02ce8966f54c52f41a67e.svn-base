@@ -1,0 +1,26 @@
+{
+	"tenant" : {
+		"client_management" 	: 	"client_management",
+		"user_management" 		: 	"user_management",
+		"device_management" 	: 	"device_management",
+		"role_management"		: 	"role_management",
+		"connected_diagnostics" : 	"connected_diagnostics",
+		"geofence" 				: 	"geofence",
+		"device_status" 		: 	"device_status",
+		"dashboards"			:	"dashboards",
+		"claim_device"			:   "claim_device",
+		"geotag"				:	"geotag",
+		"tag"					: 	"tag",
+		"tag_type"				:	"tag_type",
+		"asset_monitoring"		:	"asset_monitoring",
+		"asset_history"			:	"asset_history",
+		"asset_types"			:	"asset_types",
+		"asset_management" 		: 	"asset_management",
+		"asset_details" 		: 	"asset_details",
+		"alarm_console"			: 	"alarm_console",
+		"alarm_logs"			: 	"alarm_logs",
+		"alarm_definition"		:	"alarm_definition",
+		"poi_management"		:	"poi_management",
+		"poi_types"				:	"poi_types"
+	}
+}

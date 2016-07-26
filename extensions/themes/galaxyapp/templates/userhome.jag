@@ -1,0 +1,396 @@
+<%
+	var APPCONF = require('/configs/appconfig.jag');
+	var ObjUser = session.get('user');
+	var permission = require('/configs/permissions.json');
+	
+%>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="UI for IOT platform">
+        <meta name="author" content="galaxy app">
+		<title>Galaxy App</title>
+		<link rel="shortcut icon" href="<%=urlPrefix%><%=utils.resolveUrl('images/favicon.ico')%>">
+		<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" />
+		<link rel="stylesheet" type="text/css" href="<%=urlPrefix%><%=utils.resolveUrl('css/font-awesome.min.css')%>" />
+		<link rel="stylesheet" type="text/css" href="<%=urlPrefix%>plugins/bootstrap/css/bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="<%=urlPrefix%><%=utils.resolveUrl('css/metroJs.css')%>" /> 
+		<link rel="stylesheet" type="text/css" href="<%=urlPrefix%><%=utils.resolveUrl('css/animate.css')%>" />	
+		<link rel="stylesheet" type="text/css" href="<%=urlPrefix%><%=utils.resolveUrl('css/gapp.css')%>" />  
+		<link rel="stylesheet" type="text/css" href="<%=urlPrefix%>css/jquery-custom-scrollbar/jquery.mCustomScrollbar.css" />
+		<link rel="stylesheet" type="text/css" href="<%=urlPrefix%><%=utils.resolveUrl('css/home.css')%>" />
+<link rel="stylesheet" type="text/css" href="<%=urlPrefix%><%=utils.resolveUrl('css/home.css')%>" />		
+</head>
+<body class="outer-wrapper">
+	<div id="wrapper">
+		<header>   
+			<div class="container-fluid">
+				<div class="col-md-12">
+					<div class="col-md-8 col-xs-6"><h3 class="capitalize homeHeaderTxt"><%=VarTenantKey%></h3></div>
+					<div class="col-md-4 col-xs-6"> 
+						<% include(utils.resolvePath('templates/socialmedia-links.jag')); %>
+					</div>
+				</div>
+			</div> 
+		</header>
+		<section id="wrap">			
+			<div class="main-content dynamicTile pt-page-scaleUpDown pt-page-delay300"> <!-- use this class if you need slidescroll and activate JS init below : "panorama" -->
+				<div class="content-wrapper tiles panorama-sections">
+					<section class="tile-group four-wide tilescategoryOne first panorama-section">
+						<div class="container-ss get-width">
+						
+						
+							<!-- Category 1 -->
+							<!-- CLIENT MANAGEMENT START -->
+							<% if(utils.allowed(ObjUser['permissions'],[permission.clients.add,permission.clients.list])){ %>
+							<div data-ss-colspan="2">
+								<div class="live-tile exclude tile" data-mode="none" data-bounce="true">
+									<div class="tile_style " style="background-color: #163D58;">
+										<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/clients/list')">
+											<div class="carousel slide client_scroll" data-ride="carousel">
+												<!-- Wrapper for slides -->
+												<div class="carousel-inner">
+													<div class="item active">
+														<img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/client_icon.png')%>" class="tile_image img-responsive"/>
+													</div>
+												</div>
+											</div>
+										</a>
+										<section class="tilecaptionbox whitebar">
+											<div class="tilecaption">Client Management</div>
+											<div class="tileactions">
+												<% if(utils.allowed(ObjUser['permissions'],[permission.clients.add])){ %>
+												<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/clients/add')"><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/plus.png')%>"/></a>
+												<% } %>
+												<% if(utils.allowed(ObjUser['permissions'],[permission.clients.list])){ %>
+												<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/clients/list')"><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/three_lines.png')%>"/></a>
+												<% } %>
+											</div>
+										</section>
+									</div>
+								</div>
+							</div>
+							<% } %>
+							<!-- CLIENT MANAGEMENT END -->
+							
+							<!-- USER MANAGEMENT START -->
+							<% if(utils.allowed(ObjUser['permissions'],[permission.users.add,permission.users.list])){ %>
+							<div data-ss-colspan="3">
+								<div class="live-tile exclude tile" data-mode="none" data-bounce="true">
+									<div class="tile_style">
+										<a href="Javascript:void(0)" <% if(utils.allowed(ObjUser['permissions'],[permission.users.list])){ %> onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/users/list')" <% } %>>
+											<ul class="flip-list nineTiles" data-mode="flip-list" data-delay="2000">
+												<li>
+													<div><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/users/user_2.svg')%>" class="svg" alt="Less"></div>
+													<div ><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/users/user_2.svg')%>" class="svg" alt="MCSD"></div>
+												</li>
+												<li>
+													<div ><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/users/user_3.svg')%>" class="svg" alt="CSS 3"></div>
+													<div><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/users/user_5.svg')%>" class="svg" alt="MCSD"></div>
+												</li>
+												<li>
+													<div ><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/users/user_6.svg')%>" class="svg" alt="MonoDevelop"></div>
+													<div ><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/users/user_6.svg')%>" class="svg" alt="MCSD"></div>
+												</li>                        
+												<li>
+													<div ><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/users/user_5.svg')%>" class="svg" alt="XCode"></div>
+													<div ><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/users/user_3.svg')%>" class="svg" alt="MCSD"></div>
+												</li>
+												<li>
+													<div ><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/users/user_2.svg')%>" class="svg" alt="XCode"></div>
+													<div ><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/users/user_2.svg')%>" class="svg" alt="MCSD" ></div>
+												</li>
+												<li>
+													<div ><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/users/user_1.svg')%>" class="svg" alt="XCode"></div>
+													<div ><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/users/user_6.svg')%>" class="svg" alt="MCSD"></div>
+												</li>
+											</ul>
+										</a>
+										<section class="tilecaptionbox">
+											<div class="tilecaption"><a href="#">User Management</a></div>
+											<div class="tileactions">
+												<% if(utils.allowed(ObjUser['permissions'],[permission.users.add])){ %>
+												<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/users/add')"><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/plus.png')%>"/></a>
+												<% } %>
+												<% if(utils.allowed(ObjUser['permissions'],[permission.users.list])){ %>
+												<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/users/list')"><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/three_lines.png')%>"/></a>
+												<% } %>
+											</div>
+										</section>
+									</div>
+								</div>
+							</div>
+							<% } %>
+							<!-- USER MANAGEMENT END -->
+							
+							<!-- Device Management -->
+							<% if(utils.allowed(ObjUser['permissions'],[permission.device.add,permission.device.list])){ %>
+							<div data-ss-colspan="3">
+								<div class="live-tile tile2 exclude" data-mode="fade-list" data-bounce="true">
+									<div class="tile_style">
+										<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/device/list')">
+											<div class="carousel slide" data-ride="carousel">
+												<!-- Wrapper for slides -->
+												<div class="carousel-inner">
+													<div class="item active">
+													  <img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/device_banner1.png')%>" class="img-responsive"/>
+													</div>
+													<div class="item">
+													  <img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/device_banner2.png')%>" class="img-responsive"/>
+													</div>
+												</div>
+											</div>
+										</a>
+										<section class="tilecaptionbox">
+											<div class="tilecaption">Device Management</div>
+											<div class="tileactions">
+												<% if(utils.allowed(ObjUser['permissions'],[permission.device.add])){ %>
+												<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/device/add')"><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/plus.png')%>"/></a>
+												<% } %>
+												<% if(utils.allowed(ObjUser['permissions'],[permission.device.list])){ %>
+												<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/device/list')"><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/three_lines.png')%>"/></a>
+												<% } %>
+											</div>
+										</section>
+									</div>
+								</div>
+							</div>
+							<% } %>
+							<!-- End:Device Management -->
+							
+							<!-- Unclaimed Device -->
+							<% if(utils.allowed(ObjUser['permissions'],[permission.claim.list])){ %>
+							<div data-ss-colspan="2">
+								<div class="live-tile tile2" data-mode="fade-list" data-bounce="true" >
+									<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/claim/list')">
+										<div class="tile_style" style="background-color: #494b62;">
+											<aside ><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/G2021_device.png')%>"  class="tile_image img-responsive" style="padding-top: 8%;" /></aside>
+											<section class="tilecaptionbox noaction">
+												<div class="tilecaption" style="color:#fff">Unclaimed Device</div>
+											</section>
+										</div>
+									</a>
+								</div>
+							</div>
+							<% } %>
+							<!-- End:Unclaimed Device -->
+							
+							<!-- Role Management -->
+							<% if(utils.allowed(ObjUser['permissions'],[permission.roles.add,permission.roles.list])){ %>
+								<div data-ss-colspan="2">
+									<div class="live-tile tile2" data-mode="fade-list" data-bounce="true" >
+										<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/roles/list')">
+											<div class="tile_style" style="background-color: #d58808;">
+												<aside><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/roles.png')%>"  class="tile_image img-responsive" /></aside>
+											</div>
+										</a>
+										<section class="tilecaptionbox whitebar">
+											<div class="tilecaption"><a href="#">Role Management</a></div>
+											<div class="tileactions">
+												<% if(utils.allowed(ObjUser['permissions'],[permission.roles.add])){ %>
+												<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/roles/add')"><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/plus.png')%>"/></a>
+												<% } %>
+												<% if(utils.allowed(ObjUser['permissions'],[permission.roles.list])){ %>
+												<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/roles/list')"><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/three_lines.png')%>"/></a>
+												<% } %>
+											</div>
+										</section>
+									</div>
+								</div>
+							<% } %>
+							<!-- End: Role Management -->
+							
+							<!-- Connected Diagnostics -->
+							<% if(utils.allowed(ObjUser['permissions'],[permission.ccd.contact.list,permission.ccd.import.equipments,permission.ccd.faults.list])){ %>
+							<div data-ss-colspan="2">
+								<div class="live-tile tile2" data-mode="fade-list" data-bounce="true" >
+									<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/ccdhome')">
+										<div class="tile_style" style="background-color:#af1a40;">
+											<aside><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/connected.png')%>"  class="tile_image img-responsive" /></aside>
+											<section class="tilecaptionbox noaction">
+												<div class="tilecaption" style="color:#fff">Connected Diagnostics</div>
+											</section>
+										</div>
+									</a>
+								</div>
+							</div>
+							<% } %>
+							<!-- END:Connected Diagnostics -->
+							<% if(utils.allowed(ObjUser['permissions'],[permission.geofence.create,permission.geofence.list])){ %>
+							<div data-ss-colspan="2">
+								<div class="live-tile tile2" data-mode="fade-list" data-bounce="true" >
+									<% if(utils.allowed(ObjUser['permissions'],[permission.geofence.list])){ %>
+									<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/geofence/list')">
+										<div class="tile_style" style="background-color:#00566a;">
+											<aside><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/geofence.png')%>"  class="tile_image img-responsive"/></aside>
+											<section class="tilecaptionbox noaction">
+												<div class="tilecaption" style="color:#fff">Geofence</div>
+											</section>
+										</div>
+									</a>
+									<% } %>
+									<section class="tilecaptionbox whitebar">
+											<div class="tilecaption"><a href="#">Geofence</a></div>
+											<div class="tileactions">
+												<% if(utils.allowed(ObjUser['permissions'],[permission.geofence.create])){ %>
+												<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/geofence/create')"><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/plus.png')%>"/></a>
+												<% } %>
+												<% if(utils.allowed(ObjUser['permissions'],[permission.geofence.list])){ %>
+												<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/geofence/list')"><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/three_lines.png')%>"/></a>
+												<% } %>
+											</div>
+										</section>
+								</div>
+							</div>
+							<% } %>
+						</div>
+					</section>
+					<!-- End:Category 1 -->
+					
+					<!-- Category 2 -->
+					<section class="tile-group four-wide panorama-section tilescategoryGroup">
+						<div style="margin-top:10px;" class="tilescategoryTwo">
+							<h3>Asset Management</h3>
+							<div class="container-ss smallbox" >
+									<% if(utils.allowed(ObjUser['permissions'],[permission.assets.monitoring])){ %>
+									<div data-ss-colspan="2">
+										<div class="live-tile tile2" data-mode="fade-list" data-bounce="true" >
+											<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/assets/monitoring')">
+												<div class="tile_style" style="background-color:#494b62;">
+													<aside><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/map_icon.png')%>"  class="map_image tile_image img-responsive" /></aside>
+													<section class="tilecaptionbox noaction">
+														<div class="tilecaption" style="color:#fff">Monitoring</div>
+													</section>
+												</div>
+											</a>
+										</div>
+									</div>
+									<% } %>
+									<% if(utils.allowed(ObjUser['permissions'],[permission.assets.historyasset])){ %>
+									<div data-ss-colspan="2">
+										<div class="live-tile tile2" data-mode="fade-list" data-bounce="true" >
+											<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/assets/historyasset')">
+												<div class="tile_style" style="background-color:#2574eb;">
+													<aside><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/device_history.png')%>"  class="tile_image img-responsive" /></aside>
+													<section class="tilecaptionbox noaction">
+														<div class="tilecaption" style="color:#fff">Asset History</div>
+													</section>
+												</div>
+											</a>
+										</div>
+									</div>
+									<% } %>
+									
+									<% if(utils.allowed(ObjUser['permissions'],[permission.equipments.template.add,permission.equipments.template.list])){ %>
+									<div data-ss-colspan="2">
+										<div class="live-tile tile2" data-mode="fade-list" data-bounce="true" >
+											<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/equipments/template/list')">
+												<div class="tile_style" style="background-color:green;">
+													<aside><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/asset_template.png')%>"  class="tile_image img-responsive"/></aside>
+												</div>
+											</a>
+											<section class="tilecaptionbox whitebar">
+												<div class="tilecaption"><a href="#">Asset Type</a></div>
+												<div class="tileactions">
+												<% if(utils.allowed(ObjUser['permissions'],[permission.equipments.template.add])){ %>
+													<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/equipments/template/add')"><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/plus.png')%>"/></a>
+												<% } %>	
+												<% if(utils.allowed(ObjUser['permissions'],[permission.equipments.template.list])){ %>	
+													<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/equipments/template/list')"><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/three_lines.png')%>"/></a>
+												<% } %>	
+												</div>
+											</section>
+										</div>
+									</div>
+									<% } %>
+									<% if(utils.allowed(ObjUser['permissions'],[permission.equipments.asset.add,permission.equipments.asset.list])){ %>
+									<div data-ss-colspan="2">
+										<div class="live-tile tile2" data-mode="fade-list" data-bounce="true" >
+											<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/equipments/asset/list')">
+												<div class="tile_style" style="background-color:#00566a;">
+													<aside><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/asset_globe.png')%>"  class="tile_image img-responsive" /></aside>
+												</div>
+											</a>
+											<section class="tilecaptionbox whitebar">
+												<div class="tilecaption"><a href="#">Assets</a></div>
+												<div class="tileactions">
+												<% if(utils.allowed(ObjUser['permissions'],[permission.equipments.asset.add])){ %>
+													<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/equipments/asset/add')"><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/plus.png')%>"/></a>
+												<% } %>	
+												<% if(utils.allowed(ObjUser['permissions'],[permission.equipments.asset.list])){ %>		
+													<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/equipments/asset/list')"><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/three_lines.png')%>"/></a>
+												<% } %>	
+												</div>
+											</section>
+										</div>
+									</div>
+									<% } %>
+							</div>
+						</div>
+						<div style="display:inline-block;" class="tilescategoryThree">
+							<h3>Alarm</h3>
+							<div class="container-ss smallbox">
+								<% if(utils.allowed(ObjUser['permissions'],[permission.alarm.console])){ %>
+									<div data-ss-colspan="2">
+												<div class="live-tile tile2" data-mode="fade-list" data-bounce="true" >
+													<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/alarm/console')">
+														<div class="tile_style" style="background-color:#009bad;">
+															<aside><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/alarm_console.png')%>"  class="tile_image img-responsive" /></aside>
+															<section class="tilecaptionbox noaction">
+																<div class="tilecaption" style="color:#fff">Console</div>
+															</section>
+														</div>
+													</a>
+												</div>
+									</div>
+								<% } %>
+								<% if(utils.allowed(ObjUser['permissions'],[permission.alarm.history])){ %>
+									<div data-ss-colspan="2">
+												<div class="live-tile tile2" data-mode="fade-list" data-bounce="true" >
+													<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/alarm/history')">
+														<div class="tile_style" style="background-color:#d44b29;">
+															<aside><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/alarm-history.png')%>"  class="tile_image img-responsive" /></aside>
+															<section class="tilecaptionbox noaction">
+																<div class="tilecaption" style="color:#fff">Logs</div>
+															</section>
+														</div>
+													</a>
+												</div>
+									</div>
+								<% } %>
+							</div>
+						</div>
+					
+					</section>
+					<!-- End: Category 2 -->
+
+				</div>
+			</div>			
+		</section>
+
+		<div  id="myfooter" class="page-footer-inner">&copy; 2016 Galaxy, Pacific Controls.</div>
+	</div>
+	<form action="" name="gapp-tenant-info" id="gapp-tenant-info" method="post">
+		<input type="hidden" name="gapp-tenant-key" id="gapp-tenant-key" value="<%=VarTenantKey%>" />
+	</form>
+</body>
+
+	<% 
+		include('/controllers/includes/theme-portal-scripts.jag');
+	%>
+	
+	  <script type='text/javascript' src="<%=urlPrefix%>plugins/jquery.min.js"></script>
+	<script type='text/javascript' src="<%=urlPrefix%>plugins/jquery-ui/jquery-ui.min.js"></script>
+	<script type='text/javascript' src="<%=urlPrefix%>plugins/bootstrap/js/bootstrap.min.js"></script>  
+	<script type='text/javascript' src="<%=urlPrefix%><%=utils.resolveUrl('js/metroJs.min.js')%>"></script>
+	<script type='text/javascript' src="<%=urlPrefix%><%=utils.resolveUrl('js/ripples.min.js')%>"></script>
+	<script type='text/javascript' src="<%=urlPrefix%><%=utils.resolveUrl('js/modernizr.js')%>"></script>
+	<script type='text/javascript' src="<%=urlPrefix%><%=utils.resolveUrl('js/jquery.shapeshift.min.js')%>"></script>
+	<script type='text/javascript' src="<%=urlPrefix%><%=utils.resolveUrl('js/jquery.touchSwipe.min.js')%>"></script>
+	<script type='text/javascript' src="<%=urlPrefix%><%=utils.resolveUrl('js/userhome.js')%>"></script>
+	<script type='text/javascript' src="<%=urlPrefix%>js/jquery-custom-scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
+	<script type='text/javascript' src="<%=urlPrefix%><%=utils.resolveUrl('js/home-common.js')%>"></script>
+
+</body>
+</html>

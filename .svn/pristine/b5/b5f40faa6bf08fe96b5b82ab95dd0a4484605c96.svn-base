@@ -1,0 +1,87 @@
+<%
+
+	var user = session.get('user');
+	if(user == null){
+		response.sendError(401, 'unathorized');
+		exit();
+	}
+	
+	var APPCONF = require('../../configs/appconfig.jag');
+	var GADGETCONF = require('../../configs/apigadgets.jag');
+	include('../commonservicefunctions.jag');
+	
+	var util = require('modules/dashboards.js');	
+	
+	
+	var log = new Log();
+	
+	// Requert Parameters
+	
+	var payload = parse(stringify(request.getContent()));
+	var action = payload.action;
+	
+	var VarEndPointUrl = (GADGETCONF.GADGET_SERVICES.server.scheme) + "://" + (GADGETCONF.GADGET_SERVICES.server.host) + ":" + (GADGETCONF.GADGET_SERVICES.server.port);
+	
+	function FnGetCurrentTenant(VarTenantKey){
+		var ObjTenantInfo = session.get('PARENT_CLIENT');
+		var ObjChildTenantInfo = session.get('CHILD_CLIENT');
+		var VarCurrentTenantInfo = '';
+		if(ObjTenantInfo != 'null'){ 
+			if(ObjTenantInfo['tenantId'] == VarTenantKey){
+				VarCurrentTenantInfo = ObjTenantInfo;
+			} else if(ObjChildTenantInfo != 'null' && ObjChildTenantInfo['tenantId'] == VarTenantKey){
+				VarCurrentTenantInfo = ObjChildTenantInfo;
+			}		
+		}
+		
+		return VarCurrentTenantInfo;
+	}
+	
+	function FnGetTenantAssetsList(){
+		var VarTenantKey = payload.tenantId;
+		var ObjTenantInfo = FnGetCurrentTenant(VarTenantKey);
+		var VarInputs = {"parentIdentity":{"domain":{"domainName":ObjTenantInfo.parentDomain},"identifier":{"key":"tenantId","value":ObjTenantInfo.tenantId}},"searchTemplateName":"Genset","searchEntityType":"MARKER","statusName":"ACTIVE"};
+		var VarUrl = VarEndPointUrl + GADGETCONF.GADGET_SERVICES.cummins.tenantsChildren;
+		log.info('Retrieving TenantAssetsList');
+		var VarResponse = FnMakePostRequestCall(VarUrl,true,'application/json','application/json',VarInputs);
+		print(VarResponse);
+		
+	}
+	
+	function FnGetAssetPointList(){
+		var param = payload.payload;
+		var VarUrl = VarEndPointUrl + GADGETCONF.GADGET_SERVICES.cummins.pointlist;
+		log.info('Retrieving AssetPointList');
+		var VarResponse = FnMakePostRequestCall(VarUrl,true,'application/json','application/json',param);
+		print(VarResponse);
+	}
+	
+	function FnGetSubcriptionInfo(){
+		var param = payload.datasource;			
+		var VarUrl = VarEndPointUrl + GADGETCONF.GADGET_SERVICES.cummins.subscribe;
+		log.info('Retrieving SubcriptionInfo');
+		var VarResponse = FnMakePostRequestCall(VarUrl,true,'application/json','application/json',param);
+		print(VarResponse);
+	}
+	
+	function FnGetAssetInfo(){
+		var param = payload.payload;
+		var VarInputs = {"domain":param.domain,"platformEntity":param.platformEntity,"entityTemplate":param.entityTemplate,"identifier":param.identifier};
+		var VarUrl = VarEndPointUrl + GADGETCONF.GADGET_SERVICES.cummins.assetinfo;
+		log.info('Retrieving AssetInfo');
+		var VarResponse = FnMakePostRequestCall(VarUrl,true,'application/json','application/json',VarInputs);
+		print(VarResponse);
+	}
+	
+	
+	
+	var actionMapping = {
+		'tenant-assets-list' : FnGetTenantAssetsList,
+		'subcription-info' : FnGetSubcriptionInfo,
+		'asset-point-list' : FnGetAssetPointList,
+		'asset-info' : FnGetAssetInfo
+	};	
+	
+	actionMapping[action]();
+
+%>

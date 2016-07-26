@@ -1,0 +1,128 @@
+{
+	"clients" : {
+				"add" : "client_management/create",
+				"list" : "client_management/list",
+				"view" : "client_management/view",
+				"sendemail" : "client_management/create admin",
+				"edit" : "client_management/edit"
+			},
+	"users" : {
+				"add" : "user_management/create",
+				"list" : "user_management/list",
+				"view" : "user_management/view",
+				"edit" : "user_management/edit",
+				"delete" : "user_management/delete"
+			},
+	"roles" : {
+				"add" : "role_management/create",
+				"list" : "role_management/list",
+				"view" : "role_management/view",
+				"edit" : "role_management/edit"
+			},
+	"device" : {
+				"add" : "device_management/create",
+				"list" : "device_management/list",
+				"view" : "device_management/view",
+				"edit" : "device_management/edit",
+				"assign" : "device_management/assign devices to tenants",
+				"dashboard" : "device_management/dashboard",
+				"mapping" : "device_management/mapping",
+				"info" : "device_status/view"
+			},
+			
+	"pointofinterest":{
+			"template" : {
+						"add" : "poi_types/create",
+						"list" : "poi_types/list",
+						"view" : "poi_types/view",
+						"edit" : "poi_types/edit",
+						"delete" : "poi_types/delete"
+				},
+				"poi" : {
+					"add" : "poi_management/create",
+					"list" : "poi_management/list",
+					"view" : "poi_management/view",
+					"edit" : "poi_management/edit",
+					"mappoint" : "poi_management/map points"
+					
+				}
+			
+			},
+	"equipments" : {
+				
+				"template" : {
+						"add" : "asset_types/create",
+						"list" : "asset_types/list",
+						"view" : "asset_types/view",
+						"edit" : "asset_types/edit"
+				},
+				"asset" : {
+					"add" : "asset_management/create",
+					"list" : "asset_management/list",
+					"view" : "asset_management/view",
+					"edit" : "asset_management/edit",
+					"mappoint" : "asset_management/map points",
+					"dashboard" : "asset_management/asset dashboard",
+					"details" : "asset_details/view"
+				}
+			},
+	"claim" : {
+		"list" : "claim_device/list unclaimed",
+		"view" : "claim_device/claim device"
+	},
+	"assets" : {
+			"monitoring" : "asset_monitoring/view",
+			"historyasset" : "asset_history/view",
+			"historyexport" : "asset_history/export",
+			"livegrid" : "asset_monitoring/view live grid",
+			"historyview" : "asset_monitoring/view history"
+	},
+	"alarm" : {
+				"console" : "alarm_console/view",
+				"history" : "alarm_logs/view",
+				"definition" : "alarm_definition/view",
+				"define" : "alarm_definition/define"
+				
+			},
+	"ccd" : {
+		"contact" : {
+				"add" : "connected_diagnostics/all",
+				"list" : "connected_diagnostics/all",
+				"view" : "connected_diagnostics/all",
+				"map" : "connected_diagnostics/all"
+			},
+		"import" : {
+			"equipments" : "connected_diagnostics/all",
+			"equipmentlist" : "connected_diagnostics/all"
+		},
+		"faults" : {
+			"list" : "connected_diagnostics/all"
+		}
+	},
+	"geofence" : {
+		"create" : "geofence/create",
+		"list" : "geofence/list",
+		"view" : "geofence/view",
+		"edit" : "geofence/edit",
+		"delete" : "geofence/delete"
+	},
+	"tags" : {
+		"template": {
+			"create": "tag_type/create",
+			"list" : "tag_type/list",
+			"view" : "tag_type/view"
+		},
+		"nametag": {
+			"create" : "tag/create",
+			"list" : "tag/list",
+			"view" : "tag/view",
+			"edit" : "tag/edit"
+		}
+	},
+	"configurationTemplates" : {
+		"create" : "geofence_management/create",
+		"list" : "geofence_management/list",
+		"view" : "geofence_management/view",
+		"edit" : "geofence_management/edit"
+	}
+}

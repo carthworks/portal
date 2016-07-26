@@ -1,0 +1,447 @@
+<%
+	var APPCONF = require('/configs/appconfig.jag');
+	var APICONF = require('/configs/apiproperties.jag');
+	var usr = require('/modules/user.js');
+	include(utils.resolvePath('templates/portal-header.jag'));
+	include('/controllers/includes/theme-portal-styles.jag');
+%>
+	<style type="text/css">
+		
+		.portlet-title { min-height: 12px !important; padding:0; }
+	
+		.ga-wrap {padding:12px; display: block; min-height:460px;  }
+	
+			
+		.form .form-section {
+			margin: 12px 0px 22px 0px;
+			padding-bottom: 12px;
+		}
+		.myportlet{ display: inline-block;    width: 100%;}
+			
+		form-group.form-md-line-input {margin: 0 !important;}
+		.portlet.light {padding: 12px 20px 0px 20px !important;	}
+		.dark{background-color: #f7f7f7;}
+		.gapp-fanRating .form-md-line-input{margin-bottom:10px;padding-left: 0px;}
+		.gapp-fanRating{background-color: #f7f7f7;padding: 10px;border: 1px solid #f7f7f7;margin-bottom: 15px;}
+		.boxTextbox{margin-top: 24px;}
+	</style>
+</head>
+<body class="page-md page-header-fixed page-quick-sidebar-over-content page-footer-fixed  page-full-width"  >
+	<% include(utils.resolvePath('templates/global-header.jag')); %>
+<!-- BEGIN CONTAINER -->
+	<div class="page-container">
+		<!-- BEGIN SIDEBAR -->
+		<div class="page-sidebar-wrapper">
+			<div class="page-sidebar   navbar-collapse collapse">
+				<!-- BEGIN SIDEBAR MENU -->	
+				<ul class="page-sidebar-menu page-sidebar-menu-hover-submenu " data-keep-expanded="false" data-auto-scroll="false" data-slide-speed="200">
+					<li class="sidebar-toggler-wrapper"><div class="sidebar-toggler"></div></li>
+					<li class="nav-item start active open ">
+						<a href="dashboard.html" class="nav-link nav-toggle">
+                            <i class="icon-bar-chart"></i>
+                            <span class="title">Dashboard</span>
+                            <span class="selected"></span>                              
+                        </a>
+                    </li>
+					<li class="">
+						<a href="javascript:;" class="nav-link nav-toggle">
+							<i class="icon-puzzle"></i>
+                            <span class="title">Dashboard Designer</span>
+                            <span class="selected"></span>                               
+                        </a>
+					</li>
+					<li class="heading">
+						<h3 class="uppercase">Device Management</h3>
+					</li>
+					<li class="open">
+						<a href="javascript:;">
+							<i class="icon-diamond"></i>
+							<span class="title">Device </span>
+							<span class="arrow "></span>
+						</a>
+						<ul class="sub-menu">						
+							<li>
+								<a href="ui_icons.html">
+								<span class="badge badge-roundless badge-danger">new</span>Create Device</a>
+							</li>		
+						
+							<li>
+								<a href="ui_tabs_accordions_navs.html">
+								List Device</a>
+							</li>
+							<li>
+								<a href="ui_tabs_accordions_navs.html">
+								Update Device</a>
+							</li>					
+						</ul>
+					</li>
+				</ul>
+				<!-- END SIDEBAR MENU -->
+			</div>
+		</div>
+		<!-- END SIDEBAR -->
+		
+		<!-- BEGIN CONTENT -->
+		<div class="page-content-wrapper">
+			<div class="page-content">
+				<h3 class="page-title">	Genset </h3>
+				<div class="page-bar">
+					<ul class="page-breadcrumb">
+						<li>
+							<i class="fa fa-home"></i>
+							<a href="Javascript:void(0)" onclick="FnBreadCrumbHome()">Home</a>
+							<i class="fa fa-angle-right"></i>
+						</li>
+						<li>
+							<a href="Javascript:void(0)" onclick="FnNavigateGensetList()">Genset</a>
+							<i class="fa fa-angle-right"></i>
+						</li>
+						<li>
+							<a href="Javascript:void(0)"><a href="Javascript:void(0)"><% if(VarEquipId != '') { %> View Genset <% } else { %> Create Genset <% } %></a></a>
+						</li>
+					</ul>
+				</div>
+				<!-- BEGIN PAGE CONTENT-->
+				<div class="row">
+					<div class="col-md-12">	
+						<!--<div id="" class="Metronic-alerts alert alert-danger fade in">
+							<button type="button" class="close" data-dismiss="alert" aria-hidden="true"> </button>						
+							<i class="fa-lg fa fa-warning"></i>Could not complete request. Please check your internet connection
+						</div>-->					
+						
+						<div class="portlet light bordered">
+							<div class="portlet-title">
+								<div class="caption font-red-sunglo">
+									<i class="fa fa-bolt font-red-sunglo"></i>
+									<span class="caption-subject bold uppercase"> <% if(VarEquipId != '') { %> View Genset <% } else { %> Create Genset <% } %> </span>
+								</div>
+								<div class="actions">
+												<% if(ObjPageAccess['edit']=='1') { %>	
+													<span id="gapp-genset-edit">
+														<a class="btn btn-circle btn-icon-only red" href="Javascript:void(0)" onclick="FnEditGenset()">
+															<i class="icon-note icons"></i> 
+														</a>		
+													</span>
+													<% } %>
+									<button type="button" class="btn btn-raised default" name="gapp-genset-cancel" id="gapp-genset-cancel" data-toggle="modal"   onclick= "FnCancelGenset()" tabindex="15">Cancel</button>							
+									<button type="button" class="btn  btn-raised btn-danger" name="gapp-genset-save" id="gapp-genset-save" onclick="FnSaveGenset()" tabindex="16" disabled="disabled">Save</button>
+								</div>
+							</div>
+							<!-- END title-->
+							
+							<div class="portlet-body form">
+								<form name="gapp-genset-form" id="gapp-genset-form" method="post" role="form" autocomplete="off">
+									<div class="row">
+										<div class="col-md-12">
+												<!-- Begin: Col-1 -->
+												<div class="col-md-4 ">												
+													<!-- Genset Id -->
+													<div class="form-group form-md-line-input">
+														<input type="text" class="form-control input-sm" name="assetName" id="assetName" placeholder="Enter your Genset Id" required data-required-msg="Genset Id not specified" data-available data-available-url="<%=APICONF.GAPP_SERVICES.equipments.genset.equipidunique%>" data-available-msg="Genset already exists" tabindex="1" />																												
+														<label class="col-md-12 control-label" for="assetName"> Genset Id <span class="required" aria-required="true"> * </span></label>
+														<div class="form-control-focus"></div>			
+													</div>
+													<!-- END Genset Id -->
+														
+													<!-- Set output -->
+													<div class="form-group form-md-line-input">	
+														<input type="text" class="form-control input-sm" name="setOutput" id="setOutput" placeholder="Enter your set output" tabindex="2" />													
+														<label class="col-md-12 control-label" for="setOutput"> Set output </label>
+														<div class="form-control-focus"></div>			
+													</div>									
+													<!-- END Set output -->
+														
+													<!-- BEGIN Prime rating -->
+													<div class="form-group form-md-line-input" >		
+														<input type="text" class="form-control input-sm" name="primeRating" id="primeRating" placeholder="Enter your prime rating"  tabindex="3"/>	
+														<label class="col-md-12 control-label" for="primeRating">Prime rating </label>
+														<div class="form-control-focus"></div>
+													</div>	
+													<!-- END Prime rating -->
+														
+													<!-- Engine make -->
+													<div class="form-group form-md-line-input">
+														<input type="text" class="form-control input-sm" name="engineMake" placeholder="Enter your Engine make" id="engineMake" required data-required-msg="Engine make not specified" tabindex="4"/>																
+														<label class="col-md-12 control-label" for="engineMake"> Engine make <span class="required" aria-required="true"> * </span></label>
+														<div class="form-control-focus"></div>			
+													</div>
+													<!-- END Engine make -->
+														
+													<!-- Engine model -->
+													<div class="form-group form-md-line-input">		
+														<input type="text" class="form-control input-sm" name="engineModel" placeholder="Enter your Engine model" id="engineModel" required data-required-msg="Engine model not specified" tabindex="5"/>		
+														<label class="col-md-12 control-label" for="engineModel">Engine model <span class="required" aria-required="true"> * </span></label>
+														<div class="form-control-focus"></div>
+													</div>
+													<!-- END Engine model -->
+													
+													<!-- Cylinders -->
+													<div class="form-group form-md-line-input">		
+														<input type="text" class="form-control input-sm" name="cylinders" placeholder="Enter your cyinders" id="cylinders" tabindex="5"/>		
+														<label class="col-md-12 control-label" for="cylinders">Cylinders</label>
+														<div class="form-control-focus"></div>
+													</div>
+													<!-- END Cylinders -->
+													
+													<!-- Engine build -->
+													<div class="form-group form-md-line-input">		
+														<input type="text" class="form-control input-sm" name="engineBuild" placeholder="Enter your Engine build" id="engineBuild" tabindex="5"/>		
+														<label class="col-md-12 control-label" for="engineBuild">Engine build</label>
+														<div class="form-control-focus"></div>
+													</div>
+													<!-- END Engine build -->
+													
+													<!-- Standard Governor/Class -->
+													<div class="form-group form-md-line-input">		
+														<input type="text" class="form-control input-sm" name="standardGovernor" placeholder="Enter your Standard Governor/Class" id="standardGovernor" tabindex="5"/>		
+														<label class="col-md-12 control-label" for="standardGovernor">Standard Governor/Class</label>
+														<div class="form-control-focus"></div>
+													</div>
+													<!-- END Standard Governor/Class -->
+													
+													<!-- Bore and stroke -->
+													<div class="form-group form-md-line-input">		
+														<input type="text" class="form-control input-sm" name="boreAndStroke" placeholder="Enter your Bore and stroke" id="boreAndStroke" tabindex="5"/>		
+														<label class="col-md-12 control-label" for="boreAndStroke">Bore and stroke</label>
+														<div class="form-control-focus"></div>
+													</div>
+													<!-- END Bore and stroke -->
+													
+													<!-- Compression ratio -->
+													<div class="form-group form-md-line-input">		
+														<input type="text" class="form-control input-sm" name="compressionRatio" placeholder="Enter your Compression ratio" id="compressionRatio" tabindex="5"/>		
+														<label class="col-md-12 control-label" for="compressionRatio">Compression ratio</label>
+														<div class="form-control-focus"></div>
+													</div>
+													<!-- END Compression ratio -->
+													
+													<!-- BEGIN Cubic capacity -->
+													<div class="form-group form-md-line-input">
+														<input type="text" class="form-control input-sm" name="cubicCapacity" placeholder="Enter your Cubic capacity " id="cubicCapacity" tabindex="1" />																												
+														<label class="col-md-12 control-label" for="cubicCapacity"> Cubic capacity </label>
+														<div class="form-control-focus"></div>			
+													</div>
+													<!-- END Cubic capacity -->
+													
+												</div>			
+												<!-- End: Col-1 -->
+											
+												<!-- Begin: Col-2 -->
+												<div class="col-md-4 ">
+
+													<!-- BEGIN Starting/min°C -->
+													<div class="form-group form-md-line-input">		
+														<input type="text" class="form-control input-sm" name="startingMin" placeholder="Enter Starting/min°C " id="startingMin" tabindex="7"/>	
+														<label class="col-md-12 control-label" for="startingMin">Starting/min°C</label>
+														<div class="form-control-focus"></div>
+													</div>	
+													<!-- END Starting/min°C -->
+																										
+													<!-- BEGIN Battery capacity -->
+													<div class="form-group form-md-line-input">		
+														<input type="text" class="form-control input-sm" name="batteryCapacity" placeholder="Enter Battery capacity" id="batteryCapacity" tabindex="7"/>	
+														<label class="col-md-12 control-label" for="batteryCapacity">Battery capacity</label>
+														<div class="form-control-focus"></div>
+													</div>	
+													<!-- END Battery capacity -->
+													
+													<!-- BEGIN Gross engine output prime -->
+													<div class="form-group form-md-line-input">		
+														<input type="text" class="form-control input-sm" name="grossEngineOutputPrime" placeholder="Enter Gross engine output prime" id="grossEngineOutputPrime" tabindex="7"/>	
+														<label class="col-md-12 control-label" for="grossEngineOutputPrime">Gross engine output prime</label>
+														<div class="form-control-focus"></div>
+													</div>	
+													<!-- END Gross engine output prime -->
+													
+													<!-- BEGIN Gross engine output -->
+													<div class="form-group form-md-line-input">		
+														<input type="text" class="form-control input-sm" name="grossEngineOutput" placeholder="Enter Gross engine output" id="grossEngineOutput" tabindex="7"/>	
+														<label class="col-md-12 control-label" for="grossEngineOutput">Gross engine output</label>
+														<div class="form-control-focus"></div>
+													</div>	
+													<!-- END Gross engine output -->
+													
+													<!-- BEGIN Speed -->
+													<div class="form-group form-md-line-input">		
+														<input type="text" class="form-control input-sm" name="speed" id="speed" placeholder="Enter speed" tabindex="7"/>	
+														<label class="col-md-12 control-label" for="speed">Speed</label>
+														<div class="form-control-focus"></div>
+													</div>	
+													<!-- END Speed -->
+													
+													<!-- BEGIN Alternator Insulation class -->
+													<div class="form-group form-md-line-input">		
+														<input type="text" class="form-control input-sm" name="alternatorInsulationClass" placeholder="Enter Alternator Insulation class" id="alternatorInsulationClass" tabindex="7"/>	
+														<label class="col-md-12 control-label" for="alternatorInsulationClass">Alternator Insulation class</label>
+														<div class="form-control-focus"></div>
+													</div>	
+													<!-- END Alternator Insulation class -->
+													
+													<!-- BEGIN Fuel consumption(prime) -->
+													<div class="form-group form-md-line-input">		
+														<input type="text" class="form-control input-sm" name="fuelConsumptionPrime" placeholder="Enter Fuel consumption level" id="fuelConsumptionPrime" tabindex="7"/>	
+														<label class="col-md-12 control-label" for="fuelConsumptionPrime">Fuel consumption (prime)</label>
+														<div class="form-control-focus"></div>
+													</div>	
+													<!-- END Fuel consumption(prime) -->
+													
+													<!-- BEGIN Fuel consumption(standby) -->
+													<div class="form-group form-md-line-input">		
+														<input type="text" class="form-control input-sm" name="fuelConsumptionStandby" placeholder="Enter Fuel consumption level" id="fuelConsumptionStandby" tabindex="7"/>	
+														<label class="col-md-12 control-label" for="fuelConsumptionStandby">Fuel consumption (standby)</label>
+														<div class="form-control-focus"></div>
+													</div>	
+													<!-- END Fuel consumption(standby) -->
+													
+													<!-- BEGIN Lubrication system oil-->
+													<div class="form-group form-md-line-input">		
+														<input type="text" class="form-control input-sm" name="lubricationSystemOil" placeholder="Enter Lubrication system oil" id="lubricationSystemOil" tabindex="7"/>	
+														<label class="col-md-12 control-label" for="lubricationSystemOil">Lubrication system oil</label>
+														<div class="form-control-focus"></div>
+													</div>	
+													<!-- END Lubrication system oil -->
+													
+													<!-- BEGIN Base fuel tank capacity-->
+													<div class="form-group form-md-line-input">		
+														<input type="text" class="form-control input-sm" name="baseFuelTankCapacity" placeholder="Enter Base fuel tank capacity" id="baseFuelTankCapacity" tabindex="7"/>	
+														<label class="col-md-12 control-label" for="baseFuelTankCapacity">Base fuel tank capacity</label>
+														<div class="form-control-focus"></div>
+													</div>	
+													<!-- END Base fuel tank capacity -->
+													
+													<!-- BEGIN Coolant capacity-->
+													<div class="form-group form-md-line-input">		
+														<input type="text" class="form-control input-sm" name="coolantCapacity" placeholder="Enter your Coolant capacity" id="coolantCapacity" tabindex="7"/>	
+														<label class="col-md-12 control-label" for="coolantCapacity">Coolant capacity</label>
+														<div class="form-control-focus"></div>
+													</div>	
+													<!-- END Coolant capacity -->
+																											
+												</div>			
+												<!-- End: Col-2 -->
+											
+												<!-- Begin: Col-3 -->
+												<div class="col-md-4 ">				
+													<!-- BEGIN Exhaust temperature(prime) -->
+													<div class="form-group form-md-line-input">		
+														<input type="text" class="form-control input-sm" name="exhaustTemperaturePrime" placeholder="Enter Exhaust temperature" id="exhaustTemperaturePrime" tabindex="7"/>	
+														<label class="col-md-12 control-label" for="exhaustTemperaturePrime">Exhaust temperature(prime)</label>
+														<div class="form-control-focus"></div>
+													</div>	
+													<!-- END Exhaust temperature(prime) -->
+													
+													<!-- BEGIN Exhaust Gas flow(prime) -->
+													<div class="form-group form-md-line-input">		
+														<input type="text" class="form-control input-sm" name="exhaustGasFlowPrime" placeholder="Enter Exhaust Gas flow" id="exhaustGasFlowPrime" tabindex="7"/>	
+														<label class="col-md-12 control-label" for="exhaustGasFlowPrime">Exhaust Gas flow(prime)</label>
+														<div class="form-control-focus"></div>
+													</div>	
+													<!-- END Exhaust Gas flow(prime) -->
+													
+													<!-- BEGIN Exhaust Gas back pressure-->
+													<div class="form-group form-md-line-input">		
+														<input type="text" class="form-control input-sm" name="exhaustGasBackPressure" placeholder="Enter Exhaust Gas back pressure" id="exhaustGasBackPressure" tabindex="7"/>	
+														<label class="col-md-12 control-label" for="exhaustGasBackPressure">Exhaust Gas back pressure</label>
+														<div class="form-control-focus"></div>
+													</div>	
+													<!-- END Exhaust Gas back pressure -->
+													
+													<!-- BEGIN Air flow Radiator -->
+													<div class="form-group form-md-line-input">		
+														<input type="text" class="form-control input-sm" name="airFlowRadiator" placeholder="Enter Air flow Radiator" id="airFlowRadiator" tabindex="7"/>	
+														<label class="col-md-12 control-label" for="airFlowRadiator">Air flow Radiator</label>
+														<div class="form-control-focus"></div>
+													</div>	
+													<!-- END Air flow Radiator -->
+													
+													<!-- BEGIN Air intake Engine(prime) -->
+													<div class="form-group form-md-line-input">		
+														<input type="text" class="form-control input-sm" name="airIntakeEnginePrime" placeholder="Enter Air intake Engine" id="airIntakeEnginePrime" tabindex="7"/>	
+														<label class="col-md-12 control-label" for="airIntakeEnginePrime">Air intake Engine(prime)</label>
+														<div class="form-control-focus"></div>
+													</div>	
+													<!-- END Air intake Engine(prime) -->
+													
+													<!-- BEGIN Minimum Air opening to room -->
+													<div class="form-group form-md-line-input">		
+														<input type="text" class="form-control input-sm" name="minimumAirOpeningToRoom" placeholder="Enter Minimum Air opening to room" id="minimumAirOpeningToRoom" tabindex="7"/>	
+														<label class="col-md-12 control-label" for="minimumAirOpeningToRoom">Minimum Air opening to room</label>
+														<div class="form-control-focus"></div>
+													</div>	
+													<!-- END Minimum Air opening to room -->
+													
+													<!-- BEGIN Minimum discharge opening -->
+													<div class="form-group form-md-line-input">		
+														<input type="text" class="form-control input-sm" name="minimumDischargeOpening" placeholder="Enter Minimum discharge opening" id="minimumDischargeOpening" tabindex="7"/>	
+														<label class="col-md-12 control-label" for="minimumDischargeOpening">Minimum discharge opening</label>
+														<div class="form-control-focus"></div>
+													</div>	
+													<!-- END Minimum discharge opening -->
+													
+													<!-- BEGIN Pusher fan head -->
+													<div class="form-group form-md-line-input">		
+														<input type="text" class="form-control input-sm" name="pusherFanHead" placeholder="Enter Pusher fan head" id="pusherFanHead" tabindex="7"/>	
+														<label class="col-md-12 control-label" for="pusherFanHead">Pusher fan head</label>
+														<div class="form-control-focus"></div>
+													</div>	
+													<!-- END Pusher fan head -->
+													
+													<!-- BEGIN Heat radiated by engine -->
+													<div class="form-group form-md-line-input">		
+														<input type="text" class="form-control input-sm" name="heatRadiatedByEngine" placeholder="Enter Heat radiated by engine" id="heatRadiatedByEngine" tabindex="7"/>	
+														<label class="col-md-12 control-label" for="heatRadiatedByEngine">Heat radiated by engine</label>
+														<div class="form-control-focus"></div>
+													</div>	
+													<!-- END Heat radiated by engine -->
+													
+												</div>	<!-- End: Col-3 -->		
+												
+										
+												<div style="clear:both"></div>
+												<% if(VarEquipId != ''){ %>
+												<div class="animated slideInUp">
+													<div id="gapp-gensetpoint-list"></div>
+												</div>
+												<% } %>
+										</div> <!-- END col-md-12 -->
+									</div> <!-- END row -->
+								</form>
+								<form id="gapp-genset-list" role="form" action="<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/equipments/genset/list" name="gapp-genset-list" method="post">
+									<input type="hidden" id="gapp-tenant-key" name="gapp-tenant-key" value="<%=VarTenantKey%>" />
+								</form>
+							</div> <!-- END portlet-body -->
+						</div><!-- END portlet bordered-->
+							
+					</div><!-- END col-md-12-->
+				</div>
+				<!-- END PAGE CONTENT-->
+			</div>
+		</div>
+		<!-- END CONTENT -->
+		
+	</div>
+	<!-- END CONTAINER -->
+	<% include(utils.resolvePath('templates/global-footer.jag')); %>
+	<% 
+		include(utils.resolvePath('templates/portal-footer.jag'));
+		include('/controllers/includes/theme-portal-scripts.jag');
+	%>
+	<script type="text/javascript">
+				
+		var VarCreateEquipUrl = '<%=APICONF.GAPP_SERVICES.equipments.genset.create%>';
+		var VarListFacilityUrl = '<%=APICONF.GAPP_SERVICES.facility.list%>';
+		var VarViewEquipUrl = '<%=APICONF.GAPP_SERVICES.equipments.genset.view%>';
+		var VarUpdateEquipUrl = '<%=APICONF.GAPP_SERVICES.equipments.genset.update%>';
+		var VarAttachParentUrl = '<%=APICONF.GAPP_SERVICES.hierarchy.attachparent%>';
+		var VarAttachChildrenUrl = '<%=APICONF.GAPP_SERVICES.hierarchy.attachchildren%>';
+		var VarPointTagsUrl = '<%=APICONF.GAPP_SERVICES.common.filterlist%>';
+		var VarEditEquipId = '<%=VarEquipId%>';
+		var VarLUDomainName = '<%=usr.domainName()%>';
+		var VarLUTenantName = '<%=usr.tenantName()%>';
+		var VarCurrentTenantInfo = $.parseJSON('<%=VarCurrentTenantInfo%>');
+		var VarAppRootDomain = '<%=APPCONF.GAPP_CONF.MY_DOMAIN_NAME%>';
+	</script>
+	<script type="text/javascript" src="<%=urlPrefix%><%=utils.resolveUrl('js/equipments/genset/add.js')%>"></script>
+	<script src="<%=urlPrefix%>js/jquery-custom-scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>	
+</body>
+</html>

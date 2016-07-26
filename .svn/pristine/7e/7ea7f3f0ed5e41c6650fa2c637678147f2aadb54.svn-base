@@ -1,0 +1,8 @@
+<%
+%>
+
+<a href="javascript:void(0);" style="padding:10px;text-decoration:none;color:#205081!important;" name="gapp-show-tags" id="gapp-show-tags" onclick="FnShowTags()">
+	<i class="fa fa-tags aria-hidden="true"></i></i>
+	Tags
+</a>
+									

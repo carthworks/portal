@@ -1,0 +1,129 @@
+{
+	"roles" : {
+				"add" : "roles/add.jag",
+				"list" : "roles/list.jag",
+				"view" : "roles/add.jag"
+			},
+	"clients" : {
+				"add" : "clients/add.jag",
+				"list" : "clients/list.jag",
+				"view" : "clients/add.jag",
+				"sendemail" : "clients/sendemail.jag"
+			},
+	"device" : {
+				"add" : "device/add.jag",
+				"list" : "device/list.jag",
+				"view" : "device/add.jag",
+				"assign" : "device/assign.jag",
+				"chart" : "device/chart.jag",
+				"writeback" : "device/writeback.jag",
+				"info" : "device/info.jag",
+				"mapping" : "device/mapping.jag"
+			},
+	"claim" : {			
+				"list" : "claim/list.jag",
+				"view" : "claim/add.jag"
+			},
+	"users" : {
+				"add" : "users/add.jag",
+				"list" : "users/list.jag",
+				"view" : "users/add.jag",
+				"profile" : "users/myprofile.jag"
+			},
+	"pointofinterest":{
+				"template" : {
+						"add" : "pointofinterest/template/add.jag",
+						"list" : "pointofinterest/template/list.jag",
+						"delete" : "pointofinterest/template/list.jag",
+						"view" : "pointofinterest/template/add.jag"
+					},
+				"poi" : {
+						"add" : "pointofinterest/poi/add.jag",
+						"list" : "pointofinterest/poi/list.jag",
+						"view" : "pointofinterest/poi/add.jag",
+						"dashboard" : "pointofinterest/poi/dashboard.jag",
+						"details" : "pointofinterest/poi/details.jag"
+					}
+			},
+	"equipments" : {
+					
+					"template" : {
+						"add" : "equipments/template/add.jag",
+						"list" : "equipments/template/list.jag",
+						"view" : "equipments/template/add.jag"
+					},
+					"asset" : {
+						"add" : "equipments/asset/add.jag",
+						"list" : "equipments/asset/list.jag",
+						"view" : "equipments/asset/add.jag",
+						"dashboard" : "equipments/asset/dashboard.jag",
+						"details" : "equipments/asset/details.jag",
+						"points" : "equipments/asset/points.jag"
+					}
+				},		
+	"pointsmapping" :{
+						"asset" : "pointsmapping/asset.jag"
+					},
+	"dashboard" : {
+						"create" : "dashboard/create-dashboard.jag",
+						"list" : "dashboard/dashboard-list.jag",
+						"settings" : "dashboard/dashboard-settings.jag"
+				},
+	"alarm" : {
+				"console" : "alarm/console.jag",
+				"history" : "alarm/history.jag",
+				"definition" : "alarm/alarmdefinition.jag"
+			},
+	"alarmdefinition" : {
+				"add" : "alarmdefinition/add.jag",
+				"list" : "alarmdefinition/list.jag"
+			},
+	"ccd" : {
+		"contact" : {
+				"add" : "ccd/contact/add.jag",
+				"list" : "ccd/contact/list.jag",
+				"view" : "ccd/contact/add.jag",
+				"map" : "ccd/contact/map.jag"
+			},
+		"import" : {
+			"equipments" : "ccd/import/equipments.jag",
+			"equipmentlist" : "ccd/import/equipmentlist.jag"
+		},
+		"faults" : {
+			"list" : "ccd/faults/list.jag"
+		}
+	},
+	"assets" : {
+			"history" : "assets/history.jag",
+			"monitoring" : "assets/monitoring.jag",
+			"historyasset" : "assets/historyasset.jag",
+			"historytracks" : "assets/historytracks.jag"
+	},
+	"error" : {
+		"404" : "error/error404.jag",
+		"403" : "error/error403.jag"
+	},
+	"geofence" : {
+		"create" : "geofence/add.jag",
+		"list" : "geofence/list.jag",
+		"view" : "geofence/add.jag",
+	},
+	"tags" : {
+		"template": {
+			"create" : "tags/template/add.jag",
+			"list" : "tags/template/list.jag",
+			"view" : "tags/template/add.jag"
+		},
+		"nametag": {
+			"create" : "tags/add.jag",
+			"list" : "tags/list.jag",
+			"view" : "tags/add.jag"
+		}
+		
+	},
+	"configurationTemplates" : {
+		"add" : "configurationTemplates/add.jag",
+		"list" : "configurationTemplates/list.jag",
+		"view" : "configurationTemplates/add.jag",
+	},
+}

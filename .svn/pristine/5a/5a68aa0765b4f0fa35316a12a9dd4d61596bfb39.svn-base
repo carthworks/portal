@@ -1,0 +1,65 @@
+<%
+var pageId;
+var VarRoleId;
+var VarTenantKey;
+var VarCurrentTenantInfo;
+var ObjPageAccess;
+
+(function() {
+	
+    if (!user) {
+        sendLogin();
+        return;
+    }
+		
+    var vars;
+	var matcher = new URIMatcher(request.getRequestURI());
+	
+	if (matcher.match('/roles/{id}')) {
+        vars = matcher.elements();
+        pageId = (vars.id).toString();
+    } else {
+		response.sendError(404, JSON.stringify({
+					error: true
+				}));
+		return;
+	}
+	
+	var pages = require('/configs/pages.json');
+	
+	if (!pages.roles[pageId]) {
+	
+        response.sendRedirect(utils.tenantedPrefix(urlPrefix+"error/404"));
+        return;
+		
+    } else {
+	
+		var usr = require('/modules/user.js');
+		var permission = require('/configs/permissions.json');
+		ObjPageAccess = {'add':'0','list':'0','view':'0','edit':'0'};
+		var ObjPageConf = {'list':['add','view'],'view':['edit']};
+		var VarPageRef = permission.roles;		
+		ObjPageAccess = usr.FnGetPageAccessAuthorization(ObjPageAccess,ObjPageConf,pageId,VarPageRef);
+	
+	}
+	
+	var method = request.getMethod();
+	
+	if (method === 'POST') {
+				
+		VarRoleId = (pageId=='view') ? request.getParameter("role_id") : '';
+		VarTenantKey = (request.getParameter("gapp-tenant-key") != null) ? request.getParameter("gapp-tenant-key") : '';
+		
+	} else {
+		VarRoleId = '';
+		
+		var ObjTenantInfo = session.get('PARENT_CLIENT');
+		if(ObjTenantInfo != null){
+			VarTenantKey = ObjTenantInfo['tenantId'];
+		}
+	}
+	
+	VarCurrentTenantInfo = usr.FnGetCurrentClientInfo(VarTenantKey);
+	
+    include(utils.resolvePath('templates/'+pages.roles[pageId]));
+} ()); %>

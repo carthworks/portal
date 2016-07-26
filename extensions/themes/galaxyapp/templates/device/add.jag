@@ -1,0 +1,577 @@
+<%
+	var APPCONF = require('/configs/appconfig.jag');
+	var APICONF = require('/configs/apiproperties.jag');
+	var usr = require('/modules/user.js');
+	include(utils.resolvePath('templates/portal-header.jag'));	
+	include('/controllers/includes/theme-portal-styles.jag');
+%>
+	<link rel="stylesheet" type="text/css" href="<%=urlPrefix%>plugins/bootstrap-switch/css/bootstrap-switch.min.css" />
+	<link rel="stylesheet" type="text/css" href="<%=urlPrefix%>plugins/jquery-tags-input/jquery.tagsinput.css" />
+	<link rel="stylesheet" type="text/css" href="<%=urlPrefix%><%=utils.resolveUrl('css/jquery-gmaps-latlon-picker.css')%>" />
+	<style type="text/css">
+		.checkbox-inner-padding { padding: 20px 30px;}
+		.portlet-title { min-height: 12px !important; padding:0;}
+		.pwrapper{width: 100%;overflow-x: scroll;overflow-y:hidden;height: 280px;	white-space: nowrap;padding:12px 0 ;	}
+		.permission-wrapper { display: inline-block;}		
+		.ga-wrap {padding:12px; display: block; min-height:460px; }			
+		.form .form-section {margin: 12px 0px 22px 0px;padding-bottom: 12px;}
+		.myportlet{    border: 1px solid #E8E7E7 !important;    background: #FFFCFC; }			
+		form-group.form-md-line-input {  margin: 0 !important;}
+		.portlet.light {padding: 12px 20px 0px 20px !important;box-shadow:none;}
+		.dark{background-color: #f7f7f7;}
+		select {  font-size: 14px !important; color: #888888 !important}
+		div#tags_help_tagsinput {    height: 136px!important;}
+		.portlet.light {    padding: 6px 20px 0px 20px !important;}
+		/*	div.tagsinput span.tag { border: 1px solid #f44336; -moz-border-radius:2px; -webkit-border-radius:2px;
+				display: block; float: left; padding: 5px; text-decoration:none; 
+				background: #FFADA7; color: #000; margin-right: 5px; margin-bottom:5px;
+				font-family: helvetica;  
+				font-size:13px;
+		}*/	
+		li.k-button {
+			border: 1px solid #a5d24a;
+			-moz-border-radius: 2px;
+			-webkit-border-radius: 2px;
+			display: block;
+			float: left;
+			/* padding: 5px; */
+			text-decoration: none;
+			background: #cde69c;
+			color: #638421;
+			margin-right: 5px;
+			margin-bottom: 5px;
+			font-family: helvetica;
+			font-size: 13px;
+		}
+
+	.md-radio.has-error label > .check {
+			  background: #26A69A !important;
+			}
+	.md-radio.has-error label > .box {
+			border-color: #26A69A !important;
+			}
+			
+	.form-label{
+		top: 0;
+		margin-bottom: 0;
+		/* font-size: 13px; */
+		color: rgba(0,0,0,0.7);
+		opacity: 1}
+		
+	.gllpMap {   width: 100% !important;}
+	form-group.form-md-line-input {
+		position: relative;
+		margin: 0 0 26px 0;
+		padding-top: 18px;
+	}
+	.gllpMap {   width:  100% !important;}
+	div#publishContainer {
+			
+				display: inline-block;
+				width: 100%;
+				margin-top: 30px;
+				min-height: 30px;
+			}
+	
+	</style>
+	
+	<script type="text/javascript">	
+	
+
+	</script>
+</head>
+<body class="page-md page-header-fixed page-quick-sidebar-over-content page-footer-fixed  page-full-width" >
+<div class="se-pre-con"></div>
+	<% include(utils.resolvePath('templates/global-header.jag')); %>
+	<!-- BEGIN CONTAINER -->
+	<div class="page-container">
+		<!-- BEGIN SIDEBAR -->
+		<div class="page-sidebar-wrapper">
+			<div class="page-sidebar   navbar-collapse collapse">
+				<!-- BEGIN SIDEBAR MENU -->	
+				<ul class="page-sidebar-menu page-sidebar-menu-hover-submenu " data-keep-expanded="false" data-auto-scroll="false" data-slide-speed="200">
+					<li class="sidebar-toggler-wrapper"><div class="sidebar-toggler"></div></li>
+					<li class="nav-item start active open ">
+						<a href="dashboard.html" class="nav-link nav-toggle">
+                            <i class="icon-bar-chart"></i>
+                            <span class="title">Dashboard</span>
+                            <span class="selected"></span>                               
+                        </a>
+                    </li>
+					<li class="">
+						<a href="javascript:;" class="nav-link nav-toggle">
+							<i class="icon-puzzle"></i>
+                            <span class="title">Dashboard Designer</span>
+                            <span class="selected"></span>                               
+                        </a>
+					</li>
+				
+			
+				</ul>
+				<!-- END SIDEBAR MENU -->
+			</div>
+		</div>
+		<!-- END SIDEBAR -->
+		
+		<!-- BEGIN CONTENT -->
+		<div class="page-content-wrapper ">
+			<div class="page-content ">
+				<h3 class="page-title  ">Device Management </h3>
+				<div class="page-bar">
+					<ul class="page-breadcrumb">
+						<li>
+							<i class="fa fa-home"></i>
+							<a href="Javascript:void(0)" onclick="FnBreadCrumbHome()">Home</a>
+							<i class="fa fa-angle-right"></i>
+						</li>
+						<li>
+							<a href="Javascript:void(0)" onclick="FnNavigateDeviceList()">Devices</a>
+							<i class="fa fa-angle-right"></i>
+						</li>
+						<li>
+							<a href="Javascript:void(0)" class="caption-edit-label"><% if(VarDeviceId!='') { %> View Device <% } else { %> Create Device <% } %></a>
+						</li>
+					</ul>
+				</div>
+				<!-- BEGIN PAGE CONTENT-->
+				
+				<div class="portlet light bordered dark"> 
+				 <div class="portlet-title">
+								<div class="caption font-red-sunglo">
+									<i class="icon-settings font-red-sunglo"></i>
+									<span class="caption-subject bold uppercase caption-edit-label"><% if(VarDeviceId!='') { %> View Device <% } else { %> Create Device <% } %></span>
+								</div>																	
+								<div class="actions" id="editContainer">
+										<% if(ObjPageAccess['edit']=='1') { %>
+											<a class="btn btn-circle btn-icon-only red" href="Javascript:void(0)"  id="BtnEditDevice" title="Edit the device" onclick="FnEditDevice()">
+												<i class="icon-note icons"></i> 
+											</a>
+										<% } %>
+								<button type="button" class="btn btn-raised default" name="gapp-device-cancel" id="gapp-device-cancel" data-toggle="modal"   onclick= "FnCancelDevice()" tabindex="15">Cancel</button>							
+								<button type="button" class="btn  btn-raised btn-danger" name="gapp-device-save" id="gapp-device-save" onclick="FnSaveDevice()" tabindex="16">Save</button>
+								
+								</div>
+								
+							</div>
+							
+							<div class="portlet-body form">
+							<form name="gapp-adddevice-form" id="gapp-adddevice-form" role="form" autocomplete="off">
+							
+								<div class="row">
+									<div class="col-md-8">
+										<div class="portlet light  myportlet" style="min-height: 580px;">	
+										
+										<div class="portlet-title">
+											<div class="caption">
+												<i class="icon-settings font-red-sunglo"></i>
+												<span class="caption-subject  font-red-sunglo uppercase">Device configuration </span>
+											</div>
+							
+								</div>
+								
+								<div class="portlet-body">	
+												<div class="col-md-6">	
+														<!-- BEGIN DATANAME --->
+														<div class="form-group form-md-line-input is-empty">
+																	<input type="text" class="form-control" name="deviceName" id="deviceName" autofocus tabindex="1"  required="true" 	data-required-msg="Device name is not specified"  onkeypress="return FnAllowAlphaNumericOnly(event)" tabindex="1"   placeholder="Please enter device name" />	
+																<label class="col-md-12 control-label" for="deviceName"> Device Name <span class="required" aria-required="true"> * </span></label>
+																<div class="form-control-focus"></div>			
+																<span class="material-input"></span>
+														
+														</div>														
+														<!-- END DATANAME --->
+														
+														<!-- BEGIN LOCATION  : longitude,latitude-->								
+	
+														<div class="form-group form-md-line-input input-group">	
+															<label class="col-md-12 control-label form-label" for=""> Device Location</label>			
+																<div class="col-md-4 ">
+																	<input type="text" class="form-control input-xs " name="latitude" id="latitude"   onkeypress="return FnAllowNumbersOnly(event)" placeholder="latitude"/>
+																</div>
+																<div class="col-md-4">
+																	<input type="text" class="form-control input-xs" name="longitude" id="longitude"  onkeypress="return FnAllowNumbersOnly(event)"  placeholder="longitude"/>
+																</div>
+																
+																<span class="input-group-btn btn-right col-md-4">
+																	<button class="btn green-haze"  id="deviceLocModel" type="button"  data-toggle="modal"  title="Location picker to get lat and long"> <i class="fa fa-map-marker"></i> picker</button>
+																	</span>
+
+																<div class="form-control-focus"></div>			
+																<span class="material-input"></span>
+																<div class="clearfix"></div>
+															
+														</div>														
+												<!-- END LOCATION  : longitude,latitude-->
+												
+								
+										
+														<!-- BEGIN SOURCE ID -->
+															<div class="form-group form-md-line-input">
+																	<input type="text" class="form-control " name="sourceId" id="sourceId" autofocus tabindex="1"  required="true" 	data-required-msg="Source identifier is not specified"  onkeypress="return FnAllowAlphaNumericOnly(event)" tabindex="1"  data-available data-available-url="<%=APICONF.GAPP_SERVICES.device.validate%>" data-available-msg=" Source identifier already exists" placeholder="Please enter source identifier (eg., IMEI, MAC ID etc.) " />																
+																	<label class="col-md-12 control-label " for="sourceId"> Source identifier  <span class="required" aria-required="true"> * </span></label>
+																	<div class="form-control-focus"></div>			
+															</div>
+														<!-- END SOURCE ID -->
+														
+
+														
+														<!-- BEGIN TAGS -->
+																<div class="form-group form-md-line-input" style="margin: 0 0 15px 0;">
+																	<select class="form-control" name="tags" id="tags" multiple="multiple" tabindex="5"></select>
+																	<label class="col-md-12 control-label" for="tags_help"> Tags </label>
+																	<div class="form-control-focus"></div>									
+																</div>									
+														<!-- END TAGS -->
+										
+													<!-- BEGIN STATUS -->													
+													<div class="form-group form-md-line-input"  title="Set the status of the device">
+														<label class="col-md-2 control-label" for="form_control_1">Status</label>
+														<div class="col-md-10">
+															<div class="md-radio-inline">										
+																<div class="md-radio has-error">
+																	<input type="radio" id="statusName_active" name="statusName" class="md-radiobtn" checked value="ACTIVE">
+																	<label for="statusName_active" style="color:#26A69A">
+																	<span></span>
+																	<span class="check"></span>
+																	<span class="box"></span>
+																	Active </label>
+																</div>
+																<div class="md-radio has-warning">
+																	<input type="radio" id="statusName_inactive" name="statusName" class="md-radiobtn" value="INACTIVE">
+																	<label for="statusName_inactive">
+																	<span></span>
+																	<span class="check"></span>
+																	<span class="box"></span>
+																	In Active</label>
+																</div>
+															</div>
+														</div>
+											</div>
+											<!-- END STATUS -->															
+								
+													<!-- BEGIN PUBLISH CHECKBOX -->	
+													<div class="form-group form-md-checkboxes hidden" id="publishContainer">									
+														<div class="md-checkbox-inline col-md-3" style="margin:0;">								
+															<div class="md-checkbox">
+																<input type="checkbox" id="isPublish" name="isPublish" class="md-check" tabindex="13" onchange="handlePublish()">
+																<label for="isPublish">
+																	<span></span>
+																	<span class="check"></span>
+																	<span class="box"></span>
+																	Publish
+																</label>
+															</div>
+														</div>
+													</div>						
+													<!--END  PUBLISH CHECKBOX -->
+													<!-- BEGIN DATASOURCE NAME -->	
+														<div class="form-group form-md-line-input col-md-9 hidden" id="dsnameElement">
+															
+															<input type="text" class="form-control input-sm" name="dsName" id="dsName" tabindex="14"  
+															data-required-msg="Please enter datasource name" tabindex="14" onkeypress="return FnAllowAlphaNumericOnly(event)"   data-isexist data-isexist-url="<%=APICONF.GAPP_SERVICES.device.isexist%>" data-isexist-msg=" Datasource name  already exists" placeholder="Enter datasource name"/>												
+																			
+															<label class="col-md-12 control-label" for="name"> Datasource Name <span class="required" aria-required="true">*</span></label>
+															<div class="form-control-focus"></div>			
+														</div
+												<!--ENDDATASOURCE NAME -->
+												
+												</div>													
+												
+												<div class="col-md-6" >		
+
+												<!-- BEGIN MAKE -->
+															<div class="form-group form-md-line-input ">		
+																	<select class="form-control" name="make" id="make" required="true" 
+																	data-required-msg="Please select make" 
+																	tabindex="3" placeholder="select the make"														 
+																	aria-invalid="true" onchange="FnGetDeviceTypeList(1)" >
+																	<option value="">Select make</option>	
+																	</select>
+																	<label class="col-md-12 control-label for="make"> Make <span class="required" aria-required="true">*</span></label>
+																	<div class="form-control-focus"></div>
+															</div>
+														<!-- END MAKE -->
+														
+												<!-- BEGIN DEVICE TYPE -->
+												<div class="form-group form-md-line-input">		
+															<select class="form-control" name="deviceType"  id="deviceType" required="true" data-required-msg="Please select device type" tabindex="4" onchange="FnGetModelList(1)">
+																<option value="">Select a device type</option>
+																												
+															</select>
+															<label class="col-md-12 control-label" for="deviceType">Device type 
+															<span class="required" aria-required="true">*</span></label>
+															<div class="form-control-focus"></div>
+												</div>	
+												<!-- END DEVICE TYPE -->
+													<!-- BEGIN MODEL -->
+													<div class="form-group form-md-line-input">		
+														<select class="form-control" name="model" id="model" required="true" data-required-msg="Please select model" tabindex="5" onchange="FnGetProtocolList(1)">
+														<option value="">Select a model </option>
+																												
+														</select>
+														<label class="col-md-12 control-label" for="model"> Model <span class="required" aria-required="true">*</span></label>
+														<div class="form-control-focus"></div>
+													</div>		
+												<!-- END MODEL -->
+															
+													<!-- BEGIN PROTOCOL -->
+												<div class="form-group form-md-line-input">		
+													<select class="form-control" name="protocol" id="protocol" required="true" data-required-msg="Please select protocol" tabindex="6" 
+													onchange="FnGetProtocolVersionList(1)">
+														<option value="">Select a protocol </option>
+																									
+													</select>
+													<label class="col-md-12 control-label" for="protocol">  Protocol <span class="required" aria-required="true">*</span></label>
+													<div class="form-control-focus"></div>
+												</div>															
+												<!-- END PROTOCOL -->
+															
+												<!-- BEGIN PROTOCOLVERSION -->
+												<div class="form-group form-md-line-input">		
+													<select class="form-control" name="version" id="version" required="true" data-required-msg="Please select protocol version" tabindex="7" onchange="FnGetTemplate()">
+														<option value="">Select a protocol version </option>
+																									
+													</select>
+													<label class="col-md-12 control-label" for="version">  Protocol version <span class="required" aria-required="true">*</span></label>
+													<div class="form-control-focus"></div>
+												</div>
+												<!-- END PROTOCOLVERSION -->
+															
+												<!-- BEGIN CONFIG-TEMPLATE -->
+												<div class="form-group form-md-line-input">		
+													<select class="form-control" name="configuration" id="configuration"  data-required-msg="Please select Configuration template" tabindex="8" onchange="FnGetconfigurationTemplate()">																					
+													<option value="">Select a configuration </option>
+													</select>
+													<label class="col-md-12 control-label" for="configuration"> Configuration template</label>
+													<div class="form-control-focus"></div>
+												</div>
+												<!-- END CONFIG-TEMPLATE -->
+													
+													<!--BEGIN ACTIVE -->
+													
+													
+				
+																									
+												<!-- <div class="form-group">
+														<label class="control-label col-md-3">Status</label>
+														<input type="checkbox"  class=""pull-right"  id="status" name="status"  />	
+														<div class="ripple-container"></div>
+												</div>				
+
+													-->												
+													<!--END ACTIVE -->	
+											</div>									
+
+												</div>
+										</div><!--- ga-wrap --->
+									</div>
+					
+					
+					<div class=" col-md-4">						
+						<div class="portlet light myportlet"  style="min-height: 580px !important;"> 
+						
+						   <!-- BEGIN IP CONFIG-->						 		
+								<div class="portlet-title">
+									<div class="caption">
+										<i class="icon-settings font-red-sunglo"></i>
+										<span class="caption-subject  font-red-sunglo uppercase">ip configuration </span>
+									</div>
+																
+								</div>
+							 <!-- END IP CONFIG-->
+								
+								<div class="portlet-body">
+								<!-- BEGIN NETWORK -->	
+								<div class="form-group form-md-line-input">		
+													<select class="form-control" name="nwProtocol" id="nwProtocol" required="true" data-required-msg="Please select network protocol" tabindex="9">
+														<option value="">Select network protocol </option>											
+													</select>
+													<label class="col-md-12 control-label" for="nwProtocol">Network protocol <span class="required" aria-required="true">*</span></label>
+													<div class="form-control-focus"></div>
+												</div>
+																<!--END NETWORK -->
+								
+								<!-- BEGIN DEVICE IP -->									
+										<div class="form-group form-md-line-input is-empty">
+											<!-- <input type="text" class="form-control" name="deviceIp" id="deviceIp" 
+											data-required-msg="Please enter device ip" tabindex="10"  onkeypress="return FnAllowNumbersOnly(event)"  
+											placeholder ="Please enter device ip"/>	-->
+
+											<input type="text" class="form-control" name="deviceIp" id="deviceIp" 
+											data-required-msg="Please enter device ip" tabindex="10" onblur= "return FnAllowIPNumbersOnly(this.value,'deviceIp','form-control-focus-error')" placeholder ="Please enter device ip"/>
+											
+											<label class="col-md-12 control-label" for="deviceIp"> Device ip </label>
+											
+											<div class="form-control-focus" id="form-control-focus-error">
+											
+											</div>			
+										</div>
+								<!--END DEVICE IP -->
+								
+								<!-- BEGIN DEVICE PORT -->
+										<div class="form-group form-md-line-input">
+											<input type="text" class="form-control" name="devicePort" id="devicePort"  
+											data-required-msg="Please enter device port" input type="text" 
+											onkeypress="return FnAllowNumbersOnly(event)"  placeholder =" Please enter device port" tabindex="11"/>																
+											<label class="col-md-12 control-label" for="devicePort"> Device port </label>
+											<div class="form-control-focus"></div>			
+										</div>								
+								<!--END DEVICE PORT -->
+								
+								<!-- BEGIN WRITEBACK IP -->	
+										<div class="form-group form-md-line-input">
+											<input type="text" class="form-control" name="wbPort" id="wbPort"  
+											data-required-msg="Please enter Writeback"  placeholder ="Please enter writeback" onkeypress="return FnAllowNumbersOnly(event)" tabindex="12"/>																
+											<label class="col-md-12 control-label" for="wbPort"> Writeback port </label>
+											<div class="form-control-focus"></div>			
+										</div>	
+								<!--END WRITEBACK IP -->
+							
+								
+								</div><!--- pbody->
+								
+						</div> <!-- portlet4--->		
+					</div>
+					</div>
+					<div class="clearfix"></div>
+					<!-- END SAMPLE FORM PORTLET-->
+				
+				</div>
+				</form>
+				<form id="gapp-device-list" role="form" action="<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/device/list" name="gapp-device-list" method="post">
+					<input type="hidden" id="gapp-tenant-key" name="gapp-tenant-key" value="<%=VarTenantKey%>" />
+				</form>
+				</div> <!---pform --->
+				
+				
+				</div><!-- portlet ends -->
+				<!-- END PAGE CONTENT-->
+			</div>
+		</div>
+		<!-- END CONTENT -->
+		
+	</div>
+	
+	
+	<div class="modal fade" id="draggable" tabindex="-1" role="draggable" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header bg-green-meadow">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+						<h4 class="modal-title">Location</h4>
+					</div>
+					<div class="modal-body">
+						<form>
+							<fieldset class="gllpLatlonPicker">
+							
+							<div class="form-group col-md-12">										
+										<div class="input-group">
+												<div class="input-icon">
+													<i class="fa fa-street-view"></i>
+													<input  type="text" class="form-control gllpSearchField" placeholder="Type the location name"  name="password" placeholder="password">
+												</div>
+												<span class="input-group-btn">
+												<button  class="btn btn-success gllpSearchButton" type="button"   value="search"><i class="fa fa-arrow-left fa-fw"></i> Search</button>
+												</span>
+											</div>
+										
+								
+							</div>
+							<div class="col-md-12">
+								<div class="gllpMap" width="100%">Google maps loading...</div>
+							</div>
+							
+							<div class="col-md-12" style="margin: 16px 0 0 0;">
+								<div class="col-md-4">
+									<input type="text" class="gllpLatitude"  id="gllpLatitude" value="25.2048493"/>	
+								</div>
+								<div class="col-md-6"> 
+									<input type="text" class="gllpLongitude"  id="gllpLongitude" value="55.270782"/>	
+								</div>
+								<div class="col-md-3 hidden"> 
+									<input type="text" class="gllpZoom" value="3"/>	
+								</div>
+								<div class="col-md-2">
+								<input type="button" class="gllpUpdateButton" value="update" />
+								</div>
+							
+									
+							</div>
+					
+								</fieldset>
+							</form>
+				
+					</div>
+					<div class="modal-footer">
+						<!-- <button type="button" class="btn default" data-dismiss="modal">Close</button> -->
+						<button type="button" id="deviceLocationSave" class="btn  btn-danger" data-dismiss="modal">Save</button>
+					</div>
+				</div>
+				<!-- /.modal-content -->
+			</div>
+			<!-- /.modal-dialog -->
+	</div>
+								
+	<!-- END CONTAINER -->
+	<% include(utils.resolvePath('templates/global-footer.jag')); %>	
+	<% 
+		include(utils.resolvePath('templates/portal-footer.jag'));
+		include('/controllers/includes/theme-portal-scripts.jag');
+	%>
+	<!--<script type='text/javascript' src="<%=urlPrefix%>plugins/gmaps/gmaps.js"></script>	 -->
+	<script type='text/javascript' src="<%=urlPrefix%>plugins/bootstrap-switch/js/bootstrap-switch.min.js"></script>
+	<script type='text/javascript' src="<%=urlPrefix%>plugins/jquery-tags-input/jquery.tagsinput.min.js"></script>	
+	
+	
+
+	
+	
+	<script src="https://maps.googleapis.com/maps/api/js"></script>
+	<script type='text/javascript' src="<%=urlPrefix%><%=utils.resolveUrl('js/jquery-gmaps-latlon-picker.js')%>"></script>
+	
+		
+	<script type="text/javascript">	
+
+		$('#deviceLocationSave').on('click', function() {
+			//console.log('username : '+$("#gllpLatitude").val());
+			//console.log('result : '+$("#gllpLongitude").val());
+			
+			var lat=$("#gllpLatitude").val();
+			var long=$("#gllpLongitude").val();
+
+				
+				lat =precise_round(lat,7);
+				long =precise_round(long,7);
+			
+			$('#gapp-adddevice-form #latitude').val(lat);
+			$('#gapp-adddevice-form #longitude').val(long);
+		
+			
+		});
+		var VarCreateDeviceUrl = '<%=APICONF.GAPP_SERVICES.device.create%>';
+		var VarViewDeviceUrl = '<%=APICONF.GAPP_SERVICES.device.view%>';
+		var VarUpdateDeviceUrl = '<%=APICONF.GAPP_SERVICES.device.update%>';
+		var VarListDeviceConfUrl = '<%=APICONF.GAPP_SERVICES.device.configuration%>';
+		var VarAssignDeviceUrl = '<%=APICONF.GAPP_SERVICES.device.assign%>';	
+		var VarDBisExist = '<%=APICONF.GAPP_SERVICES.device.isexist%>';		
+	
+
+		var VarPopulateMakeListUrl = '<%=APICONF.GAPP_SERVICES.device.makes%>';	
+		var VarPopulateProtocolListUrl = '<%=APICONF.GAPP_SERVICES.device.networkprotocols%>';
+		var VarPopulateDevicetagsUrl = '<%=APICONF.GAPP_SERVICES.device.tags%>';		
+		var VarPopulateModelListUrl = '<%=APICONF.GAPP_SERVICES.device.models%>';
+		var VarPopulateDeviceProtocolListUrl = '<%=APICONF.GAPP_SERVICES.device.protocols%>';
+		var VarPopulateVersionsListUrl = '<%=APICONF.GAPP_SERVICES.device.versions%>';
+		var VarPopulateConfigTemplatesListUrl = '<%=APICONF.GAPP_SERVICES.device.configtemplates%>';
+
+					
+		var VarPopulateDeviceType= '<%=APICONF.GAPP_SERVICES.device.types%>';
+		var VarEditDeviceId = '<%=VarDeviceId%>';		
+		var VarLUDomainName = '<%=usr.domainName()%>';
+		
+	</script>
+	<script type='text/javascript' src="<%=urlPrefix%>js/mask.js"></script>
+	<script type="text/javascript" src="<%=urlPrefix%><%=utils.resolveUrl('js/device/add.js')%>"></script>   
+	
+</body>
+</html>

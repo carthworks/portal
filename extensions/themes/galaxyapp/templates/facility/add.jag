@@ -1,0 +1,326 @@
+<%
+	var APPCONF = require('/configs/appconfig.jag');
+	var APICONF = require('/configs/apiproperties.jag');
+	var usr = require('/modules/user.js');
+	include(utils.resolvePath('templates/portal-header.jag'));
+	include('/controllers/includes/theme-portal-styles.jag');
+%>
+	<style type="text/css">		
+		.portlet-title { min-height: 12px !important; padding:0; }
+	</style>
+</head>
+<body class="page-md page-header-fixed page-quick-sidebar-over-content page-footer-fixed  page-full-width">
+	<div class="se-pre-con"></div>
+	<% include(utils.resolvePath('templates/global-header.jag')); %>
+	<!-- BEGIN CONTAINER -->
+	<div class="page-container">
+		<!-- BEGIN SIDEBAR -->
+		<div class="page-sidebar-wrapper">
+			<div class="page-sidebar   navbar-collapse collapse">
+				<!-- BEGIN SIDEBAR MENU -->	
+				<ul class="page-sidebar-menu page-sidebar-menu-hover-submenu " data-keep-expanded="false" data-auto-scroll="false" data-slide-speed="200">
+					<li class="sidebar-toggler-wrapper"><div class="sidebar-toggler"></div></li>
+					<li class="nav-item start active open ">
+						<a href="dashboard.html" class="nav-link nav-toggle">
+                            <i class="icon-bar-chart"></i>
+                            <span class="title">Dashboard</span>
+                            <span class="selected"></span>                               
+                        </a>
+                    </li>
+					<li class="">
+						<a href="javascript:;" class="nav-link nav-toggle">
+							<i class="icon-puzzle"></i>
+                            <span class="title">Dashboard Designer</span>
+                            <span class="selected"></span>                               
+                        </a>
+					</li>
+					<li class="heading">
+						<h3 class="uppercase">Device Management</h3>
+					</li>
+					<li class="open">
+						<a href="javascript:;">
+							<i class="icon-diamond"></i>
+							<span class="title">Device </span>
+							<span class="arrow "></span>
+						</a>
+						<ul class="sub-menu">						
+							<li>
+								<a href="ui_icons.html">
+								<span class="badge badge-roundless badge-danger">new</span>Create Device</a>
+							</li>		
+						
+							<li>
+								<a href="ui_tabs_accordions_navs.html">
+								List Device</a>
+							</li>
+							<li>
+								<a href="ui_tabs_accordions_navs.html">
+								Update Device</a>
+							</li>					
+						</ul>
+					</li>
+				</ul>
+				<!-- END SIDEBAR MENU -->
+			</div>
+		</div>
+		<!-- END SIDEBAR -->
+		
+		<!-- BEGIN CONTENT --> 
+		<div class="page-content-wrapper">
+			<div class="page-content">
+				<h3 class="page-title">	Facility Management  <small></small></h3>
+				<div class="page-bar">
+					<ul class="page-breadcrumb">
+						<li>
+							<i class="fa fa-home"></i>
+							<a href="Javascript:void(0)" onclick="FnBreadCrumbHome()">Home</a>
+							<i class="fa fa-angle-right"></i>
+						</li>
+						<li>
+							<a href="Javascript:void(0)" onclick="FnNavigateFacilityList()">Facility</a>
+							<i class="fa fa-angle-right"></i>
+						</li>
+						<li>
+							<a href="Javascript:void(0)"><% if(VarFacilityId!='') { %> View Facility <% } else { %> Create Facility <% } %></a>
+						</li>
+					</ul>
+				</div>
+				<!-- BEGIN PAGE CONTENT-->
+				<div class="row">
+					<div class="col-md-12">						
+						<div class="portlet light bordered animated fadeInUp dark">
+							<div class="portlet-title">
+								<div class="caption font-red-sunglo">
+									<i class="icon-plus icons font-red-sunglo"></i>
+									<span class="caption-subject bold uppercase"> <% if(VarFacilityId!='') { %> View Facility <% } else { %> Create Facility <% } %> </span>
+								</div>
+								
+								<div class="actions">
+									<div class="form-actions">
+										<% if(ObjPageAccess['edit']=='1') { %>									
+											<a class="btn btn-circle btn-icon-only red" href="Javascript:void(0)" onclick="FnEditFacility()" id="gapp-facility-edit" tabindex="19"><i class="icon-note icons"></i></a>
+										<% } %>
+										<button type="button" class="btn btn-raised default" name="gapp-facility-cancel" id="gapp-facility-cancel" onclick="FnCancelFacility()" tabindex="18">Cancel</button>
+										<button type="button" class="btn  btn-raised btn-danger" name="gapp-facility-save" id="gapp-facility-save" onclick="return FnSaveFacility()" tabindex="17">Save</button>								
+									</div>
+								</div>
+								
+							</div>
+							<div class="portlet-body form">
+								<form name="gapp-addfacility-form" id="gapp-addfacility-form" role="form" autocomplete="off">
+									<div class="form-body">					
+										<div class="" style="margin:24px 0 0 0">								
+											<div class=" col-md-5 col-sm-6">
+												<!-- BEGIN FACILITY NAME -->										
+												<div class="form-group form-md-line-input">
+													<input  type="text" class="form-control" name="facilityName" id="facilityName"   required="true" data-required-msg="Facility Name not specified" tabindex="1" data-available data-available-url="<%=APICONF.GAPP_SERVICES.facility.nameunique%>" data-available-msg="Facility already exists"  
+													onkeypress="return FnAllowAlphaNumericOnlyWithNoSplCharFirst(event)"/>																	
+													<label class="col-md-12 control-label" for="facilityName"> Facility Name <span class="required" aria-required="true">* </span></label>
+													<div class="form-control-focus"></div>			
+												</div>	
+												<!-- END FACILITY NAME -->
+												<!-- BEGIN COUNTRY -->
+												<div class="form-group form-md-line-input">														
+													<select class="form-control" id="country" name="country" required data-required-msg="Country not specified" tabindex="2" onchange="FnGetEmirateList(1)">
+														<option value="">Select Country</option>													
+													</select>
+													<label class="col-md-12 control-label" for="country">Country<span class="required" aria-required="true">* </span></label>
+													<div class="form-control-focus"></div>	
+												</div>		
+												<!-- END COUNTRY -->
+												<!-- BEGIN EMIRATE -->
+												<div class="form-group form-md-line-input">														
+													<select class="form-control" name="emirate" id="emirate" required="true" data-required-msg="Emirate not specified" tabindex="3" onchange="FnGetCityList()">
+														<option value="">Select Emirate</option>													
+													</select>															
+													<label class="col-md-12 control-label" for="emirate">Emirate<span class="required" aria-required="true">* </span></label>
+													<div class="form-control-focus"></div>
+												</div>														
+												<!-- END EMIRATE -->
+												
+													<!-- BEGIN CITY -->
+												<div class="form-group form-md-line-input">														
+													<select class="form-control" name="city" id="city" tabindex="4">
+														<option value="">Select City</option>												
+													</select>															
+													<label class="col-md-12 control-label" for="city">City</label>
+													<div class="form-control-focus"></div>
+												</div>		
+												<!-- END CITY -->
+												
+												<!-- BEGIN ZONE -->
+												<div class="form-group form-md-line-input">
+													<select class="form-control" id="zone" name="zone" tabindex="5">
+														<option value="">Select Zone</option>
+													</select>
+													<label class="col-md-12 control-label" for="zone">Zone</label>
+													<div class="form-control-focus"></div>													
+												</div>													
+												<!-- END ZONE NAME -->
+												
+													<!-- BEGIN VERTICAL -->
+												<div class="form-group form-md-line-input">		
+													<select class="form-control" name="vertical" id="vertical" required="true" data-required-msg="Vertical not specified" tabindex="6">
+														<option value="">Select Vertical</option>													
+													</select>
+													<label class="col-md-12 control-label" for="vertical">Vertical <span class="required" aria-required="true">* </span></label>
+													<div class="form-control-focus"></div>
+												</div>
+												<!-- END VERTICAL -->
+												
+												<!-- BEGIN BLD TYPE -->
+												<div class="form-group form-md-line-input">														
+													<select class="form-control" id="buildingType" name="buildingType" required data-required-msg="Building Type not specified" tabindex="7">
+														<option value="">Select Building Type</option>													
+													</select>
+													<label class="col-md-12 control-label" for="buildingType">Building Type<span class="required" aria-required="true">* </span></label>
+													<div class="form-control-focus"></div>
+												</div>												
+												<!-- END BLD TYPE -->
+												
+												<!-- BEGIN TIMEZONE -->
+												<div class="form-group form-md-line-input">														
+													<select class="form-control" name="timeZone" id="timeZone" required data-required-msg="Time zone not specified" tabindex="8">
+														<option value="">Select Time Zone</option>
+														<option value="Dubai">Dubai</option>
+														<option value="Muscat">Muscat</option>
+													</select>
+													<label class="col-md-12 control-label" for="timezone">Time zone<span class="required" aria-required="true">* </span></label>
+													<div class="form-control-focus"></div>
+												</div>	
+												<!-- END TIMEZONE -->
+												
+												<!-- BEGIN BLD STRUCTURE -->
+												<div class="form-group form-md-line-input">
+													<input  type="text" class="form-control" name="buildingStructure" id="buildingStructure"  required="true"  data-required-msg=" Building Structure not Specified" tabindex="9" />
+													<label class="col-md-12 control-label" for="buildingStructure">Building structure <span class="required" aria-required="true">* </span></label>
+													<div class="form-control-focus"></div>
+												</div>												
+												<!-- END BLD STRUCTURE -->
+												
+															
+												<div class="clearfix"></div>																										
+											</div>
+											<div class=" col-md-5 col-sm-6">
+	
+												<!-- BEGIN SQUAREFEET -->
+												<div class="form-group form-md-line-input is-empty  ">
+													<input type="text" class="form-control k-valid" name="squareFeet" id="squareFeet" tabindex="10" onkeypress="return FnAllowNumbersOnly(event)"/>														
+													<label class="col-md-12 control-label" for="squareFeet"> Square feet</label>
+													<div class="form-control-focus"></div>
+													<span class="material-input"></span>
+												</div>	
+												<!-- BEGIN  SQUAREFEET -->	
+																									
+													
+												
+												<!-- BEGIN WEATHER STATION -->	
+												<div class="form-group form-md-line-input is-empty  ">
+													<input type="text" class="form-control k-valid" name="weatherStation" id="weatherStation" tabindex="11"/>														
+													<label class="col-md-12 control-label" for="weatherStation"> Weather station</label>
+													<div class="form-control-focus"></div>
+													<span class="material-input"></span>
+												</div>	
+												<!-- BEGIN  WEATHER STATION -->
+																																			
+												<!-- BEGIN RFS DATE -->
+												<div class="form-group form-md-line-input">
+													<label class="control-label col-md-12">RFS Date</label>
+													<div class="input-group input-large date date-picker">
+														<input type="text" class="form-control date-picker" name="rfsDate" id="rfsDate" tabindex="12"/>
+														<!--<span class="input-group-btn">
+															<button class="btn default" type="button">
+															<i class="fa fa-calendar"></i></button>
+														</span>-->
+													</div>
+												</div>
+												<!-- END RFS DATE -->
+														
+												<!-- BEGIN PRE ECM  DATE-->													
+												<div class="form-group form-md-line-input">
+													<label class="col-md-12 control-label" for="clientBuildingSelector">Pre ECM End Date</label>
+													<div class="input-group input-large date date-picker">			
+														<input type="text" class="form-control date-picker" name="preEcmEndDate" id="preEcmEndDate" tabindex="13" />
+														<!--<span class="input-group-btn">																	
+															<button class="btn default" type="button">																	
+															<i class="fa fa-calendar"></i></button>
+														</span>-->										
+													</div>														
+												</div>
+												<!-- END PRE ECM  DATE -->
+													
+												<!-- BEGIN START DATE -->
+												<div class="form-group form-md-line-input">
+													<label class="control-label col-md-12">Start Date</label>
+													<div class="input-group input-large date date-picker">
+														<input type="text" class="form-control date-picker" name="startDate" id="startDate" tabindex="14"/>
+														<!--<span class="input-group-btn">
+															<button class="btn default" type="button">
+															<i class="fa fa-calendar"></i></button>
+														</span>-->
+													</div>
+												</div>											
+												<!-- END START DATE -->		
+													
+												<div class="clearfix"></div>	
+												
+
+												<!-- BEGIN SAVING TARGET-->													
+												<div class="form-group form-md-line-input">
+													<input type="text" class="form-control" name="savingsTarget" id="savingsTarget" onkeypress="return FnAllowNumbersOnly(event)" tabindex="15"/>																
+													<label class="col-md-12 control-label" for="savingsTarget">Savings Target</label>
+													<div class="form-control-focus"></div>
+												</div>	
+												<!-- END SAVING TARGET -->
+												
+												<!-- BEGIN MAX VALUE -->
+												<div class="form-group form-md-line-input is-empty ">
+													<input type="text" class="form-control k-valid" name="maxValue" id="maxValue" tabindex="16" onkeypress="return FnAllowNumbersOnly(event)"/>																
+													<label class="col-md-12 control-label" for="maxValue"> Max value</label>
+													<div class="form-control-focus"></div>
+													<span class="material-input"></span>
+												</div>
+												<!-- END MAX VALUE -->														
+											</div>
+										</div>
+										<div class="clearfix"></div>
+									</div>
+									<input type="hidden" name="facility_id" id="facility_id" value="<%=VarFacilityId%>" />
+								</form>
+								<form id="gapp-facility-list" role="form" action="<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/facility/list" name="gapp-facility-list" method="post">
+									<input type="hidden" id="gapp-tenant-key" name="gapp-tenant-key" value="<%=VarTenantKey%>" />
+								</form>
+							</div>
+						</div>
+					</div>
+					<!-- END SAMPLE FORM PORTLET-->
+				</div>
+				<!-- END PAGE CONTENT-->
+			</div>
+		</div>
+		<!-- END CONTENT -->
+		
+	</div>
+	<!-- END CONTAINER -->
+	<% include(utils.resolvePath('templates/global-footer.jag')); %>
+	<% 
+		include(utils.resolvePath('templates/portal-footer.jag'));
+		include('/controllers/includes/theme-portal-scripts.jag');
+	%>
+	<script type="text/javascript">
+		var VarCreateFacilityUrl = '<%=APICONF.GAPP_SERVICES.facility.create%>';
+		var VarViewFacilityUrl = '<%=APICONF.GAPP_SERVICES.facility.view%>';
+		var VarUpdateFacilityUrl = '<%=APICONF.GAPP_SERVICES.facility.update%>';
+		var VarFilterListUrl = '<%=APICONF.GAPP_SERVICES.common.filterlist%>';
+		var VarHierarchyListUrl = '<%=APICONF.GAPP_SERVICES.common.hierarchy%>';
+		var VarAttachParentUrl = '<%=APICONF.GAPP_SERVICES.hierarchy.attachparent%>';
+		var VarAttachChildrenUrl = '<%=APICONF.GAPP_SERVICES.hierarchy.attachchildren%>';
+		var VarEditFacilityId = '<%=VarFacilityId%>';
+		var VarLUDomainName = '<%=usr.domainName()%>';
+		var VarLUClientName = '<%=usr.tenantName()%>';
+		var VarCurrentTenantInfo = $.parseJSON('<%=VarCurrentTenantInfo%>');
+		var VarAppRootDomain = '<%=APPCONF.GAPP_CONF.MY_DOMAIN_NAME%>';
+	</script>
+	<script type="text/javascript" src="<%=urlPrefix%><%=utils.resolveUrl('js/facility/add.js')%>"></script>  
+</body>
+</html>

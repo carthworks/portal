@@ -1,0 +1,124 @@
+<%
+	var APPCONF = require('/configs/appconfig.jag');
+	var APICONF = require('/configs/apiproperties.jag');
+	var usr = require('/modules/user.js');
+	include(utils.resolvePath('templates/portal-header.jag'));
+	include('/controllers/includes/theme-portal-styles.jag');
+	
+%>
+	<style type="text/css">
+		#grid-view .k-grid-header .k-header {
+			background-color: #f44336;
+		}
+
+		#grid-view .k-header a.k-link, .k-grid-header th{
+			color: #000 !important;
+		}
+
+		.paddingRight15{padding-right:15px;}
+		
+	</style>
+</head>
+<body class="page-md page-header-fixed page-quick-sidebar-over-content page-footer-fixed  page-full-width">
+	<div class="se-pre-con"></div>
+	<% include(utils.resolvePath('templates/global-header.jag')); %>
+	<!-- BEGIN CONTAINER -->
+	<div class="page-container">
+		<!-- BEGIN CONTENT -->
+		<div class="page-content-wrapper">
+			<div class="gapp-header">
+				<% include(utils.resolvePath('templates/leftnavigation.jag')); %>
+				<h3 class="page-title">	Tag Management </h3>
+				<div class="page-bar">
+					<ul class="page-breadcrumb">
+						<li>
+							<i class="fa fa-home"></i>
+							<a href="Javascript:void(0)" onclick="FnBreadCrumbHome()">Home</a>
+							<i class="fa fa-angle-right"></i>
+						</li>
+						<li>
+							<a href="Javascript:void(0)">Tags</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="page-content">
+				<!-- BEGIN PAGE CONTENT-->
+					<div class="row">
+						<div class="col-md-12">		
+						
+							<div class="portlet light bordered">
+								<div class="portlet-title">
+									<div class="caption font-red-sunglo">
+										<!--<i class="pageheadericon pageheader-assetsicon"></i>-->
+										<i class="fa fa-tags aria-hidden=" true"=""></i>
+										<span class="caption-subject bold uppercase"> Tags </span>
+									</div>
+									<div class="actions">
+										<% if(ObjPageAccess['create'] == '1') { %>
+										<div class="btn-group">
+											<a href="Javascript:void(0)" onclick="FnCreateTag()" class="btn green"> +  Create </a>						
+										</div>
+										<% } %>
+									</div>
+								</div>
+								<div class="portlet-body">
+									<form class="form-inline margin-bottom-15">
+										<div class="form-group paddingRight15">
+											<label for="fromdate" style="font-weight: bold;padding-right: 10px;">Tag Types</label>
+											<select class="form-control" name="assetCategory" id="assetCategory" onchange="FnGetTagList(this.value)">
+												<option value="">Select Tag Type</option>
+											</select>
+										</div>
+									</form>
+																	
+									<div class="chart-wrapper">
+										<div id="assetListSection">
+											<div id="gapp-asset-list"></div>
+										</div>
+									</div>
+									
+									
+									<form id="gapp-asset-create" role="form" action="<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/tags/nametag/create" name="gapp-asset-create" method="post">
+										<input type="hidden" id="gapp-tenant-key" name="gapp-tenant-key" value="<%=VarTenantKey%>" />
+									</form>	
+
+									
+									<form id="gapp-asset-view" role="form" action="<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/tags/nametag/view" name="gapp-asset-view" method="post">
+										<input type="hidden" id="entity_id" name="entity_id" />
+										<input type="hidden" id="tag_type" name="tag_type" />
+										<input type="hidden" id="gapp-tenant-key" name="gapp-tenant-key" value="<%=VarTenantKey%>" />
+									</form>
+				
+									
+								</div>
+							</div>
+						</div>
+					</div>
+				<!-- END PAGE CONTENT-->
+			</div>
+		</div>
+		<!-- END CONTENT -->
+		
+	</div>
+	<!-- END CONTAINER -->
+	<% include(utils.resolvePath('templates/global-footer.jag')); %>
+	<% 
+	include(utils.resolvePath('templates/portal-footer.jag'));
+	include('/controllers/includes/theme-portal-scripts.jag');
+	%>
+	<script type="text/javascript">
+		var VarListAssetsUrl = '<%=APICONF.GAPP_SERVICES.tags.nametags.list%>';
+		var VarListTemplateUrl = '<%=APICONF.GAPP_SERVICES.tags.nametags.template.list%>';
+		var VarViewTemplateUrl = '<%=APICONF.GAPP_SERVICES.tags.nametags.template.view%>';
+		
+		var VarFetchAllByTemplateUrl = '<%=APICONF.GAPP_SERVICES.tags.nametags.fetchbytype%>';
+		
+		var VarLUDomainName = '<%=usr.domainName()%>';
+		var VarCurrentTenantInfo = $.parseJSON('<%=VarCurrentTenantInfo%>');
+		var ObjPageAccess = $.parseJSON('<%=ObjPageAccess%>');
+	</script>
+	<script type="text/javascript" src="<%=urlPrefix%><%=utils.resolveUrl('js/tags/list.js')%>"></script>
+	<script src="<%=urlPrefix%>js/jquery-custom-scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
+</body>
+</html>

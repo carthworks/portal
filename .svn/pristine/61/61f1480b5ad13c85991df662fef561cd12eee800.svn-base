@@ -1,0 +1,158 @@
+<%
+
+%>
+<!-- Style sheet for Tag(Geo Map) section -->
+<link rel="stylesheet" type="text/css" href="<%=urlPrefix%><%=utils.resolveUrl('css/jquery-gmaps-latlon-picker.css')%>" />
+<!--<link rel="stylesheet" type="text/css" href="<%=urlPrefix%>plugins/tag-handler/css/jquery.taghandler.css" />-->
+
+<style type="text/css">
+/*--- Start:Styles for Tag section ---*/
+	.tag-wrapper{
+		display:none;
+		position:relative;
+		background-color:#fff;
+		clear:both;
+		
+	}    
+	.tag-wrapper hr{
+		border: 0;
+		height: 0;
+		border-top: 1px solid rgba(0, 0, 0, 0.1);
+		border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+	}    
+	.gllpMap {   
+		width: 100% !important;
+	}
+	.geo-tag-inputs input{
+		border: none;
+        height: 25px;
+        text-align: center;
+        margin-left: 10px;
+        margin-right: 10px;
+	}
+	
+	.tag-wrapper .k-multiselect.k-header{
+		margin-left: 12px;
+		margin-right: 12px;
+		padding-top: 10px;
+		background-color: #e5e5e5;
+		border: none;
+	}
+	
+	.tag-wrapper .k-multiselect-wrap{
+		padding: 0px 10px 8px 10px;
+		/*border-radius: 5px;*/
+	}
+	
+	.tag-wrapper .k-multiselect-wrap li.k-button {
+			background-color: #205081;
+			color: #FFFFFF;
+			border-radius: 5px;
+			font-size:13px;
+			margin-top: 9px;
+	}
+	
+	
+	
+/*--- End: Styles for Tag Section  ---*/
+
+</style>
+<!-- *** START TAGGING SECTION *** -->
+								
+	<div class="tag-wrapper" id="tag-wrapper">
+		<!--
+		<div class="portlet-title">
+			<div class="caption">
+				<hr/>
+				<i class="fa fa-tags  font-red-sunglo" aria-hidden="true"></i>
+				<span class="caption-subject  font-red-sunglo uppercase" style="font-weight:bold;">Tags </span>
+			</div>
+		</div>
+		-->
+		<!-- eof-portlet-title -->
+		
+		<div class="portlet-body">
+			<form id="form-gapp-tag-management" name="form-gapp-tag-management" role="form" method="post">
+				<div class="col-md-6 left-pane" id="portlet-body-left-pane">
+					<div class="map-content" style="border:1px solid #dbdbdb;margin-top:12px;">					
+						<div class="modal-header bg-green-meadow" style="background:#fff!important;color:#f44336!important;border:none!important;">
+							<h4 class="modal-title" style="font-size:14px!important;font-weight:bold!important;"><i class="fa fa-map-marker"></i>&nbsp;Geo Tag</h4>
+						</div>	
+
+						<div class="map-body" style="background:#e5e5e5;">
+							<fieldset class="gllpLatlonPicker">
+								<div class="form-group col-md-12">										
+									<div class="input-group" style="margin-top: 10px;">
+										<div class="input-icon">
+											<i class="fa fa-street-view"></i>
+											<input  type="text" class="form-control gllpSearchField" placeholder="Type the location name"  name="password" placeholder="password">
+										</div>
+										<span class="input-group-btn" margin="top:15px;">
+											<button  class="btn default gllpSearchButton" type="button"   value="search"><i class="fa fa-arrow-left fa-fw"></i> Search</button>
+										</span>
+									</div>
+										
+									<div>
+										<div class="gllpMap" width="100%">Google maps loading...</div>
+									</div>
+										
+									<div class="col-md-12 geo-tag-inputs" style="margin: 16px 0 0 0;">
+										Latitude:<input type="text" class="gllpLatitude"  id="gllpLatitude" value=""/>	
+										Longitude:<input type="text" class="gllpLongitude"  id="gllpLongitude" value=""/>	
+										Zoom:<input type="text" class="gllpZoom" style="width:50px;" value="3"/>	
+										<span class="glyphicon glyphicon-search gllpUpdateButton" style="cursor:pointer;"></span>
+									</div>
+								</div>
+							</fieldset>								
+						</div>
+						<!-- map-body-->	
+						
+						<div class="modal-footer" style="padding:12px 15px 0px 0px!important;">
+							<span>
+								<strong><span id="tag-latitude-longitude-display-value"></span></strong>
+							</span>
+							<button type="button" id="add-geo-tag" class="btn green" data-dismiss="modal"><i class="fa fa-tags " aria-hidden="true"></i><span id="geo-tag-label">Tag</span></button>
+							<button type="button" id="clear-geo-tag" class="btn default" data-dismiss="modal"><i class="fa fa-refresh" aria-hidden="true"></i>Clear</button>
+							<input type="hidden" class="form-control input-xs " name="tag-latitude" id="tag-latitude" placeholder="latitude"/>
+							<input type="hidden" class="form-control input-xs" name="tag-longitude" id="tag-longitude" placeholder="longitude"/>
+							
+							<input type="hidden" class="form-control input-xs " name="tag-domain-name"     id="tag-domain-name"  />
+							<input type="hidden" class="form-control input-xs" name="tag-identifier-key"   id="tag-identifier-key" />
+							<input type="hidden" class="form-control input-xs" name="tag-identifier-value" id="tag-identifier-value" />
+							<input type="hidden" class="form-control input-xs" name="tag-entity-template-name" id="tag-entity-template-name" />
+							<input type="hidden" class="form-control input-xs" name="tag-update-flag" id="tag-update-flag" value="false"/>
+						</div>							
+					</div>
+					<!-- map-content -->			
+
+				</div>
+				<!-- eof-left-pane-->
+				
+				<div class="col-md-6 right-pane" id="portlet-body-right-pane">
+				<!-- right-pane-content -->
+					<div class="map-content" style="border:1px solid #dbdbdb;margin-top:12px;">					
+						<div class="modal-header bg-green-meadow" style="background:#fff!important;color:#f44336!important;border:none!important;">
+							<h4 class="modal-title" style="font-size:14px!important;font-weight:bold!important;"><i class="fa fa-tags"></i>&nbsp;Tags</h4>
+						</div>	
+
+						<div class="map-body" style="background:#e5e5e5!important;">
+							<select id="name-tag-placeholder" id="name-tag-placeholder" multiple="multiple" data-placeholder="Select tag values"></select>		
+						</div>
+						<!-- map-body-->	
+						
+						<div class="modal-footer" style="padding:12px 15px 0px 0px!important;background:#e5e5e5;">				
+							<div id="content-footer"></div>
+						</div>	
+					</div>
+					<!-- map-content -->		
+				</div>
+				<!-- eof-right-pane-content -->
+			</form>
+			<!-- eof-form-gapp-tag-management -->	
+		</div>
+		<!-- eof-portlet-body -->
+	</div>
+	<!-- eof-tag-wrapper -->
+	<!--<div class="clearfix"></div>-->
+									
+<!-- *** END TAGGING SECTION *** -->

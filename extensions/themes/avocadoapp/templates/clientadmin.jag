@@ -1,0 +1,173 @@
+<%
+	var APICONF = require('/configs/apiproperties.jag');
+	var APPCONF = require('/configs/appconfig.jag');
+	include(utils.resolvePath('templates/portal-header.jag'));
+	include('/controllers/includes/theme-portal-styles.jag');
+	
+%>
+	<style type="text/css">		
+		.portlet-title {min-height: 12px !important; padding:0;}
+		.tile-group h3 {
+    padding-left: 3px;
+    color: #205081 !important;
+}
+	</style>
+</head>
+<body class="page-md page-header-fixed page-quick-sidebar-over-content page-footer-fixed  page-full-width">
+	<div class="se-pre-con"></div>
+	<% include(utils.resolvePath('templates/global-header.jag')); %>
+	<!-- BEGIN CONTAINER -->
+	<div class="page-container">
+		<!-- BEGIN SIDEBAR -->
+		<div class="page-sidebar-wrapper">
+			<div class="page-sidebar   navbar-collapse collapse">
+				<!-- BEGIN SIDEBAR MENU -->	
+				<ul class="page-sidebar-menu page-sidebar-menu-hover-submenu " data-keep-expanded="false" data-auto-scroll="false" data-slide-speed="200">
+					<li class="sidebar-toggler-wrapper"><div class="sidebar-toggler"></div></li>
+					<li class="nav-item start active open ">
+						<a href="dashboard.html" class="nav-link nav-toggle">
+                            <i class="icon-bar-chart"></i>
+                            <span class="title">Dashboard</span>
+                            <span class="selected"></span>                              
+                        </a>
+                    </li>
+					<li class="">
+						<a href="javascript:;" class="nav-link nav-toggle">
+							<i class="icon-puzzle"></i>
+                            <span class="title">Dashboard Designer</span>
+                            <span class="selected"></span>                               
+                        </a>
+					</li>
+					<li class="heading">
+						<h3 class="uppercase">Device Management</h3>
+					</li>
+					<li class="open">
+						<a href="javascript:;">
+							<i class="icon-diamond"></i>
+							<span class="title">Device </span>
+							<span class="arrow "></span>
+						</a>
+						<ul class="sub-menu">						
+							<li>
+								<a href="ui_icons.html">
+								<span class="badge badge-roundless badge-danger">new</span>Create Device</a>
+							</li>		
+						
+							<li>
+								<a href="ui_tabs_accordions_navs.html">
+								List Device</a>
+							</li>
+							<li>
+								<a href="ui_tabs_accordions_navs.html">
+								Update Device</a>
+							</li>					
+						</ul>
+					</li>
+				</ul>
+				<!-- END SIDEBAR MENU -->
+			</div>
+		</div>
+		<!-- END SIDEBAR -->
+		
+		<!-- BEGIN CONTENT -->
+		<div class="page-content-wrapper">
+			<div class="page-content">
+								
+				<!-- BEGIN PAGE CONTENT-->
+					<div class="row">
+						<div class="col-sm-offset-1 col-md-10">						
+							<div class="portlet light bordered animated fadeInUp dark" style="background-color: #f7f7f7;">
+								<div class="portlet-title">
+									<div class="caption font-red-sunglo">
+										<i class="icon-plus icons font-red-sunglo"></i>
+										<span class="caption-subject bold uppercase"> Create Client Admin </span>
+									</div>
+									
+									<div class="actions" id="editContainer">																		
+										<div class="form-actions">
+											<button type="button" class="btn  btn-raised btn-danger ladda-button" name="gapp-clientadmin-save" id="gapp-clientadmin-save" data-style="slide-up" data-size="l" onclick="return FnSaveClientAdmin()"><span class="ladda-label"><i class="icon-check icons" aria-hidden="true"></i>Save</span></button>
+										</div>
+									</div>
+								</div>
+								<div class="portlet-body form">
+									<form name="gapp-clientadmin-form" id="gapp-clientadmin-form" role="form" autocomplete="off">
+										<div class="form-body">
+											<div class="">								
+												<div class=" col-md-6">			
+													<!-- BEGIN USERNAME -->													
+													<div class="form-group form-md-line-input">
+														<input type="text" class="form-control" name="userName" id="userName" autofocus tabindex="1" required data-required-msg="User Name not specified" onkeypress="return FnAllowAlphaNumericOnly(event)" data-available data-available-url="<%=APICONF.GAPP_SERVICES.users.usernameunique%>" data-available-msg="User Name already exists" />							
+														<label class="col-md-12 control-label" for="form_control_1">User name 
+															<span class="required" aria-required="true">* </span>
+														</label>
+														<div class="form-control-focus"></div>
+													</div>													
+													<!-- END USERNAME -->		
+																
+													<!-- BEGIN FIRSTNAME -->													
+													<div class="form-group form-md-line-input">
+														<input type="text" class="form-control" name="firstName" id="firstName" tabindex="2" />									
+														<label class="col-md-12 control-label" for="form_control_1">First name	</label>
+														<div class="form-control-focus"></div>
+													</div>													
+													<!-- END FIRSTNAME -->
+													
+														<!-- BEGIN LASTNAME -->
+													<div class="form-group form-md-line-input">
+														<input type="text" class="form-control" name="lastName" id="lastName" required data-required-msg="Last Name not specified" tabindex="3" />									
+														<label class="col-md-12 control-label" for="form_control_1">Last name<span class="required" aria-required="true">* </span></label>
+														<div class="form-control-focus"></div>
+													</div>
+													<!-- END LASTNAME -->															
+												</div>									
+											</div>	
+											<div class=" col-md-offset-1 col-md-5">
+												<!-- BEGIN EMAILID -->
+												<div class="form-group form-md-line-input">
+													<div class="input-group">
+														<input type="email" class="form-control" placeholder="" name="emailId" id="emailId" tabindex="4" value="<%=VarUserEmail%>" disabled/>												
+														<label class="col-md-12 control-label" for="form_control_1">Email id</label>
+														<span class="input-group-addon"><i class="fa fa-envelope"> </i></span>
+													</div>
+												</div>	
+												<!-- END EMAILID -->
+													
+													<!-- BEGIN CONTACTNO -->
+													<div class="form-group form-md-line-input">
+														<input type="text" class="form-control" name="contactNumber" id="contactNumber" tabindex="5" />									
+														<label class="col-md-12 control-label" for="form_control_1">Contact number</label>
+														<div class="form-control-focus"></div>
+													</div>
+													<!-- END CONTACTNO -->
+																		
+											</div>
+										</div>
+										<div class="clearfix"></div>
+										<input type="hidden" name="clientidentifier" id="clientidentifier" vale="<%=VarIdentifier%>" />
+									</form>
+								</div>
+							</div>	
+						</div>
+					</div>
+				<!-- END PAGE CONTENT-->
+			</div>
+		</div>
+		<!-- END CONTENT -->
+		
+	</div>
+	<!-- END CONTAINER -->
+	<% include(utils.resolvePath('templates/global-footer.jag')); %>
+	<% 
+		include(utils.resolvePath('templates/portal-footer.jag'));
+		include('/controllers/includes/theme-portal-scripts.jag');
+	%>
+	<script type="text/javascript">
+		var VarCreateClientAdminUrl = '<%=APICONF.GAPP_SERVICES.clients.createadmin%>';
+		var VarIdentifier = '<%=VarIdentifier%>';
+		var VarAPPServerPath = '<%=APPCONF.GAPP_CONF.APP_DOMAIN_ROOT_URL%>';
+		var VarMyDomain = '<%=VarMyDomain%>';
+		
+	</script>
+	<script type="text/javascript" src="<%=urlPrefix%><%=utils.resolveUrl('js/clientadmin.js')%>"></script>
+</body>
+</html>

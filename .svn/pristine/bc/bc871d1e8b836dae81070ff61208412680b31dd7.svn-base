@@ -1,0 +1,131 @@
+<% include(utils.resolvePath('templates/portal-header.jag')); %>
+	<link rel="stylesheet" href="<%=urlPrefix%>css/portal.css">
+    <% include('/controllers/includes/theme-portal-styles.jag'); %>	
+    <title>Dashboards</title>
+	<style type="text/css">
+				
+		.required {
+			color:#CE5454;
+		}
+		
+		.input-error {
+			color:#CE5454;
+		}
+
+		#ues-dashboard-form {
+			width: 65%;
+			margin: 0 auto;
+		}
+		
+		.no-js #loader { display: none;  }
+		.js #loader { display: block; position: absolute; left: 100px; top: 0; }
+		.se-pre-con {
+			position: fixed;
+			left: 0px;
+			top: 0px;
+			width: 100%;
+			height: 100%;
+			z-index: 9999;
+			background: url(<%=urlPrefix%><%=utils.resolveUrl('images/103.GIF')%>) center no-repeat #fff;
+		}
+		
+	</style>
+</head>
+<body>
+<div class="se-pre-con"></div>
+<div id="ues-portal-container">
+	<% include(utils.resolvePath('templates/global-navigation.jag')); %>
+
+	<nav role="navigation" class="navbar navbar-default ues-context-menu container-fluid">
+		<div class="row">
+			<div class="page-head col-md-9">
+				<h3><strong>Create Dashboard</strong></h3>
+			</div>
+			<div class="page-head col-md-3">
+				<a href="<%=tenantedUrlPrefix%>./" class="btn btn-success">Cancel</a>
+			</div>
+		</div>
+	</nav>
+
+	<div id="ues-portal" class="container-fluid">
+		<div class="row mrgnt20">
+			<div class="col-md-12">
+				<form class="form-horizontal" action="<%=tenantedUrlPrefix%>dashboards" method="post" id="ues-dashboard-form" enctype="multipart/form-data">
+					<div class="panel panel-default">
+						<div class="panel-heading">Create a Dashboard</div>
+						<div class="panel-body">
+							<div class="row">
+								<div class="col-md-12">
+									<div class="form-group">
+										<label for="dashboard-title" class="col-sm-3 control-label">Name of your Dashboard<span class="required">*</span></label>
+										<div class="col-sm-6">
+											<input type="text" name="title" class="form-control" id="ues-dashboard-title" onchange="FnCheckEmpty('ues-dashboard-title','Please enter the name')" onkeypress="return FnAllowAlphaNumericOnly(event)" placeholder="E.g. Sales Statistics" required autofocus>
+										</div>
+										<div class="col-sm-3 input-error" id="ues-dashboard-title-error"></div>
+									</div>
+									<div class="form-group">
+										<label for="dashboard-id" class="col-sm-3 control-label">URL<span class="required">*</span></label>
+										<div class="col-sm-6">
+											<input type="text" name="id" class="form-control" id="ues-dashboard-id" onkeypress="return FnAllowAlphaNumericOnly(event)" placeholder="E.g. sales-stats" required>
+										</div>
+										<div class="col-sm-3 input-error" id="ues-dashboard-id-error"></div>
+									</div>
+									<div class="form-group">
+										<label for="dashboard-logo" class="col-sm-3 control-label">Logo<span class="required">*</span></label>
+										<div class="col-sm-6">
+											<input type="file" name="logo" class="form-control" id="ues-dashboard-logo" accept='image/*' required>
+										</div>
+										<div class="col-sm-3 input-error" id="ues-dashboard-logo-error"></div>
+									</div>
+									<div class="form-group" style="display:none;" id="ues-dashboard-logo-previewCon">
+										<div class="col-sm-6 col-md-offset-3">
+											<img class="img-responsive" src="" alt="logo" style="height:50px;" id="ues-dashboard-logo-preview">
+										</div>
+									</div>
+							
+									<div class="form-group">
+										<label for="dashboard-description" class="col-sm-3 control-label">Description</label>
+										<div class="col-sm-6">
+											<textarea name="description" class="form-control" id="ues-dashboard-description" placeholder="E.g. Monthly Sales Statistics" rows="4" maxlength="100"></textarea>
+										</div>	
+									</div>
+									
+									<div class="form-group">
+										<label for="dashboard-fcontent" class="col-sm-3 control-label">Footer Content</label>
+										<div class="col-sm-6">
+											<textarea name="fcontent" class="form-control" id="ues-dashboard-fcontent" placeholder="E.g. Monthly Sales Statistics" rows="4" maxlength="100"></textarea>
+										</div>	
+									</div>
+									
+								</div>
+							</div>
+						</div>
+						<div class="panel-footer clearfix">
+							<div class="pull-right">                                                                                    
+								<button class="btn btn-success" type="submit" id="ues-dashboard-create">Next</button>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+<% include(utils.resolvePath('templates/portal-footer.jag')); %>
+
+<script src="<%=urlPrefix%>js/jquery-1.10.2.js"></script>
+<script src="<%=urlPrefix%>js/bootstrap.min.js"></script>
+<script src="<%=urlPrefix%>js/handlebars-v1.3.0.js"></script>
+<script src="<%=urlPrefix%>js/ues.js"></script>
+<script src="<%=urlPrefix%>js/ues-store.js"></script>
+<script src="<%=urlPrefix%>js/create.js"></script>
+<% include('/controllers/includes/theme-portal-scripts.jag'); %>
+<script src="<%=urlPrefix%><%=utils.resolveUrl('js/modernizr.js')%>"></script>
+<script type="text/javascript">
+	$(window).load(function() {
+		// Animate loader off screen
+		$(".se-pre-con").fadeOut("slow");
+	});
+</script>
+</body>
+</html>

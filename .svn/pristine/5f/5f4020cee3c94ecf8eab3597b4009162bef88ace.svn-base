@@ -1,0 +1,262 @@
+<%
+	var APPCONF = require('/configs/appconfig.jag');
+	var APICONF = require('/configs/apiproperties.jag');
+	var usr = require('/modules/user.js');
+	include(utils.resolvePath('templates/portal-header.jag'));
+	include('/controllers/includes/theme-portal-styles.jag');
+	
+%>
+	<style type="text/css">		
+		.portlet-title {    min-height: 12px !important; padding:0;}
+		.md-radio.has-error label > .check {
+			  background: #26A69A !important;
+			}
+		.md-radio.has-error label > .box {
+			border-color: #26A69A !important;
+			}
+		.form-group.form-md-line-input .help-block{left: 0;}
+	</style>
+</head>
+<body class="page-md page-header-fixed page-quick-sidebar-over-content page-footer-fixed  page-full-width">
+	<div class="se-pre-con"></div>
+	<% include(utils.resolvePath('templates/global-header.jag')); %>
+	<!-- BEGIN CONTAINER -->
+	<div class="page-container">
+		<!-- BEGIN SIDEBAR -->
+		<div class="page-sidebar-wrapper">
+			<div class="page-sidebar   navbar-collapse collapse">
+				<!-- BEGIN SIDEBAR MENU -->	
+				<ul class="page-sidebar-menu page-sidebar-menu-hover-submenu " data-keep-expanded="false" data-auto-scroll="false" data-slide-speed="200">
+					<li class="sidebar-toggler-wrapper"><div class="sidebar-toggler"></div></li>
+					<li class="nav-item start active open ">
+						<a href="dashboard.html" class="nav-link nav-toggle">
+                            <i class="icon-bar-chart"></i>
+                            <span class="title">Dashboard</span>
+                            <span class="selected"></span>                              
+                        </a>
+                    </li>
+					<li class="">
+						<a href="javascript:;" class="nav-link nav-toggle">
+							<i class="icon-puzzle"></i>
+                            <span class="title">Dashboard Designer</span>
+                            <span class="selected"></span>                               
+                        </a>
+					</li>
+					<li class="heading">
+						<h3 class="uppercase">Device Management</h3>
+					</li>
+					<li class="open">
+						<a href="javascript:;">
+							<i class="icon-diamond"></i>
+							<span class="title">Device </span>
+							<span class="arrow "></span>
+						</a>
+						<ul class="sub-menu">						
+							<li>
+								<a href="ui_icons.html">
+								<span class="badge badge-roundless badge-danger">new</span>Create Device</a>
+							</li>		
+						
+							<li>
+								<a href="ui_tabs_accordions_navs.html">
+								List Device</a>
+							</li>
+							<li>
+								<a href="ui_tabs_accordions_navs.html">
+								Update Device</a>
+							</li>					
+						</ul>
+					</li>
+				</ul>
+				<!-- END SIDEBAR MENU -->
+			</div>
+		</div>
+		<!-- END SIDEBAR -->
+		
+		<!-- BEGIN CONTENT -->
+		<div class="page-content-wrapper">
+			<div class="page-content">
+				<h3 class="page-title">	Client Management  <small></small></h3>
+				<div class="page-bar">
+					<ul class="page-breadcrumb">
+						<li>
+							<i class="fa fa-home"></i>
+							<a href="Javascript:void(0)" onclick="FnBreadCrumbHome()">Home</a>
+							<i class="fa fa-angle-right"></i>
+						</li>
+						<li>
+							<a href="Javascript:void(0)" onclick="FnNavigateClientList()">Clients</a>
+							<i class="fa fa-angle-right"></i>
+						</li>
+						<li>
+							<a href="Javascript:void(0)" class="pageTitleTxt"><% if(VarClientId!='') { %> View Client <% } else { %> Create Client <% } %></a>
+						</li>
+					</ul>
+				</div>
+				<!-- BEGIN PAGE CONTENT-->
+					<div class="row">
+						<div class="col-md-12">						
+							<div class="portlet light bordered animated fadeInUp dark">
+								<div class="portlet-title">
+									<div class="caption font-red-sunglo">
+										<i class="fa fa-users font-red-sunglo"></i>
+										<span class="caption-subject bold uppercase pageTitleTxt"> <% if(VarClientId!='') { %> View Client <% } else { %> Create Client <% } %> </span>
+									</div>
+									
+									<div class="actions">									
+										<div class="form-actions">
+											<% if(ObjPageAccess['edit']=='1') { %>										
+												<a class="btn btn-circle btn-icon-only red" href="Javascript:void(0)" onclick="FnEditClient()" id="gapp-client-edit"><i class="icon-note icons"></i></a>			
+											<% } %>
+											<button type="button" class="btn btn-raised default " name="gapp-client-cancel" id="gapp-client-cancel" onclick="FnCancelClient()" tabindex="5">Cancel</button>
+											<button type="button" class="btn  btn-raised btn-danger ladda-button" name="gapp-client-save" id="gapp-client-save" data-style="slide-up" data-size="l" onclick="return FnSaveClient()" tabindex="5">
+											<span class="ladda-label">Save</span>
+											</button>
+									
+										</div>
+									</div>
+								</div>
+								<div class="portlet-body form">
+									<form name="gapp-addclient-form" id="gapp-addclient-form" method="post" role="form" autocomplete="off" enctype="multipart/form-data">
+										<div class="form-body">
+											<div class="">								
+												<div class=" col-md-6">			
+													<!-- BEGIN CLIENTNAME -->													
+													<div class="form-group form-md-line-input">
+														<input type="text" class="form-control" name="tenantName" id="tenantName" autofocus tabindex="1" required data-required-msg="Client Name not specified" onkeypress="return FnAllowAlphaNumericOnly(event)" />							
+														<label class="col-md-12 control-label" for="form_control_1">Client name 
+															<span class="required" aria-required="true">* </span>
+														</label>
+														<div class="form-control-focus"></div>
+													</div>													
+													<!-- END CLIENTNAME -->		
+																
+													<!-- BEGIN FIRSTNAME -->													
+													<div class="form-group form-md-line-input">
+														<input type="text" class="form-control" name="firstName" id="firstName" required data-required-msg="First Name not specified" tabindex="2" />									
+														<label class="col-md-12 control-label" for="form_control_1">First name
+																<span class="required" aria-required="true">* </span>
+														</label>
+														<div class="form-control-focus"></div>
+													</div>													
+													<!-- END FIRSTNAME -->
+													
+													<!-- BEGIN LASTNAME -->
+													<div class="form-group form-md-line-input">
+														<input type="text" class="form-control" name="lastName" id="lastName" required data-required-msg="Last Name not specified" tabindex="3" />									
+														<label class="col-md-12 control-label" for="form_control_1">Last name<span class="required" aria-required="true">* </span></label>
+														<div class="form-control-focus"></div>
+													</div>
+													<!-- END LASTNAME -->
+													
+													<!-- BEGIN PROFILE IMAGE UPLOAD -->
+													<div class="form-group ">
+													<label class="col-md-12 control-label" for="form_control_1">Upload
+														<!--<span class="required" aria-required="true">* </span> -->
+														</label>
+														<a class='btn grey' href='javascript:;'>
+														   <i class="fa fa-plus"></i>  <span>	 Client Logo </span>
+															<input type="file" style='position:absolute;z-index:2;top:0;left:0;filter: alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";opacity:0;background-color:transparent;color:transparent;' name="client-logo" id="client-logo" size="40"  onchange='$("#client-logo-info").html($(this).val());' accept="image/*" />
+														</a>&nbsp;<span class='label label-info' id="client-logo-info"></span>
+														
+													</div>
+													<!-- END PROFILE IMAGE UPLOAD -->			
+												</div>									
+											</div>	
+											<div class=" col-md-offset-1 col-md-5">
+												<!-- BEGIN EMAILID -->
+												<div class="form-group form-md-line-input">
+													<div class="input-group">
+														<input type="email" class="form-control" placeholder="" name="contactEmail" id="contactEmail" required data-required-msg="Contact Email id not specified" tabindex="4" data-email-msg="Invalid email id" />												
+														<label class="col-md-12 control-label" for="form_control_1">Email id
+															<span class="required" aria-required="true">* </span>
+														</label>
+														<span class="input-group-addon">
+															<i class="fa fa-envelope"></i>
+														</span>
+													</div>
+												</div>	
+												<!-- END EMAILID -->
+												
+												<!-- BEGIN CLIENTID -->													
+												<div class="form-group form-md-line-input">
+													<input type="text" class="form-control" name="tenantId" id="tenantId" autofocus tabindex="1" required data-required-msg="Client Id not specified" onkeypress="return FnAllowAlphaNumericOnly(event)"  data-available data-available-url="<%=APICONF.GAPP_SERVICES.clients.nameunique%>" data-available-msg="Client Id already exists" />							
+													<label class="col-md-12 control-label" for="form_control_1">Client id 
+														<span class="required" aria-required="true">* </span>
+													</label>
+													<div class="form-control-focus"></div>
+												</div>													
+												<!-- END CLIENTID -->
+																										
+												<!-- BEGIN STATUS -->													
+												<div class="form-group form-md-line-input">
+													<label class="col-md-2 control-label" for="form_control_1">Status</label>
+													<div class="col-md-10">
+														<div class="md-radio-inline">										
+															<div class="md-radio has-error">
+																<input type="radio" id="statusName_active" name="statusName" class="md-radiobtn" checked value="ACTIVE">
+																<label for="statusName_active" style="color:#26A69A">
+																<span></span>
+																<span class="check"></span>
+																<span class="box"></span>
+																Active </label>
+															</div>
+															<div class="md-radio has-warning">
+																<input type="radio" id="statusName_inactive" name="statusName" class="md-radiobtn green" value="INACTIVE">
+																<label for="statusName_inactive" >
+																<span></span>
+																<span class="check"></span>
+																<span class="box"></span>
+																In Active</label>
+															</div>
+														</div>
+													</div>
+												</div>
+												<!-- END STATUS -->							
+											</div>
+										</div>
+										<div class="clearfix"></div>
+										<input type="hidden" name="client_id" id="client_id" value="<%=VarClientId%>" />
+									</form>
+									<form id="gapp-client-list" role="form" action="<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/clients/list" name="gapp-client-list" method="post">
+										<input type="hidden" id="gapp-tenant-key" name="gapp-tenant-key" value="<%=VarTenantKey%>" />
+									</form>
+								</div>
+							</div>	
+						</div>
+					</div>
+				<!-- END PAGE CONTENT-->
+			</div>
+		</div>
+		<!-- END CONTENT -->
+		<!--<div class="loading x32" style="position: absolute;display: flex;align-items: center;justify-content: center;width: 100%;height: 100%;background: rgba(247,247,247,0.5);z-index: 99999;">
+			<div style="max-width:50%">
+				<img src="<%=urlPrefix%><%=utils.resolveUrl('images/loading32x32.gif')%>">
+				<span style="color: rgb(0, 0, 0);"></span>
+			</div>
+		</div>-->
+	</div>
+	<!-- END CONTAINER -->
+	<% include(utils.resolvePath('templates/global-footer.jag')); %>
+	<% 
+		include(utils.resolvePath('templates/portal-footer.jag'));
+		include('/controllers/includes/theme-portal-scripts.jag');
+	%>
+	<script type="text/javascript">
+		var VarCreateClientUrl = '<%=APICONF.GAPP_SERVICES.clients.create%>';
+		var VarViewClientUrl = '<%=APICONF.GAPP_SERVICES.clients.view%>';
+		var VarUpdateClientUrl = '<%=APICONF.GAPP_SERVICES.clients.update%>';
+		var VarEditClientId = '<%=VarClientId%>';
+		var VarLUDomainName = '<%=usr.domainName()%>';	
+		var VarCurrentTenantInfo = $.parseJSON('<%=VarCurrentTenantInfo%>');
+		var VarClientTemplates = '<%=APICONF.GAPP_SERVICES.clienttemplates%>';
+	</script>
+	<script type='text/javascript' src="<%=urlPrefix%>plugins/jquery.form.js"></script>
+	<script type="text/javascript" src="<%=urlPrefix%><%=utils.resolveUrl('js/clients/add.js')%>"></script>
+	<script type="text/javascript">
+		if(VarEditClientId != '' && VarEditClientId != 'null'){
+			FnGetClientDetails(VarEditClientId);
+		}
+	</script>
+</body>
+</html>

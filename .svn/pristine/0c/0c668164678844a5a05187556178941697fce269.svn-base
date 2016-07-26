@@ -1,0 +1,331 @@
+<%
+	var APPCONF = require('/configs/appconfig.jag');
+	var APICONF = require('/configs/apiproperties.jag');
+	var usr = require('/modules/user.js');
+	include(utils.resolvePath('templates/portal-header.jag'));
+	include('/controllers/includes/theme-portal-styles.jag');
+	
+%>
+	
+	<link rel="stylesheet" type="text/css" href="<%=urlPrefix%>plugins/multi-select-master/css/multi-select.css" />
+
+	<style type="text/css">		
+		.portlet-title {    min-height: 12px !important; padding:0;}
+		.md-radio.has-error label > .check {
+			  background: #26A69A !important;
+			}
+		.md-radio.has-error label > .box {
+			border-color: #26A69A !important;
+			}
+		.form-group.form-md-line-input .help-block{left: 0;}
+		
+		div.fileUpload {
+			position: relative;
+			
+			margin: 10px;
+			background-image: url("<%=APPCONF.GAPP_CONF.APP_DOMAIN_ROOT_URL+APPCONF.GAPP_CONF.DOMAIN_IMG_PATH+APPCONF.GAPP_CONF.DOMAIN_IMG_DEFAULT+APPCONF.GAPP_CONF.DOMAIN_IMG_LOGO+"/"%>/client_placeholder.png");
+			background-color: #FFF;
+			
+			/*
+			overflow: hidden;
+			background-size: 200px 200px;
+			background-color: #BDBDBD;
+			height: 200px;
+			width: 200px;
+			text-align: center;
+			*/
+			background-size: 100%;
+			background-repeat: no-repeat;
+			
+		}
+		div.fileUpload input.upload {
+			position: absolute;
+			top: 0;
+			right: 0;
+			margin: 0;
+			padding: 0;
+			font-size: 20px;
+			cursor: pointer;
+			opacity: 0;
+			filter: alpha(opacity=0);
+			height: 100%;
+			text-align: center;
+			    z-index: 99;
+		}
+		
+	  div.fileUpload input.upload + img  {
+		/*position: absolute;*/
+		width:100%;
+		top: 0;
+		left: 0;
+		z-index: 9;
+		}
+			.custom-span{  font-family: Arial;
+		font-weight: bold;
+		font-size: 25px;
+		color: #fff;
+		/* padding: 10px; */
+		float: left;
+	}
+	#uploadFile{border: none;margin-left: 10px; width: 200px;}
+	.custom-para{    font-family: arial;
+    /* font-weight: bold; */
+    font-size: 13px;
+    color: #fff;
+    text-align: left;
+    float: left;
+    margin: 0;
+    padding: 0px 6px;}
+		
+	.upload-addicon	{
+	    display: inline-block;
+    position: absolute;
+    bottom: 0;
+    width: 40px;
+    /* height: 40px; */
+    width: 100%;
+    z-index: 99;
+    left: 0;
+    text-align: left;
+    background: rgba(0, 0, 0, 0.7);
+    height: 32px;
+    line-height: 30px;
+    padding: 0px 10px;
+	}
+		
+	/**/	
+	
+	
+	</style>
+</head>
+<body class="page-md page-header-fixed page-quick-sidebar-over-content page-footer-fixed  page-full-width">
+	<div class="se-pre-con"></div>
+	<% include(utils.resolvePath('templates/global-header.jag')); %>
+	<!-- BEGIN CONTAINER -->
+	<div class="page-container">
+		<!-- BEGIN CONTENT -->
+		<div class="page-content-wrapper">
+			<div class="gapp-header">
+				<% include(utils.resolvePath('templates/leftnavigation.jag')); %>
+				<h3 class="page-title">	Client Management  </h3>
+				<div class="page-bar">
+					<ul class="page-breadcrumb">
+						<li>
+							<i class="fa fa-home"></i>
+							<a href="Javascript:void(0)" onclick="FnBreadCrumbHome()">Home</a>
+							<i class="fa fa-angle-right"></i>
+						</li>
+						<li>
+							<a href="Javascript:void(0)" onclick="FnNavigateClientList()">Clients</a>
+							<i class="fa fa-angle-right"></i>
+						</li>
+						<li>
+							<a href="Javascript:void(0)" class="pageTitleTxt"><% if(VarClientId!='') { %> View Client <% } else { %> Create Client <% } %></a>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="page-content">
+				<!-- BEGIN PAGE CONTENT-->
+					<div class="row">
+						<div class="col-md-12">						
+							<div class="portlet light bordered animated fadeInUp dark">
+								<div class="portlet-title">
+									<div class="caption font-red-sunglo">
+										<i class="pageheadericon pageheader-clienticon"></i>
+										<span class="caption-subject bold uppercase pageTitleTxt"> <% if(VarClientId!='') { %> View Client <% } else { %> Create Client <% } %> </span>
+									</div>
+									
+									<div class="actions">									
+										<div class="form-actions">
+											<!-- Tag Header -->
+												<% include(utils.resolvePath('templates/tagtemplate-header.jag')); %>
+											<!-- End Tag Header -->
+											<% if(ObjPageAccess['edit']=='1') { %>										
+												<a class="btn btn-raised btn-edit red" href="Javascript:void(0)" onclick="FnEditClient()" id="gapp-client-edit"><i class="icon-note icons"></i>Edit</a>			
+											<% } %>
+											<button type="button" class="btn btn-raised default " name="gapp-client-cancel" id="gapp-client-cancel" onclick="FnCancelClient()" tabindex="9"><i class="icon-close icons" aria-hidden="true"></i>Cancel</button>
+											<button type="button" class="btn  btn-raised btn-danger ladda-button" name="gapp-client-save" id="gapp-client-save" data-style="slide-up" data-size="l" onclick="return FnSaveClient()" tabindex="8">
+											<span class="ladda-label"><i class="icon-check icons" aria-hidden="true"></i>Save</span></button>
+									
+										</div>
+									</div>
+								</div>
+								<div class="portlet-body form">
+									<form name="gapp-addclient-form" id="gapp-addclient-form" method="post" role="form" autocomplete="off" enctype="multipart/form-data">
+										<div class="form-body">
+											<div class="col-md-2 col-sm-4 col-xs-12">
+												<!-- BEGIN PROFILE IMAGE UPLOAD -->
+												<div class="form-group">
+													<div class="fileUpload">
+														<div class="upload-addicon">
+															<span class="custom-span">+</span>
+															<p class="custom-para">Add Image</p>
+														</div>
+														<input type="file" name="client-logo" id="client-logo" class="upload" accept="image/*" />
+														<%
+															var VarImgSrc = '';
+															if(VarClientId!='') {
+																var ObjFile = new File(APPCONF.GAPP_CONF.DOMAIN_IMG_PATH+"/"+VarClientId+"."+APPCONF.GAPP_CONF.LOGIN_DOMAIN+APPCONF.GAPP_CONF.DOMAIN_IMG_LOGO+"/"+VarClientId+".png");
+																if(ObjFile.isExists()){
+																	VarImgSrc = APPCONF.GAPP_CONF.APP_DOMAIN_ROOT_URL+APPCONF.GAPP_CONF.DOMAIN_IMG_PATH+"/"+VarClientId+"."+APPCONF.GAPP_CONF.LOGIN_DOMAIN+APPCONF.GAPP_CONF.DOMAIN_IMG_LOGO+"/"+VarClientId+".png";
+																}
+																
+															}	
+														
+															if(VarImgSrc != ''){														
+														%>
+															<img src="<%=VarImgSrc%>" id="client-logo-preview" width="200" height="200" style="background-color:whitesmoke;"  />															
+														<% } else { %>
+															<img src="" id="client-logo-preview" width="200" height="200"  />
+														<% } %>
+													</div>
+												</div>
+												<!-- END PROFILE IMAGE UPLOAD -->
+											</div>
+											<div class="col-md-5">			
+												<!-- BEGIN CLIENTNAME -->													
+												<div class="form-group form-md-line-input">
+													<input type="text" class="form-control" name="tenantName" id="tenantName" autofocus tabindex="1" required data-required-msg="Client Name not specified" onkeypress="return FnAllowAlphaNumericOnly(event)" tabindex="1" />							
+													<label class="col-md-12 control-label" for="form_control_1">Client name 
+														<span class="required" aria-required="true">* </span>
+													</label>
+													<div class="form-control-focus"></div>
+												</div>													
+												<!-- END CLIENTNAME -->		
+																
+												<!-- BEGIN FIRSTNAME -->													
+												<div class="form-group form-md-line-input">
+													<input type="text" class="form-control" name="firstName" id="firstName" required data-required-msg="First Name not specified" tabindex="2" />									
+													<label class="col-md-12 control-label" for="form_control_1">First name
+															<span class="required" aria-required="true">* </span>
+													</label>
+													<div class="form-control-focus"></div>
+												</div>													
+												<!-- END FIRSTNAME -->
+													
+												<!-- BEGIN LASTNAME -->
+												<div class="form-group form-md-line-input">
+													<input type="text" class="form-control" name="lastName" id="lastName" required data-required-msg="Last Name not specified" tabindex="3" />									
+													<label class="col-md-12 control-label" for="form_control_1">Last name<span class="required" aria-required="true">* </span></label>
+													<div class="form-control-focus"></div>
+												</div>
+												<!-- END LASTNAME -->
+												<!-- BEGIN EMAILID -->
+												<div class="form-group form-md-line-input">
+													<div class="input-group">
+														<input type="email" class="form-control" placeholder="" name="contactEmail" id="contactEmail" required data-required-msg="Contact Email id not specified" tabindex="4" data-email-msg="Invalid email id" />												
+														<label class="col-md-12 control-label" for="form_control_1">Email id
+															<span class="required" aria-required="true">* </span>
+														</label>
+														<span class="input-group-addon">
+															<i class="fa fa-envelope"></i>
+														</span>
+													</div>
+												</div>	
+												<!-- END EMAILID -->
+												
+												<!-- BEGIN CLIENTID -->													
+												<div class="form-group form-md-line-input">
+													<input type="text" class="form-control" name="tenantId" id="tenantId" autofocus tabindex="5" required data-required-msg="Client Id not specified" onkeypress="return FnAllowAlphaNumericSmallcaseOnly(event)"  data-available data-available-url="<%=APICONF.GAPP_SERVICES.clients.nameunique%>" data-available-msg="Client Id already exists" />							
+													<label class="col-md-12 control-label" for="form_control_1">Client id 
+														<span class="required" aria-required="true">* </span>
+													</label>
+													<div class="form-control-focus"></div>
+												</div>													
+												<!-- END CLIENTID -->
+												
+															
+											</div>									
+											<div class="col-md-5">
+															
+												<!-- BEGIN FEATURES -->
+												<div class="form-group form-md-line-input">
+													
+													
+													<select name="tenantFeatures"  class="form-control" id="tenantFeatures" multiple="multiple" required data-required-msg="Feature not specified" tabindex="6"></select>
+													<label class="col-md-12 control-label" for="form_control_1">Features<span class="required" aria-required="true">* </span></label>
+													
+													<div class="form-control-focus"></div>
+												</div>
+												<!-- END FEATURES -->	
+
+												<!-- BEGIN STATUS -->													
+												<div class="form-group form-md-line-input">
+													<label class="col-md-2 control-label" for="form_control_1">Status</label>
+													<div class="col-md-10">
+														<div class="md-radio-inline">										
+															<div class="md-radio has-error">
+																<input type="radio" id="statusName_active" name="statusName" class="md-radiobtn" checked value="ACTIVE" tabindex="7">
+																<label for="statusName_active" style="color:#26A69A">
+																<span></span>
+																<span class="check"></span>
+																<span class="box"></span>
+																Active </label>
+															</div>
+															<div class="md-radio has-warning">
+																<input type="radio" id="statusName_inactive" name="statusName" class="md-radiobtn green" value="INACTIVE" tabindex="8">
+																<label for="statusName_inactive" >
+																<span></span>
+																<span class="check"></span>
+																<span class="box"></span>
+																In Active</label>
+															</div>
+														</div>
+													</div>
+												</div>
+												<!-- END STATUS -->							
+											</div>
+											
+										</div>
+										<div class="clearfix"></div>
+										<input type="hidden" name="client_id" id="client_id" value="<%=VarClientId%>" />
+									</form>
+									
+									<!-- Tag Template -->
+										<% include(utils.resolvePath('templates/tagtemplate.jag')); %>
+										<div class="clearfix"></div>	
+									<!-- End Tag Template -->
+																	
+									<form id="gapp-client-list" role="form" action="<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/clients/list" name="gapp-client-list" method="post">
+										<input type="hidden" id="gapp-tenant-key" name="gapp-tenant-key" value="<%=VarTenantKey%>" />
+									</form>
+								</div>
+							</div>	
+						</div>
+					</div>
+				<!-- END PAGE CONTENT-->
+			</div>
+		</div>
+		<!-- END CONTENT -->
+		
+	</div>
+	<!-- END CONTAINER -->
+	<% include(utils.resolvePath('templates/global-footer.jag')); %>
+	<% 
+		include(utils.resolvePath('templates/portal-footer.jag'));
+		include('/controllers/includes/theme-portal-scripts.jag');
+	%>
+	<script type="text/javascript">
+		
+		var VarCreateClientUrl   = '<%=APICONF.GAPP_SERVICES.clients.create%>';
+		var VarViewClientUrl     = '<%=APICONF.GAPP_SERVICES.clients.view%>';
+		var VarUpdateClientUrl   = '<%=APICONF.GAPP_SERVICES.clients.update%>';
+		var VarEditClientId      = '<%=VarClientId%>';
+		var VarLUDomainName      = '<%=usr.domainName()%>';	
+		var VarCurrentTenantInfo = $.parseJSON('<%=VarCurrentTenantInfo%>');
+		
+		var VarClientTemplates   = '<%=APICONF.GAPP_SERVICES.clienttemplates%>';
+		var VarListFeaturesUrl = '<%=APICONF.GAPP_SERVICES.clients.featureslist%>';
+	</script>
+	<script type='text/javascript' src="<%=urlPrefix%>plugins/jquery.form.js"></script>
+	<script type='text/javascript' src="<%=urlPrefix%>plugins/multi-select-master/js/jquery.multi-select.js"></script>
+		
+	<!-- Tag Footer -->
+		<% include(utils.resolvePath('templates/tagtemplate-footer.jag')); %>
+	<!-- End Tag Footer -->
+	
+	<script type="text/javascript" src="<%=urlPrefix%><%=utils.resolveUrl('js/clients/add.js')%>"></script>
+	
+</body>
+</html>

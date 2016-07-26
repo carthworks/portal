@@ -1,0 +1,770 @@
+<%
+	var APPCONF = require('/configs/appconfig.jag');
+	var APICONF = require('/configs/apiproperties.jag');
+	var usr = require('/modules/user.js');
+	include(utils.resolvePath('templates/portal-header.jag'));
+	include('/controllers/includes/theme-portal-styles.jag');
+	
+%>
+
+<link href="<%=urlPrefix%>plugins/leaflet/leaflet.css" rel="stylesheet" type="text/css" />
+<link href="<%=urlPrefix%>css/owl-carousal/owl.carousel.css" rel="stylesheet" type="text/css" />
+<link href="<%=urlPrefix%>css/owl-carousal/owl.theme.css" rel="stylesheet" type="text/css" />
+<link href="<%=urlPrefix%><%=utils.resolveUrl('css/chart.css')%>" rel="stylesheet" type="text/css" />
+	
+	
+<link rel="stylesheet" type="text/css" media="screen"  href="<%=urlPrefix%><%=utils.resolveUrl('css/jquery-sticklr-1.4-light-color.css')%>" >
+<link rel="stylesheet" href="<%=urlPrefix%>css/jquery-custom-scrollbar/jquery.mCustomScrollbar.css" />
+
+
+
+	<style type="text/css">
+	
+	body{ background: #ECE8E8 url(<%=urlPrefix%><%=utils.resolveUrl('images/home-bg.jpg')%>);	}
+	
+		#grid-view .k-grid-header .k-header {
+			background-color: #f44336;
+		}
+
+		#grid-view .k-header a.k-link, .k-grid-header th{
+			color: #000 !important;
+		}
+
+		.alert-danger {
+			background-color: #f2dede;
+			border-color: #ebccd1;
+			color: #a94442;
+		}
+		.view-switch {	padding: 9px 25px 9px 9px;		}
+		
+		#gensetProperties {
+				position:relative; 
+				padding:24px 0 0 0; 
+				text-align:center;	
+				min-height: 427px;				
+				/*margin-right: 20px;*/}
+	
+	
+			.genset-pic img {
+				float: none;
+				margin: 12px auto;
+				/*width: 55%;
+				height: 35%;*/
+			}
+			.genset-name {
+				color: #5a7391;
+				font-size: 20px;
+				font-weight: 600;
+				margin-bottom: 7px;
+				color:#f44336;
+				text-transform:uppercase;
+			}
+			.genset-status {
+				text-align: center;
+				margin-top: 10px;
+			}
+			.genset-info{
+				margin-top: 30px;
+				padding-bottom: 20px;
+			}
+		
+			
+			.genset-info ul li {
+				    color: #5b9bd1;
+					background-color: rgb(78, 77, 77);
+					border-left: 2px solid #26a69a;
+					border-bottom: 1px solid rgba(255,255,255,0.1);
+					margin-left: -2px;
+					/*padding: 6px 15px;*/
+					color: #fff;
+					text-align: left;
+					margin-top: 2px;
+			}
+			
+			.genset-info ul li a:hover {
+				background-color: #fafcfd;
+				color: #5b9bd1;
+			}
+			
+			.genset-info .nav {
+				margin-bottom: 0;
+				padding-left: 0;
+				list-style: none;
+			}
+			genset-info .nav li{ text-align:;left;}
+			
+			#gensetmapview { height: 220px; padding:0 }
+			
+			#owl-demo .item img{
+				display: block;
+				width: 100%;
+				height: auto;
+			}
+			.genset-properties-value{ font-weight:bold; color: #666; text-transform: capitalize; }
+			
+			.genset-properties-name 				
+				display: block;
+				text-transform: capitalize;
+			}
+			
+			#owl-example .item2{
+			  background-color: #f7f7f7;
+			  padding: 30px 0px;
+			  display: block;
+			  margin: 5px;
+			  color: #888;
+				font-size: 14px;
+				text-shadow: none;
+			  -webkit-border-radius: 3px;
+			  -moz-border-radius: 3px;
+			  border-radius: 3px;
+			  text-align: center;
+			}
+			
+			#owl-example .item {
+				display: block;
+				width: 100%;
+				height: auto;
+				margin: 2px;
+				padding: 0
+			}
+			
+			.owl-item span {
+				display: block;
+				padding: 4px !important;
+				text-align: center;
+			}
+			#owl-example{}
+			#owl-example .mtype{}
+			#owl-example .smsg{}
+			#owl-example .astatus{}
+			#owl-example .astatus{}
+			#owl-example .astatus{}
+			
+			.outer-contentbox{background:none;padding: 10px;border: 0px;box-shadow: none;}
+			
+			.page-content {    background-color: #f7f7f7;}
+			.portlet{background:#fff;}
+			span.genset-properties-name {
+				text-transform: capitalize;
+			
+			}
+			div#genset-info {
+					height: 240px;
+					over-flow:auto;
+					background: #C3BDBD;
+			
+			}
+		
+		
+			.smag{}
+			.astatus{}
+			.rtime{}
+			.time{}
+		
+			ul#alarm-list li span >span {  
+				color:red !important;
+				display: inline-block;
+				width: 90px;
+			}
+			.astatus span{}
+			.rtime{}
+			.time{}	
+			
+			
+			ul#alarm-list {
+				margin: 0;
+				padding: 0;background: #fff;border: 1px solid #9BD0CB;
+
+			}
+			
+			
+			ul#alarm-list li {
+				list-style-type: none;
+				padding: 10px 0;
+				margin: 0;
+				text-align: left;
+				border-bottom: 1px solid #dfdfdf;
+				padding: 15px 0 15px 15px;    
+			}
+			
+		
+			ul#alarm-list li span {
+				display: block;
+				padding: 1px 0;
+			}
+			
+			.page-title { margin: 8px !important;}
+			
+			.view-switch {
+				padding: 9px 0px 9px 9px;
+			}
+
+			.page-bar .page-toolbar {
+				display: inline-block;
+				float: right;
+				padding: 8px 8px 8px 0;
+			}
+			.page-title {				
+				
+				padding: 10px 0 0 10px;
+			}
+			.page-title  span {padding: 10px 0 0 10px;  margin:0 0 0 4px; color:#FFFFFF; font-weight: bolder;}
+			
+			div#genset-live-alarm {  
+				height: 294px !important;
+				/* display: table-column; */
+				overflow: auto;
+			}
+			
+			.genset-properties-value {
+				font-weight: bold;
+				color: #38C0F3;
+				text-transform: capitalize;
+			}
+			
+			.page-bar {			
+					background: none;
+					margin-bottom:0
+				}
+			
+			
+			#equipmentInfo li .genset-properties-name:first-child{
+				background-color:rgb(78, 77, 77);
+				width:40%;
+				padding: 7px 0px 7px 9px;
+				display: inline-block;	
+			}
+			
+			.genset-properties-value{
+				padding: 7px 0px 7px 9px;
+					display: inline-block;	
+				background-color: rgb(56, 52, 52);
+				width:60%;
+			}
+			.dashboardtext-length{
+			    width: 160px;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+				overflow: hidden;
+				display: inline-block;
+			}
+			
+			.dashboardtextleft-length{
+			 width: 120px;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+				overflow: hidden;
+				display: inline-block;
+			}
+			.btn-group a {
+				margin: 0 12px;
+			}
+			span#genset-name-label {
+			color: #5a7391;
+			}
+			.page-content-wrapper .page-content { padding:0 !important; background: none;}
+			
+
+			.padding-zero{padding:0}
+			.portlet {
+					margin-top: 0px;
+					margin-bottom: 15px !important;
+					}
+			
+			ul#stickyMenu li {
+				padding: 3px;
+			}
+			ul#stickyMenu li a i {
+				padding: 5px 3px 0 0;font-size: 18px;
+			}
+			ul#stickyMenu li a i:hover {
+				padding: 10px 0 0 0;font-size: 18px;
+				color:#000;
+			}
+		 a.k-pager-refresh.k-link {
+				display: none !important;
+			}
+			span.k-icon.k-i-refresh {
+				display: none;
+			}
+			.org.btn {
+				color: #FFFFFF;
+				background-color: #ff5722;
+			}
+			
+			.org.btn:hover, .org.btn:focus, .org.btn:active, .org.btn.active {
+					color: #FFFFFF;
+					background-color: #ff5722;
+				}
+				
+			.genset-description {
+					font-style: italic;
+					color: #969292;
+					text-align: center;
+				}
+				
+		.overlay {
+				width: 100%;
+				height: 100%;
+				position: absolute;
+				top: 0;
+				left: 0;
+				opacity: .2;
+				filter: alpha(opacity=60);				
+				text-align: center;
+      }
+
+      .overlay div {			
+			position: relative;
+			font-size: 18px;
+			margin-top: 140px;
+		  }
+	
+		  
+	.genset-chart-txt {
+			display: block;			
+			padding: 0;
+			margin: 0;
+		}
+	.bleft {
+			float: left;padding: 0 0 0 20px;
+		}
+		.bright {
+			float: right;
+		}
+		.k-tooltip,.k-chart-tooltip
+			{
+				 color: white;
+			}
+			
+		#genset-gridview .k-header.k-grid-toolbar {
+			display: block;
+			background: transparent;
+			text-align: right;
+		}
+		
+		
+		#no-gensetmapview{position: relative;}
+		#no-gensetmapview span{
+				position: absolute;
+				top: -153px;
+				text-align: center;				
+				background: #F2D88E;
+				width: 100%;
+				color: #000;
+				padding: 4px 0;
+				border: 1px solid #9F9F9F;
+				border-right: none;
+				border-left: none;
+				opacity: 0.8;
+		}
+		
+		#loading{color:#cdcdcd}
+		.spinner {
+			  width: 20px;
+			  height: 20px;
+			  background-color: #26a69a;
+
+			  margin: 0px auto;
+			  -webkit-animation: sk-rotateplane 1.2s infinite ease-in-out;
+			  animation: sk-rotateplane 1.2s infinite ease-in-out;
+			}
+
+			@-webkit-keyframes sk-rotateplane {
+			  0% { -webkit-transform: perspective(120px) }
+			  50% { -webkit-transform: perspective(120px) rotateY(180deg) }
+			  100% { -webkit-transform: perspective(120px) rotateY(180deg)  rotateX(180deg) }
+			}
+
+			@keyframes sk-rotateplane {
+			  0% { 
+				transform: perspective(120px) rotateX(0deg) rotateY(0deg);
+				-webkit-transform: perspective(120px) rotateX(0deg) rotateY(0deg) 
+			  } 50% { 
+				transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg);
+				-webkit-transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg) 
+			  } 100% { 
+				transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg);
+				-webkit-transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg);
+			  }
+			}
+			
+			
+			
+		.pin {
+    width: 45px;
+    height: 45px;
+    border-radius: 50% 50% 50% 3%;
+    background: #14a5ae;
+    /* background: linear-gradient(#14a5ae, #189097); */
+    position: relative;
+    transform: rotate(-43deg);
+		margin:0;
+		animation-name: bounce;
+		animation-fill-mode: both;
+		animation-duration: 1s;
+float:left;
+		
+}
+.pin:after {
+    content: '';
+    width: 33px;
+    height: 33px;
+    margin: 6px 0 0 6px;
+    background: #fff;
+    position: absolute;
+    border-radius: 50%;
+    overflow: hidden;
+}
+.pin img{
+position: absolute;
+    z-index: 3;
+    transform: rotate(43deg);
+       left: 11px;
+    top: 11px;
+}
+.pin:before {
+       background: rgba(0,0,0,0.4);
+    border-radius: 50%;
+    height: 24px;
+    width: 7px;
+    position: absolute;
+    margin: 11px 0px 0px -12px;
+    transform: rotateZ(136deg);
+    /* z-index: -2; */
+    top: 22px;
+    left: 9px;
+    content: "";
+    filter: blur(16px);
+    -webkit-filter: blur(0.1em);
+}
+
+
+@-moz-keyframes bounce {
+  0% {
+    opacity: 0;
+    transform: translateY(-2000px) rotate(-43deg);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(30px) rotate(-43deg);
+  }
+  80% {
+    transform: translateY(-10px) rotate(-43deg);
+  }
+  100% {
+    transform: translateY(0) rotate(-43deg);
+  }
+}
+@-webkit-keyframes bounce {
+  0% {
+    opacity: 0;
+    transform: translateY(-2000px) rotate(-43deg);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(30px) rotate(-42deg);
+  }
+  80% {
+    transform: translateY(-10px) rotate(-42deg);
+  }
+  100% {
+    transform: translateY(0) rotate(-42deg);
+  }
+}
+@-o-keyframes bounce {
+  0% {
+    opacity: 0;
+    transform: translateY(-2000px) rotate(-42deg);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(30px) rotate(-42deg);
+  }
+  80% {
+    transform: translateY(-10px) rotate(-42deg);
+  }
+  100% {
+    transform: translateY(0) rotate(-42deg);
+  }
+}
+@keyframes bounce {
+  0% {
+    opacity: 0;
+    transform: translateY(-2000px) rotate(-43deg);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(30px) rotate(-43deg);
+  }
+  80% {
+    transform: translateY(-10px) rotate(-43deg);
+  }
+  100% {
+    transform: translateY(0) rotate(-43deg);
+  }
+}
+
+.leaflet-div-icon {
+    background: transparent;
+    border: 0px solid #666;
+}
+				
+</style>
+</head>
+<body class="page-md page-header-fixed page-quick-sidebar-over-content page-footer-fixed  page-full-width" onload="FnInitialization();" >
+	<div class="se-pre-con"></div>
+	<% include(utils.resolvePath('templates/global-header.jag')); %>
+	<!-- BEGIN CONTAINER -->
+	<div class="page-container">
+		<!-- BEGIN SIDEBAR -->
+		<div class="page-sidebar-wrapper hidden">
+			<div class="page-sidebar   navbar-collapse collapse">
+				<!-- BEGIN SIDEBAR MENU -->	
+				<ul class="page-sidebar-menu page-sidebar-menu-hover-submenu " data-keep-expanded="false" data-auto-scroll="false" data-slide-speed="200">
+					<li class="sidebar-toggler-wrapper"><div class="sidebar-toggler"></div></li>
+					<li class="nav-item start active open ">
+						<a href="dashboard.html" class="nav-link nav-toggle">
+                            <i class="icon-bar-chart"></i>
+                            <span class="title">Dashboard</span>
+                            <span class="selected"></span>                              
+                        </a>
+                    </li>
+					<li class="">
+						<a href="javascript:;" class="nav-link nav-toggle">
+							<i class="icon-puzzle"></i>
+                            <span class="title">Dashboard Designer</span>
+                            <span class="selected"></span>                               
+                        </a>
+					</li>
+					<li class="heading">
+						<h3 class="uppercase">Device Management</h3>
+					</li>
+			
+					</li>
+				</ul>
+				<!-- END SIDEBAR MENU -->
+			</div>
+		</div>
+		<!-- END SIDEBAR -->
+		
+		<!-- BEGIN CONTENT -->
+		<div class="page-content-wrapper">
+			<div class="page-content" >				
+					
+					<div class="page-bar">    
+						<!-- <h3 class="page-title pull-left "> Genset : <span id="genset-name"></span></h3>	-->
+						<h3 class="page-title pull-left "> </h3>							
+                        <div class="page-toolbar hidden">						
+                            <div class="btn-group pull-right"> 
+								<div class="pull-right view-switch btn-group">										
+								<a href="<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/alarm/console" class="btn red"  data-toggle="tooltip" data-placement="bottom"   title="Alarm console"> 
+									<i class="fa fa-bell"></i>	</a>											
+								<a href="<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/alarm/history" class="btn purple"  data-toggle="tooltip" data-placement="bottom"  title="Alarm histroy"> <i class="fa fa-calendar"></i>	</a>																		
+								<a href="<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/assets/history" class=" btn  btn-primary btn-group"   data-toggle="tooltip" data-placement="bottom" title="Asset histroy"><i class="fa fa-tachometer"></i><div class="ripple-container"></div>
+									</a>
+								<a href="<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/assets/monitoring" class="btn btn-icon-only yellow"  data-toggle="tooltip" data-placement="bottom" title="Asset monitering map"><i class="fa fa-globe"></i> </a>								
+							
+									
+								</div>	
+						    </div>
+							
+                        </div>
+                    </div>	
+
+
+		
+				<!-- BEGIN PAGE CONTENT-->				
+				<div class="portlet1 light1 bordered1 dark">
+				<!-- BEGIN GENSET LEFT PANE -->
+					<div class="col-md-3" id="gProperties">
+								<div class="portlet bordered light" id="gensetProperties">
+								
+						         <div class="genset-pic">                                    
+									<img name="asset_dis_image" id="asset_dis_image" src="<%=urlPrefix%><%=utils.resolveUrl('images/assets.jpg')%>" class="img-responsive" alt="" width="202" height="108" />
+								</div>
+								 <div class="genset-name"> <span id="genset-name-label">Asset </span> &nbsp: &nbsp 
+								 <span id="genset-name"></span> </div>
+								 <div class="genset-description"></div>						 
+								
+								<div class="genset-status">
+                                        <span class="btn btn-circle gray btn-sm red" id="genset-inactive" style="cursor: default;">inactive</span>
+                                        <span class="btn btn-circle green btn-sm" id="genset-active" style="cursor: default;">Active</span>
+                                </div>
+								
+								<div class="genset-info" id="genset-info">
+									<ul class="nav" id="equipmentInfo"></ul>						
+								</div><!-- END genset-info -->
+								
+								</div>
+							<div class="portlet bordered " style="padding: 0;">
+							<div class="genset-location" id="gensetmapview" style="height: 250px;"></div>
+							<div class="genset-location0" id="no-gensetmapview" ><span></span></div>
+							
+							</div>
+					
+					</div>
+			
+				<!-- END GENSET LEFT PANE -->
+				
+				<!-- BEGIN GENSET RIGHT PANE -->				
+				<div class="col-md-9 padding-zero" id="xpand-view">
+					<div class="portlet bordered light col-md-8 col-xs-12" id="genset-grid-toggle">					
+						<div id="genset-gridview" style=" height: 350px;"></div>
+					</div>	
+					
+					<div class="col-md-4 col-xs-12" id="asset-alarms-toggle">
+						<div class="portlet box green">
+												<div class="portlet-title">
+													<div class="caption">
+														<i class="fa fa-bell"></i>Alarms</div>
+													<div class="tools hidden">
+														<a href="javascript:;" class="collapse" data-original-title="" title="">
+														</a>
+														<a href="#portlet-config" data-toggle="modal" class="config" data-original-title="" title="">
+														</a>
+													</div>
+												</div>
+												<div class="portlet-body" style="min-height:300px; background: #AFEAE5;" >										
+												<div id="genset-live-alarm">
+													<ul id="alarm-list" class=feeds">
+														<li style=" text-align: center;">No alarms</li> 
+														
+												<!--	<li>
+													<span class='smsg'> <span>  Message: &nbsp<i class="fa fa-bullhorn"></i> </span>  ArrAlarmStatusMessage </span> 
+															<span class='astatus'><span>Status : </span>  ArrAlarmStatus </span>
+															<span class='rtime'><span>Received time:</span> ReceivedTime </span>
+															<span class='time'> <span>Time: </span> ArrAlarmRTime</span>
+														</li>	
+													-->										
+													</ul>
+												</div>											
+																												
+												</div>
+					
+						</div>
+					
+					</div>
+					<div class="col-md-12 col-xs-12" style="padding: 0 15px 0 0;" id="gapps-chart" >				
+					
+						<div class="portlet bordered light"  id="gensetLiveData" style="">	
+							<div class="portlet-title hidden">						
+								<div class="tools">
+								<button id="btnExport" name="btnExport" class="btn  btn-raised green " ><i class="fa fa-file-pdf"></i></button>
+								</div>
+							</div>
+							<div class=" portlet outer-contentbox" style="padding:0 0 0 6px" >					
+								<div id="genset-chart" style="height:265px; margin:12px 0 0 0;padding:0;position: relative;">				
+								</div>	
+								<div class="genset-chart-txt"><div class="bleft">12:00:00</div><div class="bright">12 AM</div></div>
+								 <div class="overlay"><div>No data available</div></div>
+							</div>	
+						</div>
+								
+					</div>
+					
+				</div>
+				
+				<!-- END GENSET RIGHT PANE -->
+				<!--<div class="clearfix margin-bottom-10"></div> -->
+				</div>
+				
+				<!-- END GENSET RIGHT PANE -->					
+											
+					</div>
+				<!-- END PAGE CONTENT-->
+			</div>
+		</div>
+		<!-- END CONTENT -->
+		
+	</div>
+	<!-- END CONTAINER -->
+			
+		<form name="gapp-client-navigation" id="gapp-client-navigation" role="form" action="" method="post">
+			<input type="hidden" id="gapp-tenant-key" name="gapp-tenant-key" value="<%=VarTenantKey%>" />
+		</form>
+		
+	    <div id="sticky">               
+			<ul id="stickyMenu" class="sticklr sticklr-right sticklr-js" >		
+				<li>
+				 <a href="javascript:void(0);" onclick="FnNavigateClientPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/alarm/console')" class="btn red"  data-toggle="tooltip" data-placement="left" title="Alarm console"> 
+				<i class="fa fa-bell"></i><div class="ripple-container"></div>	</a>	
+				</li>
+				<li>
+					<a href="javascript:void(0);" onclick="FnNavigateClientPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/alarm/history')" class="btn purple"  data-toggle="tooltip" data-placement="left"  title="Alarm history"> <i class="fa fa-calendar"></i><div class="ripple-container"></div>	</a>
+				</li>      
+
+				<li>
+					<a href="javascript:void(0);" onclick="FnNavigateClientPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/assets/historyasset')" class=" btn  btn-primary btn-group blue"   data-toggle="tooltip" data-placement="left" title="Asset history"><i class="fa fa-tachometer"></i><div class="ripple-container"></div>
+					</a>
+				</li>            
+				<li>
+				   <a href="javascript:void(0);" onclick="FnNavigateClientPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/assets/monitoring')" class="btn btn-icon-only yellow"  data-toggle="tooltip" data-placement="left" title="Asset monitoring map"><i class="fa fa-globe"></i> <div class="ripple-container"></div></a>
+				</li>
+				<li>
+					<a href="javascript:void(0);" onclick="FnNavigateClientPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/equipments/asset/list')" class="btn btn-icon-only org"  data-toggle="tooltip" data-placement="left" title="Asset List">
+					<i class="fa fa-list"></i></i> </a>
+				</li>
+			</ul>
+		</div>
+	
+	
+	<% include(utils.resolvePath('templates/global-footer.jag')); %>
+	<% 
+		include(utils.resolvePath('templates/portal-footer.jag'));
+		include('/controllers/includes/theme-portal-scripts.jag');
+	%>
+	<script type="text/javascript">		
+		var VarListAssetsUrl = '<%=APICONF.GAPP_SERVICES.assets.monitoring%>';		
+		var VarGetDeviceDataUrl = '<%=APICONF.GAPP_SERVICES.device.find%>';		
+		var VarLiveSubscribeUrl = '<%=APICONF.GAPP_SERVICES.device.datasourcesubscribe%>';			
+		var VarGetAssetLatestUrl = '<%=APICONF.GAPP_SERVICES.equipments.asset.latestdevice%>';
+		var VarGetAssetFindDataUrl = '<%=APICONF.GAPP_SERVICES.equipments.asset.find%>';			
+		var VarLUDomainName = '<%=usr.domainName()%>';
+		var VarCurrentTenantInfo = $.parseJSON('<%=VarCurrentTenantInfo%>');
+		var VarAppImagePath = '<%=APPCONF.GAPP_CONF.DOMAIN_IMG_PATH%>';
+		var VarAppAssetImagePath = '<%=APPCONF.GAPP_CONF.DOMAIN_IMG_ASSET%>';
+		var VarAppAssetTypeImagePath = '<%=APPCONF.GAPP_CONF.DOMAIN_IMG_ASSETTYPE%>';
+		var VarAppMarkerImagePath = '<%=APPCONF.GAPP_CONF.DOMAIN_IMG_ASSETTYPE_MARKER%>';
+		var VarAppDefaultImagePath = '<%=APPCONF.GAPP_CONF.DOMAIN_IMG_DEFAULT%>';
+		var ObjPageAccess = $.parseJSON('<%=ObjPageAccess%>');			
+		var VarDashbardId = '<%=VarGensetDashboardId%>';
+	</script>
+	
+	<script src="https://code.jquery.com/jquery-migrate-1.2.1.js"></script>
+	<script type="text/javascript" src="<%=urlPrefix%><%=utils.resolveUrl('js/equipments/asset/dashboard.js')%>"></script>	
+	<script src="<%=urlPrefix%>js/websocket/WebORB.js"></script>	
+	<script src="<%=urlPrefix%>js/jquery-custom-scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
+	<script src="<%=urlPrefix%>plugins/leaflet/leaflet.js"></script>	
+	<script type="text/javascript" src="<%=urlPrefix%><%=utils.resolveUrl('js/jquery-sticklr-1.4.pack.js')%>"></script>	
+	<script type="text/javascript" src="<%=urlPrefix%><%=utils.resolveUrl('js/jquery.localscroll-min.js')%>"></script>	
+	
+	<script type="text/javascript">
+		
+		$('#genset-info').mCustomScrollbar({
+				theme:"dark",
+				setHeight:210,
+				scrollButtons:{enable:true},				
+				scrollbarPosition:"inside"				
+		});
+		
+		$(document).ready(function(){
+		
+				$('#stickyMenu').sticklr({
+					showOn		: 'hover',
+					stickTo     : 'right',
+					relativeGap: 230,
+					size        : 32,
+					animate		: true,			
+					relativeTo: 'top'
+				
+				});
+		
+		});
+
+	</script>
+
+	
+</body>
+</html>

@@ -1,0 +1,172 @@
+<%
+	var APPCONF = require('/configs/appconfig.jag');
+	var APICONF = require('/configs/apiproperties.jag');
+	var usr = require('/modules/user.js');
+	include(utils.resolvePath('templates/portal-header.jag'));
+	include('/controllers/includes/theme-portal-styles.jag');
+%>
+	<style type="text/css">
+		
+		.portlet-title { min-height: 12px !important; padding:0; }
+	
+		.ga-wrap {padding:12px; display: block; min-height:460px;  }
+	
+			
+		.form .form-section {
+			margin: 12px 0px 22px 0px;
+			padding-bottom: 12px;
+		}
+		.myportlet{ display: inline-block;    width: 100%;}
+			
+		form-group.form-md-line-input {margin: 0 !important;}
+		.portlet.light {padding: 12px 20px 0px 20px !important;	}
+		.dark{background-color: #f7f7f7;}
+		.gapp-fanRating .form-md-line-input{margin-bottom:10px;padding-left: 0px;}
+		.gapp-fanRating{background-color: #f7f7f7;padding: 10px;border: 1px solid #f7f7f7;margin-bottom: 15px;}
+		.boxTextbox{margin-top: 24px;}
+	</style>
+</head>
+<body class="page-md page-header-fixed page-quick-sidebar-over-content page-footer-fixed  page-full-width"  >
+	<% include(utils.resolvePath('templates/global-header.jag')); %>
+<!-- BEGIN CONTAINER -->
+	<div class="page-container">
+		<!-- BEGIN CONTENT -->
+		<div class="page-content-wrapper">
+			<div class="gapp-header">
+				<% include(utils.resolvePath('templates/leftnavigation.jag')); %>
+				<h3 class="page-title">	Contacts </h3>
+				<div class="page-bar">
+					<ul class="page-breadcrumb">
+						<li>
+							<i class="fa fa-home"></i>
+							<a href="Javascript:void(0)" onclick="FnBreadCrumbHome()">Home</a>
+							<i class="fa fa-angle-right"></i>
+						</li>
+						<li>
+							<i class="fa fa-home"></i>
+							<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/ccdhome')">CCD</a>
+							<i class="fa fa-angle-right"></i>
+						</li>
+						<li>
+							<a href="Javascript:void(0)">Contacts</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="page-content">
+				<!-- BEGIN PAGE CONTENT-->
+				<div class="row">
+					<div class="col-md-12">	
+												
+						<div class="portlet light bordered" style="height:500px">
+							<div class="portlet-title">
+								<div class="caption font-red-sunglo">
+									<i class="icon-settings font-red-sunglo"></i>
+									<span class="caption-subject bold uppercase"> <% if(VarContactInfo!='') { %> View Contact <% } else { %> Create Contact <% } %> </span>
+								</div>
+								<div class="actions">
+									<button type="button" class="btn btn-raised default " name="gapp-contact-cancel" id="gapp-contact-cancel" onclick="FnCancelContact()"><i class="icon-close icons" aria-hidden="true"></i>Cancel</button>
+									<button type="button" class="btn  btn-raised btn-danger ladda-button" name="gapp-contact-save" id="gapp-contact-save" data-style="slide-up" data-size="l" onclick="FnSaveContact()"><span class="ladda-label"><i class="icon-check icons" aria-hidden="true"></i>Save</span></button>
+								</div>
+							</div>
+							<!-- END title-->
+							
+							<div class="portlet-body form">
+								<form name="gapp-contact-form" id="gapp-contact-form" method="post" role="form" autocomplete="off">
+									<div class="row">
+										<div class="col-md-12">
+											<div class=" myportlet">
+										
+												<!-- Begin: Col-1 -->
+												<div class="col-md-4 ">												
+													<!-- Name -->
+													<div class="form-group form-md-line-input">
+														<input type="text" class="form-control input-sm" name="name" id="name" required data-required-msg="Name not specified" tabindex="1" />																												
+														<label class="col-md-12 control-label" for="name">Contact Name<span class="required" aria-required="true"> * </span></label>
+														<div class="form-control-focus"></div>			
+													</div>
+													<!-- Name -->
+													
+													<!-- Email -->
+													<div class="form-group form-md-line-input">
+														<input type="email" class="form-control input-sm" name="email" id="email" required data-required-msg="Email Id is not specified" tabindex="2" data-email-msg="Invalid email id" />
+														
+														<label class="col-md-12 control-label" for="email"> Email Id<span class="required" aria-required="true"> * </span></label>
+														<div class="form-control-focus"></div>			
+													</div>
+													<!-- Email -->			
+													
+												</div>			
+												<!-- End: Col-1 -->
+											
+												<!-- Begin: Col-2 -->
+												<div class="col-md-4 ">
+												<!-- Type-->
+													<div class="form-group form-md-line-input">
+														<select class="form-control" name="contactType" id="contactType" required data-required-msg="Please select contact Type" tabindex="3">
+															<option value="">Select Type</option>
+															<option value="MANAGER">MANAGER</option>
+															<option value="OPERATOR">OPERATOR</option>
+														</select>	
+														<label class="col-md-12 control-label" for="contactType">Contact Type <span class="required" aria-required="true"> * </span></label>
+														<div class="form-control-focus"></div>			
+													</div>
+													<!-- Type -->
+													
+													<!-- Contact -->
+													<div class="form-group form-md-line-input">
+														<input type="text" class="form-control input-sm" name="contactNumber" id="contactNumber" required data-required-msg="Contact Number is not specified" tabindex="4" />																												
+														<label class="col-md-12 control-label" for="contactNumber"> Contact Number<span class="required" aria-required="true"> * </span></label>
+														<div class="form-control-focus"></div>			
+													</div>
+													<!-- Contact -->	
+																							
+												</div>			
+												<!-- End: Col-2 -->
+										
+												<div style="clear:both"></div>
+												
+												<% if(VarContactInfo != ''){ %>
+												<div class="animated slideInUp">
+													<div id="gapp-mappedequip-list"></div>
+												</div>
+												<% } %>
+												
+											</div> <!-- END portlet -->
+										</div> <!-- END col-md-12 -->
+									</div> <!-- END row -->
+								</form>
+								<form id="gapp-contact-list" role="form" action="<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/ccd/contact/list" name="gapp-contact-list" method="post">
+									<input type="hidden" id="gapp-tenant-key" name="gapp-tenant-key" value="<%=VarTenantKey%>" />
+								</form>
+							</div> <!-- END portlet-body -->
+						</div><!-- END portlet bordered-->
+							
+					</div><!-- END col-md-12-->
+				</div>
+				<!-- END PAGE CONTENT-->
+			</div>
+		</div>
+		<!-- END CONTENT -->
+		
+	</div>
+	<!-- END CONTAINER -->
+	<% include(utils.resolvePath('templates/global-footer.jag')); %>
+	<% 
+		include(utils.resolvePath('templates/portal-footer.jag'));
+		include('/controllers/includes/theme-portal-scripts.jag');
+	%>
+	<script type="text/javascript">
+		var VarCreateContactUrl = '<%=APICONF.GAPP_SERVICES.ccd.contact.create%>';
+		var VarContactEquipUrl = '<%=APICONF.GAPP_SERVICES.ccd.contact.equipments%>';
+		var VarViewClientUrl = '<%=APICONF.GAPP_SERVICES.clients.view%>';
+		var VarLUDomainName = '<%=usr.domainName()%>';
+		var VarLUTenantName = '<%=usr.tenantName()%>';
+		var VarCurrentTenantInfo = $.parseJSON('<%=VarCurrentTenantInfo%>');
+		var VarAppRootDomain = '<%=APPCONF.GAPP_CONF.MY_DOMAIN_NAME%>';
+		var ObjPageAccess = $.parseJSON('<%=ObjPageAccess%>');
+		var VarContactInfo = '<%=VarContactInfo%>';
+	</script>
+	<script type="text/javascript" src="<%=urlPrefix%><%=utils.resolveUrl('js/ccd/contact/add.js')%>"></script>
+</body>
+</html>

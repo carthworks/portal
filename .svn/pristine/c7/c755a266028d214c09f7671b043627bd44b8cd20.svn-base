@@ -1,0 +1,126 @@
+<%
+	var APPCONF = require('/configs/appconfig.jag');
+%>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="UI for IOT platform">
+        <meta name="author" content="galaxy app">
+		<title>Galaxy App</title>
+		<link rel="shortcut icon" href="dist/images/ga.ico">
+		<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" />
+		<link rel="stylesheet" type="text/css" href="<%=urlPrefix%><%=utils.resolveUrl('css/font-awesome.min.css')%>" />
+		<link rel="stylesheet" type="text/css" href="<%=urlPrefix%>plugins/bootstrap/css/bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="<%=urlPrefix%><%=utils.resolveUrl('css/metroJs.css')%>" />
+		<link rel="stylesheet" type="text/css" href="<%=urlPrefix%><%=utils.resolveUrl('css/animate.css')%>" />			
+		<link rel="stylesheet" type="text/css" href="<%=urlPrefix%><%=utils.resolveUrl('css/gapp.css')%>" />
+		<link rel="stylesheet" type="text/css" href="<%=urlPrefix%>css/jquery-custom-scrollbar/jquery.mCustomScrollbar.css" />  		
+		<link rel="stylesheet" type="text/css" href="<%=urlPrefix%><%=utils.resolveUrl('css/home.css')%>" />		
+	
+
+</head>
+<body class="outer-wrapper">
+	<div id="wrapper">
+		<header>   
+			<div class="container-fluid">
+			<div class="col-md-12">
+				<div class="col-md-8 col-xs-6"><h3 class="capitalize homeHeaderTxt"><a href="Javascript:void(0)" onclick="FnBreadCrumbHome()"><%=VarTenantKey%></a></h3></div>
+				<div class="col-md-4 col-xs-6"> 
+					<% include(utils.resolvePath('templates/socialmedia-links.jag')); %>
+				</div>
+			</div>
+			</div> 
+		</header>
+		<section id="wrap">
+			<div class="main-content dynamicTile pt-page-scaleUpDown pt-page-delay300">
+				<div class="content-wrapper tiles panorama-sections">
+					<section class="tile-group four-wide first panorama-section">
+						<div class="container-ss get-width">
+							<!-- Category 1 -->
+							<div data-ss-colspan="2">
+								<div class="live-tile exclude tile2" data-mode="none" data-bounce="true">
+									<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/ccd/contact/list')">
+										<div class="tile_style" style="background-color: #a202aa;">
+											<aside><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/business_contact.png')%>"  class="tile_image img-responsive" /></aside>
+											<section class="tilecaptionbox noaction">
+												<div class="tilecaption" style="color:#fff">Contacts</div>
+											</section>
+										</div>
+									</a>
+								</div>
+							</div>
+							
+							<div data-ss-colspan="2">
+								<div class="live-tile tile2" data-mode="fade-list" data-bounce="true" >
+									<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/ccd/import/equipmentlist')">
+										<div class="tile_style" style="background-color: #00a002;">
+											<aside><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/import.png')%>"  class="tile_image img-responsive" /></aside>
+											<section class="tilecaptionbox noaction">
+												<div class="tilecaption" style="color:#fff">Import Assets</div>
+											</section>
+										</div>
+									</a>
+								</div>
+							</div>
+							
+							<div data-ss-colspan="2">
+								<div class="live-tile tile2" data-mode="fade-list" data-bounce="true" >
+									<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/ccd/faults/list')">
+										<div class="tile_style" style="background-color:#fff;">
+											<aside><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/fault.png')%>"  class="tile_image img-responsive" /></aside>
+											<section class="tilecaptionbox noaction">
+												<div class="tilecaption" style="color:#000">Fault Logs</div>
+											</section>
+										</div>
+									</a>
+								</div>
+							</div>
+														
+						</div>
+					</section>
+					<!-- End: Category 1 -->
+	
+				</div>
+
+			</div>
+		</section>
+
+		<div  id="myfooter" class="page-footer-inner">&copy; 2016 Galaxy, Pacific Controls.</div> 
+	</div>
+	
+	<form action="" name="gapp-tenant-info" id="gapp-tenant-info" method="post">
+		<input type="hidden" name="gapp-tenant-key" id="gapp-tenant-key" value="<%=VarTenantKey%>" />
+	</form>
+	
+	<form id="breadcrumb-home" role="form" action="<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/clienthome" name="breadcrumb-home" method="post">
+		<input type="hidden" id="gapp-tenant-key" name="gapp-tenant-key" value="<%=VarTenantKey%>" />
+	</form>
+	
+</body>
+
+	<% 
+		include('/controllers/includes/theme-portal-scripts.jag');
+	%>
+	
+  <script type='text/javascript' src="<%=urlPrefix%>plugins/jquery.min.js"></script>
+	<script type='text/javascript' src="<%=urlPrefix%>plugins/jquery-ui/jquery-ui.min.js"></script>
+	<script type='text/javascript' src="<%=urlPrefix%>plugins/bootstrap/js/bootstrap.min.js"></script>  
+	<script type='text/javascript' src="<%=urlPrefix%><%=utils.resolveUrl('js/metroJs.min.js')%>"></script>
+	<script type='text/javascript' src="<%=urlPrefix%><%=utils.resolveUrl('js/ripples.min.js')%>"></script>
+	<script type='text/javascript' src="<%=urlPrefix%><%=utils.resolveUrl('js/modernizr.js')%>"></script>
+	<script type='text/javascript' src="<%=urlPrefix%><%=utils.resolveUrl('js/jquery.shapeshift.min.js')%>"></script>
+	<script type='text/javascript' src="<%=urlPrefix%><%=utils.resolveUrl('js/jquery.touchSwipe.min.js')%>"></script>
+	<script type='text/javascript' src="<%=urlPrefix%><%=utils.resolveUrl('js/clienthome.js')%>"></script>
+	<script type='text/javascript' src="<%=urlPrefix%>js/jquery-custom-scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
+	<script type='text/javascript' src="<%=urlPrefix%><%=utils.resolveUrl('js/home-common.js')%>"></script>
+	
+	<script type='text/javascript'>
+
+	function FnBreadCrumbHome(){
+		$("#breadcrumb-home").submit();
+	}
+
+	</script>
+</body>
+</html>

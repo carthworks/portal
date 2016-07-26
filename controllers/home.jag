@@ -1,0 +1,11 @@
+<%
+var utils;
+var urlPrefix;
+var originalURI;
+
+(function() {
+	originalURI = request.getRequestURI();
+	utils = require('/modules/utils.js');
+	urlPrefix = utils.relativePrefix(originalURI);
+	include(utils.resolvePath('templates/home.jag'));
+} ()); %>

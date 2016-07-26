@@ -1,0 +1,444 @@
+<%
+	var APPCONF = require('/configs/appconfig.jag');
+	var APICONF = require('/configs/apiproperties.jag');
+	var usr = require('/modules/user.js');
+	include(utils.resolvePath('templates/portal-header.jag'));
+	include('/controllers/includes/theme-portal-styles.jag');
+%>
+	<link rel="stylesheet" type="text/css" href="<%=urlPrefix%><%=utils.resolveUrl('css/jquery-gmaps-latlon-picker.css')%>" />
+	
+	<style type="text/css">
+		.portlet-title { min-height: 12px !important; padding:0; }
+		.form .form-section {
+			margin: 12px 0px 22px 0px;
+			padding-bottom: 12px;
+		}
+					
+		form-group.form-md-line-input {margin: 0 !important;}
+		.portlet.light {padding: 12px 20px 0px 20px !important;	}
+		.dark{background-color: #f7f7f7;}
+		
+		div.fileUpload {
+			position: relative;
+			overflow: hidden;
+			margin: 10px;
+			background-image: url("<%=APPCONF.GAPP_CONF.APP_DOMAIN_ROOT_URL+APPCONF.GAPP_CONF.DOMAIN_IMG_PATH+APPCONF.GAPP_CONF.DOMAIN_IMG_DEFAULT+APPCONF.GAPP_CONF.DOMAIN_IMG_ASSET+"/"%>/asset_placeholder.png");
+			background-size: 200px 200px;
+			background-color: #BDBDBD;
+			height: 200px;
+			width: 200px;
+			text-align: center;
+		}
+		div.fileUpload input.upload {
+			position: absolute;
+			top: 0;
+			right: 0;
+			margin: 0;
+			padding: 0;
+			font-size: 20px;
+			cursor: pointer;
+			opacity: 0;
+			filter: alpha(opacity=0);
+			height: 100%;
+			text-align: center;
+			    z-index: 99;
+		}
+		
+	  div.fileUpload input.upload + img  {position: absolute;
+		top: 0;
+		left: 0;
+		z-index: 9;}
+			.custom-span{  font-family: Arial;
+		font-weight: bold;
+		font-size: 25px;
+		color: #fff;
+		/* padding: 10px; */
+		float: left;
+	}
+	#uploadFile{border: none;margin-left: 10px; width: 200px;}
+	.custom-para{    font-family: arial;
+    /* font-weight: bold; */
+    font-size: 13px;
+    color: #fff;
+    text-align: left;
+    float: left;
+    margin: 0;
+    padding: 0px 6px;}
+		
+	.upload-addicon	{
+	    display: inline-block;
+    position: absolute;
+    bottom: 0;
+    width: 40px;
+    /* height: 40px; */
+    width: 100%;
+    z-index: 99;
+    left: 0;
+    text-align: left;
+    background: rgba(0, 0, 0, 0.7);
+    height: 32px;
+    line-height: 30px;
+    padding: 0px 10px;
+	}
+		
+	</style>
+</head>
+<body class="page-md page-header-fixed page-quick-sidebar-over-content page-footer-fixed  page-full-width"  >
+
+<div class="modal fade" id="draggable" tabindex="-1" role="draggable" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header bg-green-meadow">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+						<h4 class="modal-title">Location</h4>
+					</div>
+					<div class="modal-body">
+						<form>
+							<fieldset class="gllpLatlonPicker">
+							
+							<div class="form-group col-md-12">										
+										<div class="input-group">
+												<div class="input-icon">
+													<i class="fa fa-street-view"></i>
+													<input  type="text" class="form-control gllpSearchField" placeholder="Type the location name"  name="password" placeholder="password">
+												</div>
+												<span class="input-group-btn">
+												<button  class="btn default gllpSearchButton" type="button"   value="search"><i class="fa fa-arrow-left fa-fw"></i> Search</button>
+												</span>
+											</div>
+										
+								
+							</div>
+							<div class="col-md-12">
+								<div class="gllpMap" width="100%">Google maps loading...</div>
+							</div>
+							
+							<div class="col-md-12" style="margin: 16px 0 0 0;">
+								<div class="col-md-4">
+									<input type="text" class="gllpLatitude"  id="gllpLatitude" value="25.2048493"/>	
+								</div>
+								<div class="col-md-6"> 
+									<input type="text" class="gllpLongitude"  id="gllpLongitude" value="55.270782"/>	
+								</div>
+								<div class="col-md-3 hidden"> 
+									<input type="text" class="gllpZoom" value="3"/>	
+								</div>
+								<div class="col-md-2">
+								<input type="button" class="gllpUpdateButton" value="update" />
+								</div>
+							
+									
+							</div>
+					
+								</fieldset>
+							</form>
+				
+					</div>
+					<div class="modal-footer">
+						<!-- <button type="button" class="btn default" data-dismiss="modal">Close</button> -->
+						<button type="button" id="deviceLocationSave" class="btn green" data-dismiss="modal">Save</button>
+					</div>
+				</div>
+				<!-- /.modal-content -->
+			</div>
+			<!-- /.modal-dialog -->
+	</div>
+
+<div class="se-pre-con"></div>
+	<% include(utils.resolvePath('templates/global-header.jag')); %>
+<!-- BEGIN CONTAINER -->
+	<div class="page-container">
+		<!-- BEGIN CONTENT -->
+		<div class="page-content-wrapper">
+			<div class="gapp-header">
+				<% include(utils.resolvePath('templates/leftnavigation.jag')); %>
+				<h3 class="page-title">	POI Management  </h3>
+				<div class="page-bar">
+					<ul class="page-breadcrumb">
+						<li>
+							<i class="fa fa-home"></i>
+							<a href="Javascript:void(0)" onclick="FnBreadCrumbHome()">Home</a>
+							<i class="fa fa-angle-right"></i>
+						</li>
+						<li>
+							<a href="Javascript:void(0)" onclick="FnNavigateAssetList()">POI</a>
+							<i class="fa fa-angle-right"></i>
+						</li>
+						<li>
+							<a href="Javascript:void(0)" class="pageTitleTxt"><% if(VarEntityId != '') { %> View POI <% } else { %> Create POI <% } %></a>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="page-content">
+				<!-- BEGIN PAGE CONTENT-->
+				<div class="row">
+					<div class="col-md-12">	
+						<div class="portlet light bordered">
+							<div class="portlet-title">
+								<div class="caption font-red-sunglo">
+									<i class="pageheadericon pageheader-assetsicon"></i>
+									<span class="caption-subject bold uppercase pageTitleTxt"> <% if(VarEntityId != '') { %> View POI <% } else { %> Create POI <% } %> </span>
+								</div>
+								<div class="actions">
+								<% if(ObjPageAccess['edit']=='1') { %>
+										<a id="gapp-asset-edit" class="btn btn-raised btn-edit red" href="Javascript:void(0)" onclick="FnEditAsset()">
+											<i class="icon-note icons"></i>Edit
+										</a>
+									
+								<% } %>
+
+										<% if(ObjPageAccess['delete']=='1') { %>
+										<a id="gapp-poi-delete" class="btn btn-raised btn-edit red" href="Javascript:void(0)" onclick="FnDeletePoi() ">
+											<i class="glyphicon glyphicon-remove"></i>Delete
+											
+										</a>
+									
+								<% } %>	
+								
+						
+								
+								
+								
+									<button type="button" class="btn btn-raised default" name="gapp-asset-cancel" id="gapp-asset-cancel" data-toggle="modal"   onclick= "FnCancelAsset()" tabindex="15"><i class="icon-close icons" aria-hidden="true"></i>Cancel</button>							
+									<button type="button" class="btn  btn-raised btn-danger" name="gapp-asset-save" id="gapp-asset-save" onclick="FnSavePoi()" tabindex="16"><i class="icon-check icons" aria-hidden="true"></i>Save</button>
+								</div>
+							</div>
+							<!-- END title-->							
+														
+							<div class="portlet-body form" style="min-height: 540px;">
+								<form name="gapp-asset-form" id="gapp-asset-form" method="post" role="form" autocomplete="off" enctype="multipart/form-data">
+									<div class="row">
+										<div class="col-md-12">										
+											<!-- Begin: Col-1 -->
+											<div class="col-md-2">
+												<!-- BEGIN PROFILE IMAGE UPLOAD -->
+												<div class="form-group">
+													<div class="fileUpload">
+														<div class="upload-addicon">
+															<span class="custom-span">+</span>
+															<p class="custom-para">Add Image</p>
+														</div>
+														<input type="file" name="asset-logo" id="asset-logo" class="upload" accept="image/*" />
+														<img src="" id="asset-logo-preview" width="200" height="200"  />
+														
+													</div>
+												</div>
+												<!-- END PROFILE IMAGE UPLOAD -->
+											</div>
+											<!-- End: Col-1 -->
+											<!-- Begin: Col-2 -->
+											<div class="col-md-5">												
+												<!-- BEGIN Asset Name -->
+												<div class="form-group form-md-line-input">
+													<input type="text" class="form-control input-sm" name="poiName" id="poiName" required="true" 
+													data-required-msg="Please enter poi name" data-available data-available-url="<%=APICONF.GAPP_SERVICES.equipments.asset.equipidunique%>" data-available-msg="POI already exists" tabindex="1" 
+													placeholder=" Please enter POI Name" onkeypress="return FnAllowAlphaNumericOnly(event)"/>																
+													<label class="col-md-12 control-label" for="poiName"> POI Name <span class="required" aria-required="true"> * </span></label>
+													<div class="form-control-focus"></div>			
+												</div>
+												<!-- END Asset Name -->
+												
+												<!-- Type -->
+												<div class="form-group form-md-line-input">		
+													<select class="form-control" name="poiType" id="poiType" required="true" data-required-msg="Please select a category"  placeholder=""Please select a category" tabindex="2" onchange="FnGetAssetFields()">
+														<option value=""> Please select a category</option>																		
+													</select>		
+													<label class="col-md-12 control-label" for="poiType">POI Type <span class="required" aria-required="true"> * </span></label>
+													<div class="form-control-focus"></div>
+												</div>	
+												<!-- END Type -->
+							
+												<!-- BEGIN LOCATION  : longitude,latitude-->								
+	
+														<div class="form-group form-md-line-input input-group">	
+															<label class="col-md-12 control-label form-label" for=""> Location  <span class="required" aria-required="true"> * </span></label>			
+																<div class="col-md-4 ">
+																	<input type="text" class="form-control input-xs " name="latitude" id="latitude"   onkeypress="return FnAllowNumbersOnly(event)" placeholder="latitude"/>
+																</div>
+																<div class="col-md-4">
+																	<input type="text" class="form-control input-xs" name="longitude" id="longitude"  onkeypress="return FnAllowNumbersOnly(event)"  placeholder="longitude"/>
+																</div>
+																
+																<span class="input-group-btn btn-right col-md-4">
+																	<button class="btn green"  id="deviceLocModel" type="button"  data-toggle="modal"  title="Location picker to get lat and long"> <i class="fa fa-map-marker"></i> picker</button>
+																	</span>
+
+																<div class="form-control-focus"></div>			
+																<span class="material-input"></span>
+																<div class="clearfix"></div>
+															
+														</div>														
+												<!-- END LOCATION  : longitude,latitude-->
+												
+												
+												
+												<!-- BEGIN radius -->
+												<div class="form-group form-md-line-input">
+													<input type="text" class="form-control input-sm" name="poiRadius" id="poiRadius"  onkeypress="return FnAllowNumbersOnly(event)" tabindex="3" 
+													placeholder=" Please enter radius" required="true" 
+													data-required-msg="Please enter radius" />															
+													<label class="col-md-12 control-label" for="poiRadius"> Radius  <span class="required" aria-required="true"> * </span></label>
+													<div class="form-control-focus"></div>			
+												</div>
+												<!-- END radius  -->
+												<!-- BEGIN STATUS-->													
+												<div class="form-group form-md-line-input">
+													<label class="col-md-2" for="form_control_1">Status  <span class="required" aria-required="true"> * </span></label>
+													<div class="col-md-10">
+														<div class="md-radio-inline">										
+															<div class="md-radio has-error">
+																<input type="radio" id="status_active" name="status" class="md-radiobtn"  checked value="ACTIVE">
+																<label for="status_active" style="color:#26A69A">
+																<span></span>
+																<span class="check"></span>
+																<span class="box"></span>
+																Active </label>
+															</div>
+															<div class="md-radio has-warning">
+																<input type="radio" id="status_inactive" name="status" class="md-radiobtn green"  value="INACTIVE">
+																<label for="status_inactive" >
+																<span></span>
+																<span class="check"></span>
+																<span class="box"></span>
+																In Active</label>
+															</div>
+														</div>
+													</div>
+												</div>
+												<!-- END STATUS -->																<!-- BEGIN description -->
+												<div class="form-group form-md-line-input">
+													<textarea type="text"  rows="5" class="form-control " name="description" id="description"   tabindex="5" style="border: 1px solid #D4CCCC;" placeholder=" Please enter description"/></textarea>																
+													<label class="col-md-12 control-label" for="description">Description</label>
+													<div class="form-control-focus"></div>
+												</div>	
+												<!-- END description -->																			
+											</div>			
+											<!-- End: Col-2 -->
+											
+											<!-- Begin: Col-3 -->
+											<div class="col-md-5">	
+												<!-- BEGIN Asset Id -->
+														<div class=" field_category">	
+												<label for="form_control_1" class="hidden"><strong>Category Fields</strong></label>
+												<a href="javascript:void(0);" class="add_button hidden" title="Add field" style="margin-left:10px;position: relative;top: -1px;"><img src="<%=urlPrefix%><%=utils.resolveUrl('images/add-icon.png')%>"/></a>
+												
+												<section class="field_container ">
+													<div class="field_wrapper" style="display:block;clear: both;" id="fieldsContainer">
+														<div class="col-md-6">
+															<input type="text" id="fContainer" class="form-control" name="categoryFields[]" value="" onkeypress="return FnAllowAlphabetsOnly(event)"/>
+														</div>													
+													</div>
+												</section>
+											
+												<!-- END Asset Id -->
+												
+												
+												
+											</div>
+											<!-- End: Col-3 -->											
+											<div class="col-md-12" id="fieldsSection" style="display:none">									
+												<div class="portlet1 dark bordered">
+													<div class="portlet-body form">
+														<div class="form-body">							
+															<div class="col-md-12" id="fieldsContainer"></div>
+															<div class="clearfix"></div>									
+														</div>
+													</div>
+												</div>									
+											</div>
+											
+											<div style="clear:both"></div>
+											<% if(VarEntityId != ''){ %>
+											<div class="col-md-12 animated slideInUp hidden">
+												<div id="gapp-assetpoint-list"></div>
+											</div>
+											<% } %>
+											
+										</div> 										
+									</div>
+									<input type="hidden" id="gapp-tenant-domain" name="gapp-tenant-domain" value="<%=VarTenantKey%>" />
+								</form>
+								
+								
+							
+								
+								
+								
+							</div>
+						</div><!-- END portlet bordered-->
+					</div><!-- END col-md-12-->
+				</div>
+				<!-- END PAGE CONTENT-->
+			</div>
+		</div>
+		
+	
+		
+		
+		<form id="gapp-asset-list" role="form" action="<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/pointofinterest/poi/list" name="gapp-asset-list" method="post">
+									<input type="hidden" id="gapp-tenant-key" name="gapp-tenant-key" value="<%=VarTenantKey%>" />
+								</form>
+		<!-- END CONTENT -->
+			<script id="delete-confirmation" type="text/x-kendo-template">
+		<p class="delete-message">Are you sure want to delete the user?</p>
+		<button class="delete-confirm k-button" style="margin-left: 4px;width: 80px;">Yes</button>
+		<button class="delete-cancel k-button" style="    margin: 16px;width: 80px;">No</a>
+	</script>
+	</div>
+	<!-- END CONTAINER -->
+	<% include(utils.resolvePath('templates/global-footer.jag')); %>
+	<% 
+		include(utils.resolvePath('templates/portal-footer.jag'));
+		include('/controllers/includes/theme-portal-scripts.jag');
+	%>
+	<script type="text/javascript">
+	
+		$('#deviceLocationSave').on('click', function() {
+			//console.log('username : '+$("#gllpLatitude").val());
+			//console.log('result : '+$("#gllpLongitude").val());
+			
+			var lat=$("#gllpLatitude").val();
+			var long=$("#gllpLongitude").val();
+
+				
+				lat =precise_round(lat,7);
+				long =precise_round(long,7);
+			
+			$('#latitude').val(lat);
+			$('#longitude').val(long);
+			$('#latitude').focus();
+			$('#longitude').focus();
+		
+			
+		});
+	
+		var VarListTemplateUrl = '<%=APICONF.GAPP_SERVICES.pointofinterest.template.list%>';
+		var VarCreateAssetUrl = '<%=APICONF.GAPP_SERVICES.pointofinterest.poi.create%>';
+		var VarPoiListTemplateUrl = '<%=APICONF.GAPP_SERVICES.pointofinterest.poi.list%>';
+		var VarViewTemplateUrl = '<%=APICONF.GAPP_SERVICES.pointofinterest.template.view%>';
+		var VarViewAssetUrl = '<%=APICONF.GAPP_SERVICES.pointofinterest.poi.view%>';
+		var VarDeletePoisUrl = '<%=APICONF.GAPP_SERVICES.pointofinterest.poi.delete%>';
+		
+		var VarUpdateAssetUrl = '<%=APICONF.GAPP_SERVICES.pointofinterest.poi.update%>';
+		var VarEditAssetId = '<%=VarEntityId%>';
+	
+		var VarLUDomainName = '<%=usr.domainName()%>';
+		var VarLUTenantName = '<%=usr.tenantName()%>';
+		var VarCurrentTenantInfo = $.parseJSON('<%=VarCurrentTenantInfo%>');
+		var VarAppImagePath = '<%=APPCONF.GAPP_CONF.DOMAIN_IMG_PATH%>';
+		var VarAppAssetImagePath = '<%=APPCONF.GAPP_CONF.DOMAIN_IMG_ASSET%>';
+		var VarAppAssetTypeImagePath = '<%=APPCONF.GAPP_CONF.DOMAIN_IMG_ASSETTYPE%>';
+		var VarAppMarkerImagePath = '<%=APPCONF.GAPP_CONF.DOMAIN_IMG_ASSETTYPE_MARKER%>';
+		var VarAppDefaultImagePath = '<%=APPCONF.GAPP_CONF.DOMAIN_IMG_DEFAULT%>';
+		var VarAppRootDomain = '<%=APPCONF.GAPP_CONF.MY_DOMAIN_NAME%>';
+	</script>
+	
+	<script src="https://maps.googleapis.com/maps/api/js"></script>
+	<script type='text/javascript' src="<%=urlPrefix%><%=utils.resolveUrl('js/jquery-gmaps-latlon-picker.js')%>"></script>
+	
+	<script type="text/javascript" src="<%=urlPrefix%><%=utils.resolveUrl('js/pointofinterest/poi/add.js')%>"></script>	
+	
+	
+</body>
+</html>

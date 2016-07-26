@@ -1,0 +1,16 @@
+<%
+(function () {
+	
+	var method = request.getMethod();
+	
+	if (method === 'POST') {
+		
+		var dbid = request.getParameter('dbid');
+		var dashboards = require('/modules/dashboards.js');
+		var dashboard = dashboards.findOne(dbid);
+		print(dashboard);
+		
+	}
+}());
+
+%>

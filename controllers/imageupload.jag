@@ -1,0 +1,136 @@
+<%
+
+(function () {
+
+	var log = new Log();
+	var usr = require('/modules/user.js');
+	var util = require('/modules/utils.js');
+	var user = usr.current();
+	var VarLUDomain = usr.domainName();
+	var method = request.getMethod();
+	
+	if (!user) {
+		response.sendError(401, 'unauthorized to access');
+		return;
+	}
+	
+	var APPCONF = require('/configs/appconfig.jag');
+	
+	var matcher = new URIMatcher(request.getRequestURI());
+	
+	if (matcher.match(APPCONF.GAPP_CONF.CONTEXT_PATH+'/upload/{operation}')) {
+		vars = matcher.elements();
+		
+		function FnCreateClientImageLocations(VarClientPath){
+			var ObjFile = new File(APPCONF.GAPP_CONF.DOMAIN_IMG_PATH+"/"+VarClientPath);
+			if(!ObjFile.isExists()){
+				ObjFile.mkdir();
+				var ObjFile1 = new File(APPCONF.GAPP_CONF.DOMAIN_IMG_PATH+"/"+VarClientPath+APPCONF.GAPP_CONF.DOMAIN_IMG_LOGO);
+				ObjFile1.mkdir();
+				var ObjFile2 = new File(APPCONF.GAPP_CONF.DOMAIN_IMG_PATH+"/"+VarClientPath+APPCONF.GAPP_CONF.DOMAIN_IMG_USERS);
+				ObjFile2.mkdir();
+				var ObjFile3 = new File(APPCONF.GAPP_CONF.DOMAIN_IMG_PATH+"/"+VarClientPath+APPCONF.GAPP_CONF.DOMAIN_IMG_ASSETTYPE);
+				ObjFile3.mkdir();
+				var ObjFile4 = new File(APPCONF.GAPP_CONF.DOMAIN_IMG_PATH+"/"+VarClientPath+APPCONF.GAPP_CONF.DOMAIN_IMG_ASSET);
+				ObjFile4.mkdir();
+			}
+		}
+		
+		if(vars.operation === 'client') {
+			if (method == 'POST') {
+				var ObjClientLogo = request.getFile('client-logo');
+				var VarClientId = request.getParameter("tenantId");
+				if(VarClientId != '' && ObjClientLogo != null && (ObjClientLogo.getName() != null && ObjClientLogo.getName() != "")) {
+					var VarClientPath = VarClientId + "." + APPCONF.GAPP_CONF.LOGIN_DOMAIN;	
+					FnCreateClientImageLocations(VarClientPath);									
+					ObjClientLogo.saveAs(APPCONF.GAPP_CONF.DOMAIN_IMG_PATH+"/"+VarClientPath+APPCONF.GAPP_CONF.DOMAIN_IMG_LOGO+"/"+VarClientId+".png");					
+					return;
+					
+				}
+				return;
+			}
+		} else if(vars.operation === 'user'){
+			if (method == 'POST') {
+				var ObjUserImage = request.getFile('user-image');
+				if(ObjUserImage != null && (ObjUserImage.getName() != null && ObjUserImage.getName() != "")) {
+					var VarUserName = request.getParameter("userName");
+					var VarTenantDomainKey = request.getParameter("gapp-tenant-domain");					
+					var VarCurrentTenantInfo = usr.FnGetCurrentClientInfo(VarTenantDomainKey);
+					if(VarCurrentTenantInfo != null){
+						var VarClientPath = VarCurrentTenantInfo.tenantDomain;
+						FnCreateClientImageLocations(VarClientPath);						
+						ObjUserImage.saveAs(APPCONF.GAPP_CONF.DOMAIN_IMG_PATH+"/"+VarClientPath+APPCONF.GAPP_CONF.DOMAIN_IMG_USERS+"/"+VarUserName+".png");
+						
+					}					
+					return;
+				}
+				return;
+			}
+		} else if(vars.operation === 'assettype'){
+			if (method == 'POST') {				
+				var ObjAssetTypeImage = request.getFile('assettype-logo');				
+				if(ObjAssetTypeImage != null && (ObjAssetTypeImage.getName() != null && ObjAssetTypeImage.getName() != "")) {
+					var VarAssetTypeName = request.getParameter("categoryName");
+					var VarTenantDomainKey = request.getParameter("gapp-tenant-domain");
+					var VarCurrentTenantInfo = usr.FnGetCurrentClientInfo(VarTenantDomainKey);
+					if(VarCurrentTenantInfo != null){
+						var VarClientPath = VarCurrentTenantInfo.tenantDomain;
+						FnCreateClientImageLocations(VarClientPath);
+						var ObjFile1 = new File(APPCONF.GAPP_CONF.DOMAIN_IMG_PATH+"/"+VarClientPath+APPCONF.GAPP_CONF.DOMAIN_IMG_ASSETTYPE+APPCONF.GAPP_CONF.DOMAIN_IMG_ASSETTYPE_SOURCE);
+						var ObjFile2 = new File(APPCONF.GAPP_CONF.DOMAIN_IMG_PATH+"/"+VarClientPath+APPCONF.GAPP_CONF.DOMAIN_IMG_ASSETTYPE+APPCONF.GAPP_CONF.DOMAIN_IMG_ASSETTYPE_MARKER);
+						ObjFile1.mkdir();
+						ObjFile2.mkdir();
+						ObjAssetTypeImage.saveAs(APPCONF.GAPP_CONF.DOMAIN_IMG_PATH+"/"+VarClientPath+APPCONF.GAPP_CONF.DOMAIN_IMG_ASSETTYPE+APPCONF.GAPP_CONF.DOMAIN_IMG_ASSETTYPE_SOURCE+"/"+VarAssetTypeName+".png");
+																		
+						var ObjCropImage = request.getFile('cropImage');
+						if(ObjCropImage != null && (ObjCropImage.getName() != null && ObjCropImage.getName() != "")) {
+							ObjCropImage.saveAs(APPCONF.GAPP_CONF.DOMAIN_IMG_PATH+"/"+VarClientPath+APPCONF.GAPP_CONF.DOMAIN_IMG_ASSETTYPE+APPCONF.GAPP_CONF.DOMAIN_IMG_ASSETTYPE_MARKER+"/"+VarAssetTypeName+".png");	
+						}
+					}					
+					return;
+				}
+				return;
+			}
+		} else if(vars.operation == 'asset'){
+			if (method == 'POST') {
+				var ObjAssetImage = request.getFile('asset-logo');
+				var VarAssetName = request.getParameter("assetName");
+				var VarTenantDomainKey = request.getParameter("gapp-tenant-domain");
+				var VarCurrentTenantInfo = usr.FnGetCurrentClientInfo(VarTenantDomainKey);
+				var VarEditAssetName = request.getParameter("editassetName");
+				
+				if(ObjAssetImage != null && (ObjAssetImage.getName() != null && ObjAssetImage.getName() != "")) {					
+					if(VarCurrentTenantInfo != null){
+						var VarClientPath = VarCurrentTenantInfo.tenantDomain;
+						FnCreateClientImageLocations(VarClientPath);
+						
+						ObjAssetImage.saveAs(APPCONF.GAPP_CONF.DOMAIN_IMG_PATH+"/"+VarClientPath+APPCONF.GAPP_CONF.DOMAIN_IMG_ASSET+"/"+VarAssetName+".png");
+					}
+				} else if(ObjAssetImage == null && VarAssetName != VarEditAssetName){
+					if(VarCurrentTenantInfo != null){
+						var VarClientPath = VarCurrentTenantInfo.tenantDomain;
+						FnCreateClientImageLocations(VarClientPath);
+						
+						var VarOldAssetImage = APPCONF.GAPP_CONF.DOMAIN_IMG_PATH+"/"+VarClientPath+APPCONF.GAPP_CONF.DOMAIN_IMG_ASSET+"/"+VarEditAssetName+".png";
+						var ObjOldAssetImage = new File(VarOldAssetImage);
+						if(ObjOldAssetImage.isExists()){
+							ObjOldAssetImage.saveAs(APPCONF.GAPP_CONF.DOMAIN_IMG_PATH+"/"+VarClientPath+APPCONF.GAPP_CONF.DOMAIN_IMG_ASSET+"/"+VarAssetName+".png");
+							ObjOldAssetImage.del();						
+						}
+					}
+				}
+				return;
+			}
+		}
+		
+	} else {
+	
+		response.sendRedirect(util.tenantedPrefix(urlPrefix+"error/404"));
+        return;
+	
+	}
+	
+		
+}());
+
+%>

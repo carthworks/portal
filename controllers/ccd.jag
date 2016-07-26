@@ -1,0 +1,80 @@
+<%
+var VarCatType;
+var pageId;
+var VarContactInfo;
+var VarContactView;
+var VarContactList;
+var VarTenantKey;
+var VarCurrentTenantInfo;
+var ObjPageAccess;
+
+(function() {
+
+	if (!user) {
+        sendLogin();
+        return;
+    }
+	
+	var vars;
+	var matcher = new URIMatcher(request.getRequestURI());
+	
+	if (matcher.match('/ccd/{cattype}/{id}')) {
+	
+		vars = matcher.elements();
+		VarCatType = (vars.cattype).toString();
+		pageId = (vars.id).toString();
+		
+	} else {
+	
+		response.sendError(404, JSON.stringify({
+					error: true
+				}));
+		return;
+		
+	}
+	
+	var pages = require('/configs/pages.json');
+	
+	if (!pages.ccd[VarCatType][pageId]) {
+	
+		response.sendRedirect(utils.tenantedPrefix(urlPrefix+"error/404"));
+        return;
+		
+	} else {
+	
+		var usr = require('/modules/user.js');
+		var permission = require('/configs/permissions.json');
+		ObjPageAccess = {'add':'0','list':'0','view':'0','edit':'0','map':'0'};
+		var ObjPageConf = {'list':['add','view','map'],'view':['edit']};
+		var VarPageRef = permission.ccd[VarCatType];		
+		ObjPageAccess = usr.FnGetPageAccessAuthorization(ObjPageAccess,ObjPageConf,pageId,VarPageRef);
+		
+		var method = request.getMethod();
+		
+		if (method === 'POST') { 
+			VarContactInfo = (request.getParameter("contact_info") != null) ? request.getParameter("contact_info") : '';
+			VarContactView = (request.getParameter("contact_view") != null) ? request.getParameter("contact_view") : '';
+			VarContactList = (request.getParameter("contact_list") != null) ? request.getParameter("contact_list") : '';
+			VarTenantKey = (request.getParameter("gapp-tenant-key") != null) ? request.getParameter("gapp-tenant-key") : '';
+			
+		} else {
+			
+			VarContactInfo = '';
+			VarContactView = '';
+			VarContactList = '';
+			var ObjTenantInfo = session.get('PARENT_CLIENT');
+			if(ObjTenantInfo != null){
+				VarTenantKey = ObjTenantInfo['tenantId'];
+			}
+		
+		}
+		
+		VarCurrentTenantInfo = usr.FnGetCurrentClientInfo(VarTenantKey);
+
+		include(utils.resolvePath('templates/'+pages.ccd[VarCatType][pageId]));
+	
+	}
+
+} ());
+
+%>

@@ -1,0 +1,72 @@
+<%
+var pageId;
+var VarClientId;
+var VarClientDomain;
+var VarTenantKey;
+var VarCurrentTenantInfo;
+var ObjPageAccess;
+
+(function() {
+	
+    if (!user) {
+        sendLogin();
+        return;
+    }
+		
+    var vars;
+	var matcher = new URIMatcher(request.getRequestURI());
+	
+	if (matcher.match('/clients/{id}')) {
+	
+        vars = matcher.elements();
+        pageId = (vars.id).toString();
+		
+    } else {
+		
+		response.sendError(404, JSON.stringify({
+					error: true
+				}));
+		return;
+		
+	}
+		
+	var pages = require('/configs/pages.json');
+	
+	if (!pages.clients[pageId]) {
+
+        response.sendRedirect(utils.tenantedPrefix(urlPrefix+"error/404"));
+        return;
+		
+    } else {
+		
+		var usr = require('/modules/user.js');
+		var permission = require('/configs/permissions.json');
+		ObjPageAccess = {'add':'0','list':'0','view':'0','edit':'0','sendemail':'0'};
+		var ObjPageConf = {'list':['add','view','sendemail'],'view':['edit']};
+		var VarPageRef = permission.clients;
+		ObjPageAccess = usr.FnGetPageAccessAuthorization(ObjPageAccess,ObjPageConf,pageId,VarPageRef);
+
+	}
+	
+	var method = request.getMethod();
+	
+	if (method === 'POST') { 
+		
+		VarClientId = (pageId=='view') ? request.getParameter("client_id") : '';
+		VarClientDomain = (pageId=='sendemail') ? request.getParameter("client_domain") : '';
+		VarTenantKey = (request.getParameter("gapp-tenant-key") != null) ? request.getParameter("gapp-tenant-key") : '';
+		
+	} else {
+		VarClientId = '';
+		VarClientDomain = '';
+		
+		var ObjTenantInfo = session.get('PARENT_CLIENT');
+		if(ObjTenantInfo != null){
+			VarTenantKey = ObjTenantInfo['tenantId'];
+		}
+	}	
+	
+	VarCurrentTenantInfo = usr.FnGetCurrentClientInfo(VarTenantKey);
+			
+    include(utils.resolvePath('templates/'+pages.clients[pageId]));
+} ()); %>

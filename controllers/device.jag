@@ -1,0 +1,85 @@
+<%
+var pageId;
+var VarDeviceId;
+var VarSourceId;
+var VarDSName;
+var VarTenantKey;
+var VarTenantMapInfo;
+var VarCurrentTenantInfo;
+var ObjPageAccess;
+
+(function() {
+	
+    if (!user) {
+        sendLogin();
+        return;
+    }
+			
+    var vars;
+	var matcher = new URIMatcher(request.getRequestURI());
+	
+	if (matcher.match('/device/{id}')) {
+        vars = matcher.elements();
+        pageId = (vars.id).toString();
+    } else {
+		response.sendError(404, JSON.stringify({
+					error: true
+				}));
+		return;
+	}
+	
+	var pages = require('/configs/pages.json');
+	
+	if (!pages.device[pageId]) {
+	
+        response.sendRedirect(utils.tenantedPrefix(urlPrefix+"error/404"));
+        return;
+		
+    } else {
+	
+		var usr = require('/modules/user.js');
+		var permission = require('/configs/permissions.json');
+		ObjPageAccess = {'add':'0','list':'0','view':'0','edit':'0','assign':'0','dashboard':'0','mapping':'0','info':'0'};
+		var ObjPageConf = {'list':['add','view','assign','dashboard'],'view':['edit']};
+		var VarPageRef = permission.device;		
+		ObjPageAccess = usr.FnGetPageAccessAuthorization(ObjPageAccess,ObjPageConf,pageId,VarPageRef);
+		
+		var ObjUser = usr.current();
+		var APPCONF = require('/configs/appconfig.jag');
+		if(utils.allowed(ObjUser['roles'],[APPCONF.GAPP_CONF.SUPER_ADMIN_ROLE])){
+			ObjPageAccess['dashboard'] = '1';
+			ObjPageAccess['edit'] = '1';
+		} else if(utils.allowed(ObjUser['roles'],[APPCONF.GAPP_CONF.CLIENT_ADMIN_ROLE])){
+			ObjPageAccess['dashboard'] = '0';
+			ObjPageAccess['edit'] = '0';
+		}
+							
+	}
+	
+	var method = request.getMethod();
+	
+	if (method === 'POST') {
+		
+		VarTenantMapInfo = (request.getParameter("tenant_map_info") != null) ? request.getParameter("tenant_map_info") : '';
+		VarDeviceId = (request.getParameter("device_id") != null) ? request.getParameter("device_id") : '';
+		VarSourceId = (request.getParameter("source_id") != null) ? request.getParameter("source_id") : '';
+		VarDSName = (request.getParameter("ds_name") != null) ? request.getParameter("ds_name") : '';
+		VarTenantKey = (request.getParameter("gapp-tenant-key") != null) ? request.getParameter("gapp-tenant-key") : "";
+		
+	} else {
+	
+		VarDeviceId = '';
+		VarSourceId = '';
+		VarDSName = '';
+		VarTenantMapInfo = '';
+		
+		var ObjTenantInfo = session.get('PARENT_CLIENT');
+		if(ObjTenantInfo != null){
+			VarTenantKey = ObjTenantInfo['tenantId'];
+		}		
+	}
+	
+	VarCurrentTenantInfo = usr.FnGetCurrentClientInfo(VarTenantKey);
+	
+    include(utils.resolvePath('templates/' + pages.device[pageId]));
+} ()); %>

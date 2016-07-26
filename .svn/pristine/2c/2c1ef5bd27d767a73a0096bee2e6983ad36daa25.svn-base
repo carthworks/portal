@@ -1,0 +1,118 @@
+<%
+	var APPCONF = require('/configs/appconfig.jag');
+	var ObjUser = session.get('user');
+	var permission = require('/configs/permissions.json');
+	
+%>
+<div class="gapp-leftmenu pull-left">
+	<ul id="gn-menu" class="gn-menu-main">
+		<li class="gn-trigger">
+			<a class="gn-icon gn-icon-menu"><span>Menu</span></a>
+			<nav class="gn-menu-wrapper">
+				<div class="gn-scroller">
+					<ul class="gn-menu">
+					
+						<!-- Client Management Start-->
+						<% if(utils.allowed(ObjUser['roles'],[APPCONF.GAPP_CONF.SUPER_ADMIN_ROLE,APPCONF.GAPP_CONF.CLIENT_ADMIN_ROLE]) || utils.allowed(ObjUser['permissions'],[permission.clients.add,permission.clients.list])){ %>
+						<li><a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/clients/list')"><i class="gn-icon gn-icon-client" ></i><span>Client Management</span></a></li>
+						<% } %>
+						<!-- Client Management End-->
+						
+						<!-- User Management Start-->
+						<% if(utils.allowed(ObjUser['roles'],[APPCONF.GAPP_CONF.SUPER_ADMIN_ROLE,APPCONF.GAPP_CONF.CLIENT_ADMIN_ROLE]) || utils.allowed(ObjUser['permissions'],[permission.users.add,permission.users.list])){ %>
+						<li><a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/users/list')"><i class="gn-icon gn-icon-user" ></i><span>User Management</span></a></li>
+						<% } %>
+						<!-- User Management End-->
+						
+						<!-- Device Management Start-->
+						<% if(utils.allowed(ObjUser['roles'],[APPCONF.GAPP_CONF.SUPER_ADMIN_ROLE,APPCONF.GAPP_CONF.CLIENT_ADMIN_ROLE]) || utils.allowed(ObjUser['permissions'],[permission.device.add,permission.device.list])){ %>
+						<li><a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/device/list')"><i class="gn-icon gn-icon-device" ></i><span>Device Management</span></a></li>
+						<% } %>
+						<!-- Device Management End-->
+						
+						<!-- Device Status Start-->
+						<% if(utils.allowed(ObjUser['roles'],[APPCONF.GAPP_CONF.SUPER_ADMIN_ROLE,APPCONF.GAPP_CONF.CLIENT_ADMIN_ROLE]) || utils.allowed(ObjUser['permissions'],[permission.device.info])){ %>
+						<li><a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/device/info')"><i class="gn-icon gn-icon-device" ></i><span>Device Status</span></a></li>
+						<% } %>
+						<!-- Device Status End-->
+						
+						<!-- Role Management Start-->
+						<% if(utils.allowed(ObjUser['roles'],[APPCONF.GAPP_CONF.SUPER_ADMIN_ROLE,APPCONF.GAPP_CONF.CLIENT_ADMIN_ROLE]) || utils.allowed(ObjUser['permissions'],[permission.roles.add,permission.roles.list])){ %>
+						<li><a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/roles/list')"><i class="gn-icon gn-icon-role" ></i><span>Role Management</span></a></li>
+						<% } %>
+						<!-- Role Management End-->
+						
+			
+						
+						<!-- Connected Diagnostics Start-->
+						<% if((utils.allowed(ObjUser['roles'],[APPCONF.GAPP_CONF.SUPER_ADMIN_ROLE]) && VarCurrentTenantInfo.tenantDomain != APPCONF.GAPP_CONF.MY_DOMAIN_NAME) || utils.allowed(ObjUser['roles'],[APPCONF.GAPP_CONF.CLIENT_ADMIN_ROLE]) || utils.allowed(ObjUser['permissions'],[permission.ccd.contact.list,permission.ccd.import.equipments,permission.ccd.faults.list])){ %>
+						<li><a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/ccdhome')"><i class="gn-icon gn-icon-cd" ></i><span>Connected Diagnostics</span></a></li>
+						<% } %>
+						<!-- Connected Diagnostics End-->
+						
+						<!-- Geofence Start-->
+						<% if((utils.allowed(ObjUser['roles'],[APPCONF.GAPP_CONF.SUPER_ADMIN_ROLE]) && VarCurrentTenantInfo.tenantDomain != APPCONF.GAPP_CONF.MY_DOMAIN_NAME) || utils.allowed(ObjUser['roles'],[APPCONF.GAPP_CONF.CLIENT_ADMIN_ROLE]) || utils.allowed(ObjUser['permissions'],[permission.geofence.create,permission.geofence.list])){ %>
+						<li><a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/geofence/list')"><i class="gn-icon gn-icon-geofence" ></i><span>Geofence</span></a></li>
+						<% } %>
+						<!-- Geofence End-->
+						
+						<!-- Asset Monitoring Start-->
+						<% if((utils.allowed(ObjUser['roles'],[APPCONF.GAPP_CONF.SUPER_ADMIN_ROLE]) && VarCurrentTenantInfo.tenantDomain != APPCONF.GAPP_CONF.MY_DOMAIN_NAME) || utils.allowed(ObjUser['roles'],[APPCONF.GAPP_CONF.CLIENT_ADMIN_ROLE]) || utils.allowed(ObjUser['permissions'],[permission.assets.monitoring])){ %>
+						<li><a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/assets/monitoring')"><i class="gn-icon gn-icon-assetm" ></i><span>Asset Monitoring</span></a></li>
+						<% } %>
+						<!-- Asset Monitoring End-->
+						
+						<!-- Asset History Start-->
+						<% if((utils.allowed(ObjUser['roles'],[APPCONF.GAPP_CONF.SUPER_ADMIN_ROLE]) && VarCurrentTenantInfo.tenantDomain != APPCONF.GAPP_CONF.MY_DOMAIN_NAME) || utils.allowed(ObjUser['roles'],[APPCONF.GAPP_CONF.CLIENT_ADMIN_ROLE]) || utils.allowed(ObjUser['permissions'],[permission.assets.historyasset])){ %>
+						<li><a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/assets/historyasset')"><i class="gn-icon gn-icon-asseth" ></i><span>Asset History</span></a></li>
+						<% } %>
+						<!-- Asset History End-->
+						
+						<!-- Asset Type Start-->
+						<% if((utils.allowed(ObjUser['roles'],[APPCONF.GAPP_CONF.SUPER_ADMIN_ROLE]) && VarCurrentTenantInfo.tenantDomain != APPCONF.GAPP_CONF.MY_DOMAIN_NAME) || utils.allowed(ObjUser['roles'],[APPCONF.GAPP_CONF.CLIENT_ADMIN_ROLE]) || utils.allowed(ObjUser['permissions'],[permission.equipments.template.add,permission.equipments.template.list])){ %>
+						<li><a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/equipments/template/list')"><i class="gn-icon gn-icon-assett" ></i><span>Asset Type</span></a></li>
+						<% } %>
+						<!-- Asset Type End-->
+						
+						<!-- Assets Start-->
+						<% if((utils.allowed(ObjUser['roles'],[APPCONF.GAPP_CONF.SUPER_ADMIN_ROLE]) && VarCurrentTenantInfo.tenantDomain != APPCONF.GAPP_CONF.MY_DOMAIN_NAME) || utils.allowed(ObjUser['roles'],[APPCONF.GAPP_CONF.CLIENT_ADMIN_ROLE]) || utils.allowed(ObjUser['permissions'],[permission.equipments.asset.add,permission.equipments.asset.list])){ %>
+						<li><a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/equipments/asset/list')"><i class="gn-icon gn-icon-assets" ></i><span>Assets</span></a></li>
+						<% } %>
+						<!-- Assets End-->
+						
+						<!-- Alarm Console Start-->
+						<% if((utils.allowed(ObjUser['roles'],[APPCONF.GAPP_CONF.SUPER_ADMIN_ROLE]) && VarCurrentTenantInfo.tenantDomain != APPCONF.GAPP_CONF.MY_DOMAIN_NAME) || utils.allowed(ObjUser['roles'],[APPCONF.GAPP_CONF.CLIENT_ADMIN_ROLE]) || utils.allowed(ObjUser['permissions'],[permission.alarm.console])){ %>
+						<li><a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/alarm/console')"><i class="gn-icon gn-icon-alarmc" ></i><span>Alarm Console</span></a></li>
+						<% } %>
+						<!-- Alarm Console End-->
+						
+						<!-- Alarm Listings Start-->
+						<% if((utils.allowed(ObjUser['roles'],[APPCONF.GAPP_CONF.SUPER_ADMIN_ROLE]) && VarCurrentTenantInfo.tenantDomain != APPCONF.GAPP_CONF.MY_DOMAIN_NAME) || utils.allowed(ObjUser['roles'],[APPCONF.GAPP_CONF.CLIENT_ADMIN_ROLE]) || utils.allowed(ObjUser['permissions'],[permission.alarm.history])){ %>
+						<li><a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/equipments/asset/details')"><i class="gn-icon gn-icon-alarml" ></i><span>Asset Details</span></a></li>
+						<% } %>
+						<!-- Alarm Listings End-->	
+						
+						<!-- Alarm Logs Start-->
+						<% if((utils.allowed(ObjUser['roles'],[APPCONF.GAPP_CONF.SUPER_ADMIN_ROLE]) && VarCurrentTenantInfo.tenantDomain != APPCONF.GAPP_CONF.MY_DOMAIN_NAME) || utils.allowed(ObjUser['roles'],[APPCONF.GAPP_CONF.CLIENT_ADMIN_ROLE]) || utils.allowed(ObjUser['permissions'],[permission.alarm.history])){ %>
+						<li><a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/alarm/history')"><i class="gn-icon gn-icon-alarml" ></i><span>Alarm Logs</span></a></li>
+						<% } %>
+						<!-- Alarm Logs End-->
+						
+						<!-- POI Start-->
+						<% if((utils.allowed(ObjUser['roles'],[APPCONF.GAPP_CONF.SUPER_ADMIN_ROLE]) && VarCurrentTenantInfo.tenantDomain != APPCONF.GAPP_CONF.MY_DOMAIN_NAME) || utils.allowed(ObjUser['roles'],[APPCONF.GAPP_CONF.CLIENT_ADMIN_ROLE]) || utils.allowed(ObjUser['permissions'],[permission.alarm.history])){ %>
+						<li><a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/pointofinterest/poi/list')"><i class="gn-icon  gn-icon-alarml" ></i><span>POI </span></a></li>
+						<% } %>
+						<!-- POI End-->
+						
+						<!-- POI Type Start-->
+						<% if((utils.allowed(ObjUser['roles'],[APPCONF.GAPP_CONF.SUPER_ADMIN_ROLE]) && VarCurrentTenantInfo.tenantDomain != APPCONF.GAPP_CONF.MY_DOMAIN_NAME) || utils.allowed(ObjUser['roles'],[APPCONF.GAPP_CONF.CLIENT_ADMIN_ROLE]) || utils.allowed(ObjUser['permissions'],[permission.alarm.history])){ %>
+						<li><a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/pointofinterest/template/list')"><i class="gn-icon  gn-icon-alarml" ></i><span>POI Type</span></a></li>
+						<% } %>
+						<!-- POI Type End-->
+						
+					</ul>
+				</div>
+			</nav>
+		</li>
+	</ul>
+</div>

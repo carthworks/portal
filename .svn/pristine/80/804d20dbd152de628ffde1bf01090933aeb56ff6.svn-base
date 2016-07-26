@@ -1,0 +1,6 @@
+<%
+	var GAPP_VARS = {
+						"timezone" : ["Dubai","Muscat"]
+	};
+
+%>

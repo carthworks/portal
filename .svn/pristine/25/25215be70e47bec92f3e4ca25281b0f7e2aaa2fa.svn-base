@@ -1,0 +1,40 @@
+<%
+var VarTenantKey;
+
+(function() {
+	
+    if (!user) {
+        sendLogin();
+        return;
+    }
+	
+	var vars;
+	var matcher = new URIMatcher(request.getRequestURI());
+	
+	if (!matcher.match('/ccdhome')) {
+	
+		response.sendError(404, JSON.stringify({
+					error: true
+				}));
+		return;
+		
+	} else {
+	
+		var method = request.getMethod();
+		
+		if (method === 'POST') { 
+			VarTenantKey = (request.getParameter("gapp-tenant-key") != null) ? request.getParameter("gapp-tenant-key") : '';
+		} else {
+			var ObjTenantInfo = session.get('PARENT_CLIENT');
+			if(ObjTenantInfo != null){
+				VarTenantKey = ObjTenantInfo['tenantId'];
+			}
+		}
+		var usr = require('/modules/user.js');
+		VarCurrentTenantInfo = usr.FnGetCurrentClientInfo(VarTenantKey);
+			
+		include(utils.resolvePath('templates/ccdhome.jag'));
+	
+	}
+	
+} ()); %>

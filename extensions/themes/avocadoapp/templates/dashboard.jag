@@ -1,0 +1,530 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Dashboards</title>
+    <link rel="icon" href="<%=urlPrefix%><%=utils.resolveUrl('images/favicon.png')%>" type="image/x-icon" />
+	<link rel="stylesheet" href="<%=urlPrefix%>css/webui-popover/jquery.webui-popover.min.css">
+	<link rel="stylesheet" href="<%=urlPrefix%>css/bootstrap.min.css">
+	<link rel="stylesheet" href="<%=urlPrefix%>css/fontwso2.css">
+    <link rel="stylesheet" href="<%=urlPrefix%>css/fontwso2-extend.css">
+    <link rel="stylesheet" href="<%=urlPrefix%>css/OpenSans.css">
+    <link rel="stylesheet" href="<%=urlPrefix%>css/common.css">
+	<link rel="stylesheet" href="<%=urlPrefix%><%=utils.resolveUrl('css/bootstrap.min.css')%>">
+	<link rel="stylesheet" href="<%=urlPrefix%>css/font-awesome.min.css">
+	<% include('/controllers/includes/theme-dashboard-styles.jag'); %>
+	<link rel="stylesheet" href="<%=urlPrefix%>css/KendoUI/kendo.common.min.css">
+	<link rel="stylesheet" href="<%=urlPrefix%>css/KendoUI/kendo.custom.css">
+	<link rel="stylesheet" href="<%=urlPrefix%>css/jquery-ui.css">
+	
+	<!-- BEGIN GLOBAL MANDATORY STYLES -->
+	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" />
+	<link rel="stylesheet" type="text/css" href="<%=urlPrefix%><%=utils.resolveUrl('css/font-awesome.min.css')%>" />
+	<link rel="stylesheet" type="text/css" href="<%=urlPrefix%>plugins/simple-line-icons/simple-line-icons.min.css" />
+	<link rel="stylesheet" type="text/css" href="<%=urlPrefix%>plugins/bootstrap/css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="<%=urlPrefix%>plugins/uniform/css/uniform.default.css" />
+	<link rel="stylesheet" type="text/css" href="<%=urlPrefix%>plugins/bootstrap-switch/css/bootstrap-switch.min.css" />
+	
+	<!-- BEGIN THEME STYLES -->
+	<link rel="stylesheet" type="text/css" id="style_components" href="<%=urlPrefix%><%=utils.resolveUrl('css/components-md.css')%>" />
+	<link rel="stylesheet" type="text/css" href="<%=urlPrefix%><%=utils.resolveUrl('css/plugins-md.css')%>" />
+	<link rel="stylesheet" type="text/css" href="<%=urlPrefix%><%=utils.resolveUrl('css/layout.css')%>" />
+	<link rel="stylesheet" type="text/css" id="style_color" href="<%=urlPrefix%><%=utils.resolveUrl('css/darkblue.css')%>" />
+	<link rel="stylesheet" type="text/css" href="<%=urlPrefix%><%=utils.resolveUrl('css/custom.css')%>" />
+	
+	<!-- KendoUI Styles -->
+	<link rel="stylesheet" type="text/css" href="<%=urlPrefix%>css/KendoUI/kendo.common.min.css"  />
+	<link rel="stylesheet" type="text/css" href="<%=urlPrefix%>css/KendoUI/kendo.custom.css"  />
+	
+	<!-- customstyle -->	  
+	<link rel="stylesheet" type="text/css" href="<%=urlPrefix%><%=utils.resolveUrl('css/gapp.css')%>" />  
+	<link rel="stylesheet" type="text/css" href="<%=urlPrefix%><%=utils.resolveUrl('css/animate.css')%>" />	
+	<link rel="stylesheet" type="text/css" href="<%=urlPrefix%><%=utils.resolveUrl('css/ripples.min.css')%>" />
+	<link rel="stylesheet" type="text/css" href="<%=urlPrefix%><%=utils.resolveUrl('css/dashboard.css')%>" />
+	<link rel="stylesheet" type="text/css" href="<%=urlPrefix%><%=utils.resolveUrl('css/hover.css')%>" />
+	
+	
+	
+
+		<style type="text/css">
+		body,html{height:100%}
+		
+				.page-footer-fixed .page-footer {
+					background-color: #28303b !important;
+				}	
+				.page-footer {
+					clear: left;
+					background-color: #28303b !important;
+				}
+				.page-content{ min-height:660px; background: #F3F3F3; border-top: 1px solid #D8D6D6;border-bottom: 1px solid #D8D6D6;}
+		
+			/*		.page-header.navbar {
+					width: 100%;
+					height: 70px;
+					min-height: 70px;
+					background: #f1f3fa;
+					border-bottom: 1px solid #dce0ec!important;
+					border: 0;
+					margin: 0;
+					padding: 0;
+					box-shadow: none;
+					filter: none;
+				}
+			*/	
+				
+				
+				.breadcrumbs {
+					background: #fff;
+					overflow: hidden;
+					padding: 30px 15px;
+					margin-bottom: 0px;    margin-top: 64px;
+				}
+
+				.breadcrumbs .breadcrumbs-title {
+					float: left;
+					font-size: 20px;
+					color: #3e4f5e;
+					font-weight: 600;
+					margin: 0;
+				}
+
+				.breadcrumbs .breadcrumbs-list {
+					float: right;
+					padding-left: 0;
+					margin-bottom: 0;
+					list-style: none;
+				}
+
+				.breadcrumbs .breadcrumbs-list>li {
+					display: inline-block;
+					font-size: 14px;
+				}
+
+				.breadcrumbs .breadcrumbs-list>li>a {
+					color: #8e9daa;
+				}
+
+
+				.panel{	border-radius: 0 !important;
+					box-shadow: 0 1px 1px rgba(0, 0, 0, 0.16), 0 1px 1px rgba(0, 0, 0, 0.22);
+				}	
+				h3.panel-title.ues-title-left {
+					border-radius: 0;
+				}
+				.ues-description {
+					font-weight: 200;
+					background: #F5F4F4;
+					min-height: 86px;
+					padding: 8px 0 0 9px;
+					color: #000;
+				}
+				#ues-store{margin: 0 0 0px 26px !important;}
+				.page-header.navbar .page-logo{width:97px!important}
+				.lngweltxt{color:#fff}
+				.lngweltxt{font-size:20px}
+				.welcome-date{font-size:12px; margin-top: -4px;}
+				.welcome-msg {padding: 9px 0 0 0;}
+				.page-toolbar{display:none!important;}
+				
+				a#widgetExit { 
+					font-size:16px; padding:6px 0 0 8px; 
+					width: 34px;
+					height: 34px;
+					border-radius: 50% !important;
+					}
+				a#widgetExit:hover {
+					padding:6px 0 0 8px;
+					background: crimson !important;
+					width: 34px;
+					height: 34px;
+					border-radius: 50% !important;
+					color:#000 !important;
+				}
+		</style>
+</head>
+
+<body class="page-header-fixed page-quick-sidebar-over-content page-style-square page-full-width <%=dashboard.skin%>" id="db-skin">
+
+
+<!-- BEGIN HEADER -->
+<div class="page-header navbar navbar-fixed-top">
+			<!-- BEGIN HEADER INNER -->
+			<div class="page-header-inner">
+	
+					<div class="page-welcome col-md-5">
+				<!-- BEGIN LOGO -->
+					<div class="page-logo">
+						<a href="index.html"><img src="<%=urlPrefix%>images/domains/pacificcontrols.alpine.com/logo/cummins-logo.png"  style="padding-top: 5px" class="img-responsive" alt="logo" class="logo-default"/></a>
+						<div class="menu-toggler sidebar-toggler hide">
+							<!-- DOC: Remove the above "hide" to enable the sidebar toggler button on header -->
+						</div>
+					</div>
+				<!-- END LOGO -->
+						<div class="welcome-msg">
+							<span class="lngweltxt">Welcome&nbsp; <span class="welcome-name lngwelname" id="header_firstname"><%=user.username%></span> </span>
+							<div class="welcome-date " id="header_date"></div>
+							<div class="col-md-2 hidden" id="time" style="display:none;"><span id="hours"></span>:<span id="min"></span>:<span id="sec"></span></div>
+						</div>
+					</div>
+					<div class="col-md-3 text-center" id="dashboardTitleContainer" >
+						<div class="orgnname"></div>
+						<div>
+							<span class="dbtitle"><%=dashboard.title%></span>
+							<!--<span class="dbpagetitle"></span> -->
+						</div>
+					</div>
+				
+				
+					<section class="col-md-4 col-xs-12 col-sm-12 ">	
+
+					<div class="top-menu GAP_pages ">
+								<ul class="nav navbar-nav pull-right">										
+										<li class="logout_icon" title=" Exit">
+											<a href="javascript:window.open('','_self').close();" id="widgetExit"  class="hvr-fade">
+												<span  class="fa fa-times" ></span>
+												<div class="ripple-container"></div>
+											</a>
+										</li>
+								<!-- END USER LOGIN DROPDOWN -->	
+								</ul>
+								
+
+							</div>
+
+					
+					<div class="dashboard-usersettings hidden">							
+						<% if (user) { %>
+						<ul class="nav navbar-nav navbar-right" style="margin-top: 0px;">
+								<li>                                								
+									<a id="userlogout" href="#" class="btn btn-info btn-sm" style="background-color: rgba(0, 0, 0, 0.4); border-color:rgba(0, 0, 0, 0.4);" 
+										data-toggle="dropdown" aria-expanded="false">
+										<span class="glyphicon glyphicon-user"></span> <%=user.username%> <span class="caret"></span> 
+									</a>
+									
+									<ul id="userlogoutsec" class="dropdown-menu dropdown-usermenu animated fadeInDown pull-right" style="background-color: rgba(0, 0, 0, 0.9);">
+										<% if(user.isEditor){ %>
+										<li class="hoverClass" style="padding:10px;">
+											<a href="<%=dbRoot%>?editor=true">Edit Dashboard<span class="glyphicon glyphicon-edit pull-right"></span></a>
+										</li>
+										<li style="padding:10px;"><a href="#changeSkin" data-toggle="modal">Change Skin<span class="glyphicon glyphicon-cog pull-right"></span></a></li>
+										<% } %>
+										<li style="padding:10px;"><a href="<%=urlPrefix%>logout?destination=<%=dest%>">Logout<span class="glyphicon glyphicon-log-out pull-right"></span></a></li>
+									</ul>
+								</li>
+						</ul>
+						<% } %>
+						
+						<ul class="nav navbar-nav navbar-right" style="margin-top: 0px; display:none;" id="facilityModalContainer">
+								<li class="">								
+									<button type="button" class="" data-toggle="modal" data-target="#facilityModal" style="background-color: rgba(0, 0, 0, 0.4); border-color:rgba(0, 0, 0, 0.4); color: #FFFFFF;">
+										<img class="facilityicon" src="<%=urlPrefix%><%=utils.resolveUrl('images/building_blk.png')%>" /><span id="facility-icon-head">Select Facility</span>
+									</button>
+								</li>
+						</ul>
+											
+						<% if(dashboard.pages.length>1){ %>						
+						<button type="button" class="btn btn-default btn-sm" id="nav-expander">
+							<span class="glyphicon glyphicon-menu-hamburger"></span>
+						</button>						
+						<% } %>
+						
+					</div>
+				</section>
+				
+				
+				<!-- END LOGO -->
+				<!-- BEGIN RESPONSIVE MENU TOGGLER -->
+				<a href="javascript:;" class="menu-toggler responsive-toggler" data-toggle="collapse" data-target=".navbar-collapse"></a>
+				<!-- END RESPONSIVE MENU TOGGLER -->
+				</div>
+				<!-- END HEADER INNER -->
+			</div>	
+		<!-- BEGIN HEADER -->	
+		
+			<div class="clearfix"></div>
+			
+	<!-- BEGIN BREADCRUMBS -->
+	
+	
+	<%  var pages = dashboard.pages;						
+		pageId = (pageId ? pageId : pages[0]['id']);
+	%>
+	
+	<div class="page-bar">
+				
+				<div class="page-toolbar">
+					<%pages.forEach(function (p) { %>
+									<span <%if (p.id === pageId) { %> class="active page-title"<% } else {  %>class="hide" <%}  %>>
+									<%=p.title%></span>
+					<%	});	%>
+					
+					<div class="btn-group pull-right" style="margin: 0 16px 0 0;">
+						<button type="button" class="btn btn-fit-height grey-salt dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="1000" data-close-others="true" aria-expanded="false">Pages <i class="fa fa-angle-down"></i>
+						</button>
+						<ul class="dropdown-menu pull-right" role="menu">							
+								<%	pages.forEach(function (p) { %>
+									<li <%if (p.id === pageId) { %> class="active"<% } %>><a class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true" href="<%=dbRoot%><%=p.id%>"><%=p.title%></a></li>
+								<%	});	%>
+						</ul>
+					</div>
+				</div>
+			</div>
+	
+
+            <!-- END BREADCRUMBS -->		
+		
+		<!-- BEGIN CONTAINER -->
+		<div class="page-container" id="ues-dasboard-container">	
+			<div class="page-content-wrapper">
+				<div class="page-content" style="margin:50px 0 0 0 ">
+					<div class="dshboard-body">
+					
+						<div id="wrapper"></div>
+						<!--<div id="push"></div> -->
+					</div>
+				</div>
+			</div><!--- END page-content-wrapper --->
+			<!-- END CONTAINER -->
+		</div>
+		<!-- END CONTAINER -->
+		
+
+		<!-- BEGIN FOOTER -->
+		<div class="page-footer">
+			<div class="page-footer-inner">
+				© 2016 Galaxy,  <a href="javascript:void();" title="" target="_blank"> Pacific Controls LLC.</a>
+			</div>
+			<div class="scroll-to-top">	<i class="fa fa-arrow-circle-o-up"></i></div>
+		</div>
+		<!-- END FOOTER -->
+
+	
+
+	
+	<!-- Modal Notification-->
+	<div class="modal fade" id="dbnotification" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">Notification</h4>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div id="dbnotification-content" style="padding: 10px 25px;"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+		
+	<!-- Modal Filter-->
+	<div id="gadgetfilteroptions" style="display:none;">
+		<div class="options" style="margin-top: 15px;">
+			<form name="gadget-filter" id="gadget-filter">
+				<div class="filter-content"></div>
+				<div class="filter-footer">
+					<input type="hidden" name="gadget-filter-id" id="gadget-filter-id" value="" />
+					<a href="#" class="closebtn btn btn-primary">Close</a>
+					<a href="#" id="save" type="button" class="btn btn-primary" onclick="FnApplyGadgetFilter(this)">Show</a>
+				</div>
+			</form>
+		</div>
+	</div>
+	
+	<!-- Modal Data Visual-->
+	<div id="gadgetdataviewoptions" style="display:none;">
+		<div class="options" style="margin-top: 25px;">
+			<form name="gadget-dataview" id="gadget-dataview">
+				<div class="dataview-content"></div>
+				<input type="hidden" name="gadget-dataview-id" id="gadget-dataview-id" value="" />
+			</form>
+		</div>
+	</div>
+	
+	<!-- Modal Skins-->
+	<div class="modal fade" id="changeSkin" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title">Change Dashboard Skin</h4>
+				</div>
+				<div class="modal-body">
+					<div class="row template-skins">
+						<a data-skin="db-blur-sunset" class="col-sm-2 col-xs-4" href=""><img src="<%=urlPrefix%><%=utils.resolveUrl('images/dashboard-skin/sunset.jpg')%>" width="133" height="86" alt=""></a>
+						<a data-skin="db-blur-yellow" class="col-sm-2 col-xs-4" href=""><img src="<%=urlPrefix%><%=utils.resolveUrl('images/dashboard-skin/yellow.jpg')%>" width="133" height="86" alt=""></a>
+						<a data-skin="db-blur-dcd" class="col-sm-2 col-xs-4" href=""><img src="<%=urlPrefix%><%=utils.resolveUrl('images/dashboard-skin/dcd.jpg')%>" width="133" height="86" alt=""></a>
+						
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+<script id="ues-gadget-toolbar-hbs" type="text/x-handlebars-template">
+	
+	<div class="ues-toolbar" style="margin-right: 10px; display:none;">
+		{{#if features.maximize}}
+		<ul class="list-inline pull-right" id="maximize">
+			<li class="text-right"><a href="Javascript:void(0)" onclick="FnMaxMinGadget(this)" data-toggle="tooltip" data-placement="top" title="Maximize"><span class="glyphicon glyphicon-fullscreen"></span></a></li>
+		</ul>
+		{{/if}}
+		{{#if features.filter}}
+		<ul class="list-inline pull-right" id="filter">
+			<li class="text-right"><a href="Javascript:void(0)" class="icon-filter" data-toggle="tooltip" title="Filter"><span class="glyphicon glyphicon-filter"></span></a></li>
+		</ul>
+		{{/if}}
+		{{#if features.exportchartpdf}}
+		<ul class="list-inline pull-right" id="exportchartpdf">
+			<li class="text-right"><a href="Javascript:void(0)" onclick="FnGadgetExport(this,'PDF')" data-toggle="tooltip" data-placement="top" title="Export as PDF"><span class="glyphicon glyphicon-print"></span></a></li>
+		</ul>
+		{{/if}}
+		{{#if features.exportchartimage}}
+		<ul class="list-inline pull-right" id="exportchartimage">
+			<li class="text-right"><a href="Javascript:void(0)" onclick="FnGadgetExport(this,'IMG')" data-toggle="tooltip" data-placement="top" title="Export as Image"><span class="glyphicon glyphicon-picture"></span></a></li>
+		</ul>
+		{{/if}}
+		{{#if features.exportgridpdf}}
+		<ul class="list-inline pull-right" id="exportgridpdf">
+			<li class="text-right"><a href="Javascript:void(0)" onclick="FnGridExportPDF(this)" data-toggle="tooltip" data-placement="top" title="Export as PDF"><span class="glyphicon glyphicon-print"></span></a></li>
+		</ul>
+		{{/if}}
+		{{#if features.exportgridexcel}}
+		<ul class="list-inline pull-right" id="exportgridexcel">
+			<li class="text-right"><a href="Javascript:void(0)" onclick="FnGridExportExcel(this)" data-toggle="tooltip" data-placement="top" title="Export as Excel"><span class="glyphicon glyphicon-list-alt"></span></a></li>
+		</ul>
+		{{/if}}
+		{{#if features.refresh}}
+		<ul class="list-inline pull-right" id="refresh">
+			<li class="text-right"><a href="Javascript:void(0)" onclick="FnGadgetResetFilters(this)" data-toggle="tooltip" data-placement="top" title="Refresh"><span class="glyphicon glyphicon-refresh"></span></a></li>
+		</ul>
+		{{/if}}
+		{{#if features.dataview}}
+		<ul class="list-inline pull-right" id="dataview">
+			<li class="text-right"><a href="Javascript:void(0)" class="icon-visual" data-toggle="tooltip" title="Chart Library"><span class="glyphicon glyphicon-menu-hamburger"></span></a></li>
+		</ul>
+		{{/if}}
+	</div>
+	
+	
+</script>
+<script src="<%=urlPrefix%>js/handlebars-v1.3.0.js"></script>	
+<script src="<%=urlPrefix%>plugins/jquery.min.js"></script>
+<script src="<%=urlPrefix%>js/webui-popover/jquery.webui-popover.min.js"></script>
+
+<!-- TODO fix shindig url -->
+<script src="/shindig/gadgets/js/container:open-views:opensearch:rpc:xmlutil:pubsub-2.js?c=1&debug=1&container=default"></script>
+<script src="<%=urlPrefix%>js/ues.js"></script>
+<script src="<%=urlPrefix%>js/ues-prefs.js"></script>
+<% include('/controllers/includes/common-scripts.jag'); %>
+<% include('/controllers/includes/dashboard-scripts.jag'); %>
+<script src="<%=urlPrefix%>js/ues-gadgets.js"></script>
+<script src="<%=urlPrefix%>js/ues-dashboards.js"></script>
+<script src="<%=urlPrefix%>extensions/components/gadget/index.js"></script>
+<script src="<%=urlPrefix%>extensions/components/widget/index.js"></script>
+<script src="<%=urlPrefix%>extensions/uris/local/index.js"></script>
+<script src="<%=urlPrefix%>extensions/uris/store/index.js"></script>
+<% include('/controllers/includes/theme-dashboard-scripts.jag'); %>
+
+<script src="<%=urlPrefix%>js/KendoUI/jszip.min.js"></script>
+<script src="<%=urlPrefix%>js/KendoUI/kendo.all.min.js"></script>
+<script src="<%=urlPrefix%>js/KendoUI/kendo.custom.js"></script>
+
+<script src="<%=urlPrefix%>plugins/jquery-ui/jquery-ui.min.js"></script>
+<script src="<%=urlPrefix%>js/jquery.navgoco.js"></script>
+<script src="<%=urlPrefix%>plugins/bootstrap/js/bootstrap.min.js"></script>
+
+<script type="text/javascript">
+	var defaultFacility = '<%=session.get('default-facility')%>';		
+	if(uesdashboardview){
+		ues.dashboards.render($('#wrapper'), ues.global.dashboard, ues.global.page);
+	}
+</script>
+
+<script type="text/javascript">
+
+
+		
+	 $(document).ready(function(){
+	 
+		$('[data-toggle="tooltip"]').tooltip();
+		
+		$(document).on('focus',".input_date", function(){
+		
+				if($('#'+$(this).attr('id')).hasClass("monthyear")){
+					var VarDisFormat = 'yy-mm';
+				} else if($('#'+$(this).attr('id')).hasClass("year")) {
+					var VarDisFormat = 'yy';
+				} else {
+					var VarDisFormat = 'yy-mm-dd';
+				}
+		
+				$(".input_date").datepicker({
+						changeMonth: true,
+						changeYear: true,																			
+						minDate: "-20y",
+						maxDate: new Date(),
+						defaultDate:new Date(),					
+						dateFormat: VarDisFormat,
+						onSelect: function (dateText) {
+							var VarTmpId = $(this).closest('#gadget-filter').attr('id');
+							var VarCurFld = $(this).attr('id');
+							$('#'+VarTmpId+' #'+VarCurFld).val(dateText);
+						},
+						beforeShow: function(dateText, datePicker) {
+							  //below code is written to fix the issue of resetting the datepicker year when change the month for the first time. 
+							  if ($(this).datepicker("getDate") == null) {
+							   // $(this).datepicker('setDate', new Date());	
+								$('#gadgetfilteroptions').find(".input_date").datepicker('setDate', new Date());
+							  }	
+															
+					  }
+				});
+		});	
+			
+			 		
+		$("#userlogout").click(function() {
+			$("#userlogoutsec").toggle("slow");
+		});
+				
+	});
+	
+	
+	
+	$(document).ready(function(){
+		
+       //Navigation Menu Slider
+        $('#nav-expander').on('click',function(e){
+      		e.preventDefault();
+      		$('body').toggleClass('nav-expanded');
+      	});
+      	$('#nav-close').on('click',function(e){
+      		e.preventDefault();
+      		$('body').removeClass('nav-expanded');
+      	});
+
+      	// Initialize navgoco with default options
+        $(".main-menu").navgoco({
+            caret: '<span class="caret"></span>',
+            accordion: false,
+            openClass: 'open',
+            save: true,
+            cookie: {
+                name: 'navgoco',
+                expires: false,
+                path: '/'
+            },
+            slide: {
+                duration: 300,
+                easing: 'swing'
+            }
+        });
+
+      });
+	
+</script>
+</body>
+</html>

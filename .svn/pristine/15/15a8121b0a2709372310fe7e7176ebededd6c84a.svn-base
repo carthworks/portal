@@ -1,0 +1,186 @@
+<%
+	var APPCONF = require('/configs/appconfig.jag');
+	var APICONF = require('/configs/apiproperties.jag');
+	var usr = require('/modules/user.js');
+	include(utils.resolvePath('templates/portal-header.jag'));
+	include('/controllers/includes/theme-portal-styles.jag');
+%>
+	<link href="<%=urlPrefix%>css/jquery-custom-scrollbar/jquery.mCustomScrollbar.css" rel="stylesheet" type="text/css" />
+	<style type="text/css">
+		#grid-view .k-grid-header .k-header {
+			background-color: #f44336;
+		}
+
+		#grid-view .k-header a.k-link, .k-grid-header th{
+			color: #000 !important;
+		}
+
+		.alert-danger {
+			background-color: #f2dede;
+			border-color: #ebccd1;
+			color: #a94442;
+		}
+		
+		.form-control-custom {
+			height: 20px;
+			padding: 6px 12px;
+			font-size: 14px;
+			color: #555;
+			border: 1px solid #ccc;
+			border-radius: 4px;
+			width: 85%;
+		}
+		
+		.diviceactions a {
+			margin: 2px;
+		}
+		div#gapp-device-list td a {
+			color: #f44336;
+		}
+		
+		#tenantSection {
+			background-color: #F3F3F3;
+			box-shadow: -8px -3px 17px -10px #797979 inset;
+		}
+		
+		.leftbar-clientlist{
+			padding: 5px 10px;
+		}
+	
+	.search-client{
+	    height: 20px;
+    padding: 6px 12px;
+    font-size: 14px;
+    color: #555;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 85%;
+	margin-bottom:15px;
+	}
+	
+	span.k-in > span.highlight {
+    background: #7EA700;
+    color: #ffffff;
+    border: 1px solid green;
+    padding: 1px;
+}
+
+	span.k-in > span.highlight {
+		background:orange
+	}		
+	</style>
+</head>
+<body class="page-md page-header-fixed page-quick-sidebar-over-content page-footer-fixed  page-full-width">
+	<div class="se-pre-con"></div>
+	<% include(utils.resolvePath('templates/global-header.jag')); %>
+	
+	<!-- BEGIN CONTAINER -->
+	<div class="page-container">		
+		<!-- BEGIN CONTENT -->
+		<div class="page-content-wrapper">
+				<div class="gapp-header">
+				<% include(utils.resolvePath('templates/leftnavigation.jag')); %>
+				<h3 class="page-title">	Device Management  </h3>
+				<div class="page-bar">
+					<ul class="page-breadcrumb">
+						<li>
+							<i class="fa fa-home"></i>
+							<a href="Javascript:void(0)" onclick="FnBreadCrumbHome()">Home</a>
+							<i class="fa fa-angle-right"></i>
+						</li>
+						<li>						
+							<a href="Javascript:void(0)" onclick="FnNavigateDeviceList()">Device</a>
+							<i class="fa fa-angle-right"></i>
+						</li>
+						
+						<li>
+							<a href="Javascript:void(0)">Assign Device</a>
+						</li>
+						
+					</ul>
+				</div>
+						</div>
+			<div class="page-content">
+				<!-- BEGIN PAGE CONTENT-->
+				<div class="row">
+					<div class="col-md-12">
+						<div class="portlet dark  light bordered device-listview">
+							<div class="portlet-title">
+								<div class="caption font-red-sunglo ">
+									<i class="pageheadericon pageheader-deviceicon"></i>
+									<span class="caption-subject bold uppercase">Assign Devices</span>
+								</div>
+								<div class="actions">
+									<div class="form-actions">
+									<button type="button" class="btn btn-raised default" name="device_cancel_btn" id="device_cancel_btn" onclick="FnNavigateDeviceList()"><i class="icon-close icons" aria-hidden="true"></i>Cancel</button>
+									<% if(ObjPageAccess['assign'] == '1') { %>
+									<button type="button" class="btn  btn-raised btn-danger" name="device_save_btn" id="device_save_btn" onclick="FnSaveDevices()"><i class="icon-check icons" aria-hidden="true"></i>Save</button>
+									<% } %>
+								</div>
+								</div>
+							</div>
+							<div class="portlet-body">
+								<div id="splitter" style="height: 495px;">
+									<div id="tenantSection">
+										<div class="leftbar-clientlist">
+											<input id="treeViewSearchInput" class="search-client" placeholder="Search Client"></input>
+											<div id="gapp-clients-list"></div>
+										</div>
+									</div>
+									<div id="deviceSection">							
+										<div id="gapp-devices-list"></div>							
+									</div>
+								</div>
+								<form action="<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/device/mapping" name="gapp-device-map" id="gapp-device-map"  role="form" method="post">
+									<input type="hidden" name="tenant_map_info" id="tenant_map_info" />
+									<input type="hidden" id="gapp-tenant-key" name="gapp-tenant-key" value="<%=VarTenantKey%>" />
+								</form>
+								<form id="gapp-device-list" role="form" action="<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/device/list" name="gapp-device-list" method="post">
+									<input type="hidden" id="gapp-tenant-key" name="gapp-tenant-key" value="<%=VarTenantKey%>" />
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- END PAGE CONTENT-->
+			</div>
+		</div>
+		<!-- END CONTENT -->
+	</div>
+	<!-- END CONTAINER -->
+	<% include(utils.resolvePath('templates/global-footer.jag')); %>
+	
+	<script type="text/x-kendo-template" id="clientSearchtemplate">
+		<div class="toolbar" >
+			<input type="text" id="searchClientId" class="form-control-custom" placeholder="Search Client"/>
+		</div>
+	</script>
+	
+	<% 
+		include(utils.resolvePath('templates/portal-footer.jag'));
+		include('/controllers/includes/theme-portal-scripts.jag');
+	%>
+	
+	<script id="mapping-confirmation" type="text/x-kendo-template">
+		<p class="mapping-message">Do you want continue with mappoints ?</p>
+		<button class="mapping-confirm k-button" style="width: 80px;">Yes</button>
+		<button class="mapping-cancel k-button" style="width: 80px;">No</a>
+	</script>
+	
+	<script type="text/javascript">
+		var VarListUnsubscribedUrl = '<%=APICONF.GAPP_SERVICES.claim.unsubscribed%>';
+		var VarHierarchyChildrenUrl = '<%=APICONF.GAPP_SERVICES.hierarchy.immediatechildren%>';
+		var VarSearchDeviceUrl = '<%=APICONF.GAPP_SERVICES.device.search%>';
+		var VarSearchAssignDeviceUrl= '<%=APICONF.GAPP_SERVICES.device.assignsearch%>';
+		var VarDeviceClaimUrl= '<%=APICONF.GAPP_SERVICES.device.claim%>';
+		var VarClaimDeviceURL = '<%=APICONF.GAPP_SERVICES.claim.claimdevice%>';
+		var VarAssignDeviceUrl = '<%=APICONF.GAPP_SERVICES.device.assignbulk%>';
+		var VarAppRootDomain = '<%=APPCONF.GAPP_CONF.MY_DOMAIN_NAME%>';
+		var ObjPageAccess = $.parseJSON('<%=ObjPageAccess%>');
+		var VarCurrentTenantInfo = $.parseJSON('<%=VarCurrentTenantInfo%>');
+	</script>
+	<script type="text/javascript" src="<%=urlPrefix%><%=utils.resolveUrl('js/device/assign.js')%>"></script>
+	<script src="<%=urlPrefix%>js/jquery-custom-scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
+	
+</body>
+</html>

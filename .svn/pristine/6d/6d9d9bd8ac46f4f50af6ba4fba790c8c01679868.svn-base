@@ -1,0 +1,90 @@
+<%
+	if(VarTenantKey != ''){
+		var APPCONF = require('/configs/appconfig.jag');
+		var ObjUser = session.get('user');
+		if(utils.allowed(ObjUser['roles'],[APPCONF.GAPP_CONF.SUPER_ADMIN_ROLE])){ // SUPER ADMIN
+			var VarHomeUrl = './';
+		} else if(utils.allowed(ObjUser['roles'],[APPCONF.GAPP_CONF.CLIENT_ADMIN_ROLE])){ // CLIENT ADMIN
+			var VarHomeUrl = './clienthome';
+		} else {
+			var VarHomeUrl = './userhome';
+		}
+	}
+%>
+<style>
+	.galaxy-logo{
+	background-image:url("<%=urlPrefix%><%=utils.resolveUrl('images/Galaxy-logo2.png')%>");
+	    width: 130px;
+    height: 73px;
+    display: inline-block;
+    background-repeat: no-repeat;
+    position: relative;
+    top: 14px;
+	}
+	
+		.GAP_pages .dropdown-user a span.img_svg{    
+		background-color: #535353;
+    padding: 2px;
+    border-radius: 0px;
+    width: 30px;
+    height: 30px;
+	display:inline-block;
+    border-radius: 50%;}
+	
+	.GAP_pages .dropdown-user a svg{
+           width: 23px;
+    height: 20px;
+    padding-top: 4px!important;
+    padding-left: 2px!important;
+    margin-top: 2px;}
+	
+	.GAP_pages .dropdown-user a svg path{fill:#fff}
+.GAP_pages .dropdown-user a {padding-top: 5px!important;}
+
+.GAP_pages .username{position:relative;top: -5px;}
+	</style>
+	
+<!-- BEGIN HEADER -->
+<div class="page-header md-shadow-z-1-i navbar navbar-fixed-top GAP_pages">
+	<!-- BEGIN HEADER INNER -->
+	<div class="page-header-inner">
+		<!-- BEGIN LOGO -->
+		<div class="page-logo">
+		<h3 class="capitalize homeHeaderTxt" style="text-transform: uppercase!important;"><%=VarTenantKey%></h3>
+				<!-- <img src="dist/assets/admin/layout/img/logo.png" alt="logo" class="logo-default"/> -->
+			<div class="menu-toggler sidebar-toggler hide">
+				<!-- DOC: Remove the above "hide" to enable the sidebar toggler button on header -->
+			</div>
+		</div>
+		<!-- END LOGO -->
+		<!-- BEGIN RESPONSIVE MENU TOGGLER -->
+		<a href="javascript:;" class="menu-toggler responsive-toggler" data-toggle="collapse" data-target=".navbar-collapse"></a>
+		<!-- END RESPONSIVE MENU TOGGLER -->
+		<% if (user) { %>
+		<!-- BEGIN TOP NAVIGATION MENU -->
+		<div class="top-menu GAP_pages">
+			<ul class="nav navbar-nav pull-right ">
+					<li class="dropdown dropdown-user">
+						<a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+							<span class="username username-hide-on-mobile" style="position: relative;top: -3px;"><%=user.username%> </span>
+							<span class="img_svg"><img alt="" src="<%=urlPrefix%><%=utils.resolveUrl('images/home/users/user_2.svg')%>" class="svg"></span>
+						</a>
+					</li>		
+					<li class="home_icon">
+						<a href="<%=tenantedUrlPrefix%><%=VarHomeUrl%>"><span class="glyphicon glyphicon-home"></span></a>
+					</li>
+					<li class="logout_icon">
+						<a href="<%=urlPrefix%>logout"><span class="glyphicon glyphicon-log-out"></span></a>
+					</li>
+			<!-- END USER LOGIN DROPDOWN -->	
+			</ul>
+			
+
+		</div>
+		<!-- END TOP NAVIGATION MENU -->
+		<% } %>
+	</div>
+	<!-- END HEADER INNER -->
+</div>
+<!-- END HEADER -->
+<div class="clearfix"></div>

@@ -1,0 +1,123 @@
+<%
+var message;
+var dest;
+var username;
+var password;
+var credentials;
+var log = new Log();
+
+(function() {
+    var method = request.getMethod();
+    dest = request.getParameter('destination');
+	
+    if (method === 'POST') {
+       		
+        username = request.getParameter('username');
+		password = request.getParameter('password');
+		
+		credentials = false;
+		
+		try {
+		
+			if(username !='' && password !=''){
+				
+				var APPCONF = require('/configs/appconfig.jag');
+										
+				if(username.indexOf(APPCONF.GAPP_CONF.AT_SYMBOL) != -1){
+					username = username + APPCONF.GAPP_CONF.DOT_SYMBOL + APPCONF.GAPP_CONF.LOGIN_DOMAIN;
+				} else {
+					username = username + APPCONF.GAPP_CONF.AT_SYMBOL + APPCONF.GAPP_CONF.LOGIN_DOMAIN;
+				}
+												
+				var VarPostData = {"userName":username,"password":password};
+				var VarLoginUrl = APPCONF.GAPP_CONF.LOGIN_SCHEME + "://" + APPCONF.GAPP_CONF.LOGIN_HOST + ":" + APPCONF.GAPP_CONF.LOGIN_PORT + APPCONF.GAPP_CONF.LOGIN_URL;
+								
+				xhr = new XMLHttpRequest();
+				xhr.open('POST', VarLoginUrl);
+				xhr.setRequestHeader("Content-Type", "application/json");
+				xhr.setRequestHeader("Accept", "application/json");
+				xhr.send(VarPostData);
+				var VarResponse = parse(xhr.responseText);
+				
+				log.info(xhr.responseText);
+				log.info(VarResponse['accessToken']);
+				
+				if(APPCONF.GAPP_CONF.APP_LOG_INIT == '1'){
+					include('applicationlogs.jag');
+					FnWriteLog("POST",VarLoginUrl,VarPostData,VarResponse);
+				}				
+								
+				if(VarResponse['accessToken'] != null && VarResponse['userName'] != null){
+				
+					var ObjUser = {
+						"name": VarResponse['userName'],
+						"domain" : "carbon.super",
+						"username" : VarResponse['userName'],
+						"roles" : VarResponse['roleNames'],
+						"accessToken" : VarResponse['accessToken'],
+						"refreshToken" : VarResponse['refreshToken'],
+						"tokenType" : VarResponse['tokenType'],
+						"scope" : VarResponse['scope'],
+						"expiresin" : VarResponse['expireIn'],
+						"permissions" : VarResponse['premissions'],
+						"entityType" : VarResponse['tenant']['platformEntityType'],
+						"entityTemplate" : VarResponse['tenant']['entityTemplateName'],
+						"tenantName" : VarResponse['tenant']['tenantName'],
+						"tenantId" : VarResponse['tenant']['tenantId'],
+						"tenantDomain" : VarResponse['tenant']['currentDomain'],
+						"parentDomain" : VarResponse['tenant']['domainName']
+					};
+								
+					session.put('user', ObjUser);
+					session.put('authToken', VarResponse['accessToken']);
+					
+					var ObjDate = new Date();
+					var VarTime = (ObjDate.getTime()).toFixed();
+									
+					if(utils.allowed(VarResponse['roleNames'],[APPCONF.GAPP_CONF.SUPER_ADMIN_ROLE])){ // SUPER ADMIN
+						
+						ObjParent = {"tenantName":VarResponse['tenant']['tenantName'],"tenantDomain":VarResponse['tenant']['currentDomain'],"parentDomain":VarResponse['tenant']['domainName'],"time":VarTime,"tenantId":VarResponse['tenant']['tenantId']};
+						session.put('PARENT_CLIENT', ObjParent);					
+						response.sendRedirect(APPCONF.GAPP_CONF.CONTEXT_PATH+'/');
+						return;
+						
+					} else if(utils.allowed(VarResponse['roleNames'],[APPCONF.GAPP_CONF.CLIENT_ADMIN_ROLE])){ // CLIENT ADMIN
+						
+						ObjParent = {"tenantName":VarResponse['tenant']['tenantName'],"tenantDomain":VarResponse['tenant']['currentDomain'],"parentDomain":VarResponse['tenant']['domainName'],"time":VarTime,"tenantId":VarResponse['tenant']['tenantId']};
+						session.put('PARENT_CLIENT', ObjParent);
+						response.sendRedirect(APPCONF.GAPP_CONF.CONTEXT_PATH+'/clienthome');
+						return;
+					
+					} else {
+						
+						ObjParent = {"tenantName":VarResponse['tenant']['tenantName'],"tenantDomain":VarResponse['tenant']['currentDomain'],"parentDomain":VarResponse['tenant']['domainName'],"time":VarTime,"tenantId":VarResponse['tenant']['tenantId']};
+						session.put('PARENT_CLIENT', ObjParent);
+						response.sendRedirect(APPCONF.GAPP_CONF.CONTEXT_PATH+'/userhome');
+						return;
+					
+					}
+				} else {
+					credentials = false;
+					throw "Invalid credentials. Please try again.";
+				}
+			
+			} else {
+				credentials = true;
+				throw "Username / Password not provided.";
+			}
+		
+		} catch (err){
+		
+			if(credentials) {
+				message = err;
+			} else {
+				message = 'Invalid credentials. Please try again.';
+			}
+			
+		}
+		
+    }
+
+    include(utils.resolvePath('templates/login.jag'));
+	
+}()); %>

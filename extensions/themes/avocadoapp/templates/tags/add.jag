@@ -1,0 +1,413 @@
+<%
+	var APPCONF = require('/configs/appconfig.jag');
+	var APICONF = require('/configs/apiproperties.jag');
+	var usr = require('/modules/user.js');
+	include(utils.resolvePath('templates/portal-header.jag'));
+	include('/controllers/includes/theme-portal-styles.jag');
+%>
+	<!-- Style sheet for Tag(Geo Map) section -->
+	<link rel="stylesheet" type="text/css" href="<%=urlPrefix%><%=utils.resolveUrl('css/jquery-gmaps-latlon-picker.css')%>" />
+	
+	<style type="text/css">
+		.portlet-title { min-height: 12px !important; padding:0; }
+		.form .form-section {
+			margin: 12px 0px 22px 0px;
+			padding-bottom: 12px;
+		}
+					
+		form-group.form-md-line-input {margin: 0 !important;}
+		.portlet.light {padding: 12px 20px 0px 20px !important;	}
+		.dark{background-color: #f7f7f7;}
+		
+		div.fileUpload {
+			position: relative;
+			overflow: hidden;
+			margin: 10px;
+			background-image: url("<%=APPCONF.GAPP_CONF.APP_DOMAIN_ROOT_URL+APPCONF.GAPP_CONF.DOMAIN_IMG_PATH+APPCONF.GAPP_CONF.DOMAIN_IMG_DEFAULT+APPCONF.GAPP_CONF.DOMAIN_IMG_ASSET+"/"%>/asset_placeholder.png");
+			background-size: 200px 200px;
+			background-color: #BDBDBD;
+			height: 200px;
+			width: 200px;
+			text-align: center;
+		}
+		div.fileUpload input.upload {
+			position: absolute;
+			top: 0;
+			right: 0;
+			margin: 0;
+			padding: 0;
+			font-size: 20px;
+			cursor: pointer;
+			opacity: 0;
+			filter: alpha(opacity=0);
+			height: 100%;
+			text-align: center;
+			    z-index: 99;
+		}
+		
+	  div.fileUpload input.upload + img  {position: absolute;
+		top: 0;
+		left: 0;
+		z-index: 9;}
+			.custom-span{  font-family: Arial;
+		font-weight: bold;
+		font-size: 25px;
+		color: #fff;
+		/* padding: 10px; */
+		float: left;
+	}
+	#uploadFile{border: none;margin-left: 10px; width: 200px;}
+	.custom-para{    font-family: arial;
+    /* font-weight: bold; */
+    font-size: 13px;
+    color: #fff;
+    text-align: left;
+    float: left;
+    margin: 0;
+    padding: 0px 6px;}
+		
+	.upload-addicon	{
+	    display: inline-block;
+    position: absolute;
+    bottom: 0;
+    width: 40px;
+    /* height: 40px; */
+    width: 100%;
+    z-index: 99;
+    left: 0;
+    text-align: left;
+    background: rgba(0, 0, 0, 0.7);
+    height: 32px;
+    line-height: 30px;
+    padding: 0px 10px;
+	}
+	
+	/*--- Start:Styles for Tag section ---*/
+	.tag-wrapper{
+		display:none;
+		position:relative;
+		background-color:#fff;
+		height:500px;
+	}    
+	.tag-wrapper hr{
+		border: 0;
+		height: 0;
+		border-top: 1px solid rgba(0, 0, 0, 0.1);
+		border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+	}    
+	.gllpMap {   
+		width: 100% !important;
+	}
+	.geo-tag-inputs input{
+		border: none;
+        height: 25px;
+        text-align: center;
+        margin-left: 10px;
+        margin-right: 10px;
+	}
+	
+	/*--- End: Styles for Tag Section  ---*/
+
+	.k-multiselect-wrap li.k-button {
+			background-color: #f44336;
+			color: #FFFFFF;
+			border-radius: 5px;
+			font-size:13px;
+			margin-top: 9px;
+	}	
+	</style>
+</head>
+<body class="page-md page-header-fixed page-quick-sidebar-over-content page-footer-fixed  page-full-width"  >
+<div class="se-pre-con"></div>
+	<% include(utils.resolvePath('templates/global-header.jag')); %>
+<!-- BEGIN CONTAINER -->
+	<div class="page-container">
+		<!-- BEGIN CONTENT -->
+		<div class="page-content-wrapper">
+			<div class="gapp-header">
+				<% include(utils.resolvePath('templates/leftnavigation.jag')); %>
+				<h3 class="page-title">	Tag Management  </h3>
+				<div class="page-bar">
+					<ul class="page-breadcrumb">
+						<li>
+							<i class="fa fa-home"></i>
+							<a href="Javascript:void(0)" onclick="FnBreadCrumbHome()">Home</a>
+							<i class="fa fa-angle-right"></i>
+						</li>
+						<li>
+							<a href="Javascript:void(0)" onclick="FnNavigateAssetList()">Tags</a>
+							<i class="fa fa-angle-right"></i>
+						</li>
+						<li>
+							<a href="Javascript:void(0)" class="pageTitleTxt"><% if(VarEntityId != '') { %> View Tag <% } else { %> Create Tag <% } %></a>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="page-content">
+				<!-- BEGIN PAGE CONTENT-->
+				<div class="row">
+					<div class="col-md-12">	
+						<div class="portlet light bordered">
+							<div class="portlet-title">
+								<div class="caption font-red-sunglo">
+									<!--<i class="pageheadericon pageheader-assetsicon"></i>-->
+									<i class="fa fa-tags aria-hidden=" true"=""></i>
+									<span class="caption-subject bold uppercase pageTitleTxt"> <% if(VarEntityId != '') { %> View Tag <% } else { %> Create Tag <% } %> </span>
+								</div>
+								<div class="actions">
+								<% if(ObjPageAccess['edit']=='1') { %>
+										<a id="gapp-asset-edit" class="btn btn-raised btn-edit red" href="Javascript:void(0)" onclick="FnEditAsset()">
+											<i class="icon-note icons"></i>Edit
+										</a>
+									
+								<% } %>												
+									<button type="button" class="btn btn-raised default" name="gapp-asset-cancel" id="gapp-asset-cancel" data-toggle="modal"   onclick= "FnCancelAsset()" tabindex="15"><i class="icon-close icons" aria-hidden="true"></i>Cancel</button>							
+									<button type="button" class="btn  btn-raised btn-danger" name="gapp-asset-save" id="gapp-asset-save" onclick="FnSaveAsset()" tabindex="16"><i class="icon-check icons" aria-hidden="true"></i>Save</button>
+								</div>
+							</div>
+							<!-- END title-->							
+														
+							<div class="portlet-body form" style="min-height: 540px;">
+								<form name="gapp-asset-form" id="gapp-asset-form" method="post" role="form" autocomplete="off" enctype="multipart/form-data">
+									<div class="row">
+										<div class="col-md-12">										
+											<br>
+											<!-- Begin: Col-2 -->
+											<div class="col-md-6">												
+											
+												
+												<!-- Type -->
+												<div class="form-group form-md-line-input">		
+													<select class="form-control" name="assetType" id="assetType" required="true" data-required-msg="Please select a tag type"  placeholder=""Please select a category" tabindex="2" onchange="FnGetAssetFields()">
+														<option value=""> Please select a category</option>																		
+													</select>		
+													<label class="col-md-12 control-label" for="assetType">Tag Type <span class="required" aria-required="true"> * </span></label>
+													<div class="form-control-focus"></div>
+												</div>	
+												<!-- END Type -->
+												
+													<div class="" id="fieldsSection" style="display:none">									
+												<div class="portlet1 dark bordered">
+													<div class="portlet-body form">
+														<div class="form-body">							
+															<div class="col-md-12" id="fieldsContainer"></div>
+															<div class="clearfix"></div>									
+														</div>
+													</div>
+												</div>									
+											</div>
+
+													
+											</div>			
+											<!-- End: Col-2 -->
+											
+											
+											<div class="col-md-6">			
+												<!-- BEGIN ROLENAME -->
+											<div class="form-group form-md-line-input">
+												
+												<select class="form-control" name="roleName" id="roleName" multiple="multiple"  tabindex="5"></select>
+												<label class="col-md-12 control-label" for="form_control_1">Assign To</label>
+												<div class="form-control-focus"></div>
+											</div>
+											<!-- END ROLENAME -->
+											</div>
+																					
+											
+											
+											<div style="clear:both"></div>
+											<% if(VarEntityId != ''){ %>
+											<div class="col-md-12 animated slideInUp">
+												<div id="gapp-assetpoint-list"></div>
+											</div>
+											<% } %>
+											
+										</div> 										
+									</div>
+									<input type="hidden" id="gapp-tenant-domain" name="gapp-tenant-domain" value="<%=VarTenantKey%>" />
+									
+								<!-- ***Start Tagging section*** -->
+									<div class="tag-wrapper" id="tag-wrapper">
+										<!--
+										<div class="portlet-title">
+											<div class="caption">
+												<hr/>
+												<i class="fa fa-tags  font-red-sunglo" aria-hidden="true"></i>
+												<span class="caption-subject  font-red-sunglo uppercase" style="font-weight:bold;">Tags </span>
+											</div>
+										</div>--><!-- eof-portlet-title -->
+										<div class="portlet-body">
+											<hr>
+											<div class="col-md-6 left-pane" id="portlet-body-left-pane">
+												<div class="map-content" style="border:1px solid #dbdbdb;margin-top:12px;">					
+													<div class="modal-header bg-green-meadow" style="background:#fff!important;color:#f44336!important;border:none!important;">
+														<h4 class="modal-title" style="font-size:14px!important;font-weight:bold!important;"><i class="fa fa-map-marker"></i>&nbsp;Geo Location</h4>
+													</div>	
+
+													<div class="map-body" style="background:#e5e5e5;">
+														<fieldset class="gllpLatlonPicker">
+															<div class="form-group col-md-12">										
+																<div class="input-group" style="margin-top: 10px;">
+																	<div class="input-icon">
+																		<i class="fa fa-street-view"></i>
+																		<input  type="text" class="form-control gllpSearchField" placeholder="Type the location name"  name="password" placeholder="password">
+																	</div>
+																	<span class="input-group-btn" margin="top:15px;">
+																		<button  class="btn default gllpSearchButton" type="button"   value="search"><i class="fa fa-arrow-left fa-fw"></i> Search</button>
+																	</span>
+																</div>
+																	
+																<div>
+																	<div class="gllpMap" width="100%">Google maps loading...</div>
+																</div>
+																	
+																<div class="col-md-12 geo-tag-inputs" style="margin: 16px 0 0 0;">
+																	Latitude:<input type="text" class="gllpLatitude"  id="gllpLatitude" value="25.2048493"/>	
+																	Longitude:<input type="text" class="gllpLongitude"  id="gllpLongitude" value="55.270782"/>	
+																	Zoom:<input type="text" class="gllpZoom" style="width:50px;" value="3"/>	
+																	<span class="glyphicon glyphicon-search gllpUpdateButton" style="cursor:pointer;"></span>
+																</div>
+															</div>
+														</fieldset>								
+													</div><!-- map-body-->	
+													
+													<div class="modal-footer" style="padding:12px 15px 0px 0px!important;">				
+														<!--<span>
+															<strong>Latitude: </strong> <span id="tag-latitude-display-value">n/a</span>
+															<strong>|</strong> 
+															<strong>Longitude: </strong><span id="tag-longitude-display-value">n/a</span>
+														</span>-->
+														<span>
+															<strong><span id="tag-latitude-longitude-display-value"></span></strong>
+															
+															
+														</span>
+														<button type="button" id="add-geo-tag" class="btn green" data-dismiss="modal"><i class="fa fa-tags " aria-hidden="true"></i><span id="geo-tag-label">Tag</span></button>
+														<button type="button" id="clear-geo-tag" class="btn default" data-dismiss="modal"><i class="fa fa-refresh" aria-hidden="true"></i>Clear</button>
+														<input type="hidden" class="form-control input-xs " name="tag-latitude" id="tag-latitude" placeholder="latitude"/>
+														<input type="hidden" class="form-control input-xs" name="tag-longitude" id="tag-longitude" placeholder="longitude"/>
+														
+														<input type="hidden" class="form-control input-xs " name="tag-domain-name"     id="tag-domain-name"  />
+														<input type="hidden" class="form-control input-xs" name="tag-identifier-key"   id="tag-identifier-key" />
+														<input type="hidden" class="form-control input-xs" name="tag-identifier-value" id="tag-identifier-value" />
+														<input type="hidden" class="form-control input-xs" name="tag-entity-template-name" id="tag-entity-template-name" />
+													</div>							
+												</div><!-- map-content -->			
+
+											</div><!-- left-pane-->
+											
+											<div class="col-md-6 right-pane" id="portlet-body-right-pane">
+												<!-- right-pane-content -->
+											</div>
+										</div><!-- eof-portlet-body -->
+									</div><!-- eof-tag-wrapper -->
+								<!-- ***End Tagging section*** -->
+									
+									
+								</form>
+								<form id="gapp-asset-list" role="form" action="<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/tags/nametag/list" name="gapp-asset-list" method="post">
+									<input type="hidden" id="gapp-tenant-key" name="gapp-tenant-key" value="<%=VarTenantKey%>" />
+								</form>
+							</div>
+						</div><!-- END portlet bordered-->
+					</div><!-- END col-md-12-->
+				</div>
+				<!-- END PAGE CONTENT-->
+			</div>
+		</div>
+		<!-- END CONTENT -->
+		
+	</div>
+	<!-- END CONTAINER -->
+	<% include(utils.resolvePath('templates/global-footer.jag')); %>
+	<% 
+		include(utils.resolvePath('templates/portal-footer.jag'));
+		include('/controllers/includes/theme-portal-scripts.jag');
+	%>
+	<script type="text/javascript">
+		var VarCreateGeoTagUrl = '<%=APICONF.GAPP_SERVICES.tags.geotags.create%>';
+		var VarFindGeoTagUrl  = '<%=APICONF.GAPP_SERVICES.tags.geotags.find%>';
+		var VarUpdateGeoTagUrl = '<%=APICONF.GAPP_SERVICES.tags.geotags.update%>';
+		
+		
+		
+		var VarCreateAssetUrl = '<%=APICONF.GAPP_SERVICES.tags.nametags.create%>';
+		var VarListTemplateUrl = '<%=APICONF.GAPP_SERVICES.tags.nametags.template.list%>';
+		var VarViewTemplateUrl = '<%=APICONF.GAPP_SERVICES.tags.nametags.template.view%>';
+		var VarViewAssetUrl = '<%=APICONF.GAPP_SERVICES.tags.nametags.view%>';
+		var VarTemplateMapUrl = '<%=APICONF.GAPP_SERVICES.tags.nametags.templatemap%>';
+		
+		var VarViewMappedTemplates = '<%=APICONF.GAPP_SERVICES.tags.nametags.fetchmappedtemplates%>';
+		
+		
+		
+		var VarUpdateAssetUrl = '<%=APICONF.GAPP_SERVICES.equipments.asset.update%>';
+		var VarEditAssetId = '<%=VarEntityId%>';	
+		var VarEditTagType = '<%=VarTagType%>';
+		
+		var VarLUDomainName = '<%=usr.domainName()%>';
+		var VarLUTenantName = '<%=usr.tenantName()%>';
+		var VarCurrentTenantInfo = $.parseJSON('<%=VarCurrentTenantInfo%>');
+		var VarAppImagePath = '<%=APPCONF.GAPP_CONF.DOMAIN_IMG_PATH%>';
+		var VarAppAssetImagePath = '<%=APPCONF.GAPP_CONF.DOMAIN_IMG_ASSET%>';
+		var VarAppAssetTypeImagePath = '<%=APPCONF.GAPP_CONF.DOMAIN_IMG_ASSETTYPE%>';
+		var VarAppMarkerImagePath = '<%=APPCONF.GAPP_CONF.DOMAIN_IMG_ASSETTYPE_MARKER%>';
+		var VarAppDefaultImagePath = '<%=APPCONF.GAPP_CONF.DOMAIN_IMG_DEFAULT%>';
+		var VarAppRootDomain = '<%=APPCONF.GAPP_CONF.MY_DOMAIN_NAME%>';
+		
+		function FnShowTags(){
+			$("#tag-wrapper").slideToggle();
+			setTimeout(function() {					  
+				$(".gllpLatlonPicker").each(function() {
+					$(document).gMapsLatLonPicker().init( $(this) );
+				});				  
+			}, 1000);
+		}
+		document.addEventListener('DOMContentLoaded', function () {
+			setTimeout(function() {					  
+				$(".gllpLatlonPicker").each(function() {
+					$(document).gMapsLatLonPicker().init( $(this) );
+				});				  
+			}, 1000);
+			
+			$('#add-geo-tag').on('click', function() {
+				var var_lat=$("#gllpLatitude").val();
+				var var_long=$("#gllpLongitude").val();
+				var_lat =precise_round(var_lat,7);
+				var_long =precise_round(var_long,7);
+				$('#tag-latitude').val(var_lat);
+				$('#tag-longitude').val(var_long);
+				
+				//$('#tag-latitude-display-value').html(lat);
+				//$('#tag-longitude-display-value').html(long);
+				var VarLatLongDisplay = var_lat+' , ' +var_long+' ' ;
+				var VarLatLongDisplay = var_lat+' , ' +var_long+' ' ;
+				
+				$('#tag-latitude-longitude-display-value').html(VarLatLongDisplay);
+				
+				//alert($('#tag-latitude').val());
+				//alert($('#tag-longitude').val());
+			});
+
+			$('#clear-geo-tag').on('click', function() {
+				$('#tag-latitude').val('');
+				$('#tag-longitude').val('');
+				//$('#tag-latitude-display-value').html('n/a');
+				//$('#tag-longitude-display-value').html('n/a');
+				
+				$('#tag-latitude-longitude-display-value').html('');
+			});
+		});
+		
+	</script>
+	<script type='text/javascript' src="<%=urlPrefix%>plugins/jquery.form.js"></script>
+	
+	<!-- Scripts for Tag(Geo Map) section -->
+	<script src="https://maps.googleapis.com/maps/api/js"></script>
+	<script type='text/javascript' src="<%=urlPrefix%><%=utils.resolveUrl('js/jquery-gmaps-latlon-picker.js')%>"></script>
+	<!-- Scripts for Tag(Geo Map) section -->
+	
+	<script type="text/javascript" src="<%=urlPrefix%><%=utils.resolveUrl('js/tags/add.js')%>"></script>	
+</body>
+</html>

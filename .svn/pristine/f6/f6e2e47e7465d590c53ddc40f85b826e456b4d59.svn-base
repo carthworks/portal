@@ -1,0 +1,581 @@
+<%
+	var APPCONF = require('/configs/appconfig.jag');
+	var usr = require('/modules/user.js');
+	
+%>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="UI for IOT platform">
+        <meta name="author" content="galaxy app">
+		<title>Galaxy App</title>
+		<link rel="shortcut icon" href="<%=urlPrefix%><%=utils.resolveUrl('images/favicon.ico')%>">
+		<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" />
+		<link rel="stylesheet" type="text/css" href="<%=urlPrefix%><%=utils.resolveUrl('css/font-awesome.min.css')%>" />
+		<link rel="stylesheet" type="text/css" href="<%=urlPrefix%>plugins/bootstrap/css/bootstrap.min.css" />
+		<!--<link rel="stylesheet" type="text/css" href="<%=urlPrefix%><%=utils.resolveUrl('css/metroJs.css')%>" />-->
+		<link rel="stylesheet" type="text/css" href="<%=urlPrefix%><%=utils.resolveUrl('css/animate.css')%>" />			
+		<link rel="stylesheet" type="text/css" href="<%=urlPrefix%><%=utils.resolveUrl('css/gapp.css')%>" />
+		<link rel="stylesheet" type="text/css" href="<%=urlPrefix%>css/jquery-custom-scrollbar/jquery.mCustomScrollbar.css" />  
+<link rel="stylesheet" type="text/css" href="<%=urlPrefix%><%=utils.resolveUrl('css/home.css')%>" />		
+		<style>
+		.dynamicTile{    margin-top: 20px;}
+		.tilescategoryGroup:before{background:none transparent!important}
+		.content-wrapper{
+		overflow: visible;
+		    display: inline-block;
+    width: 100%;
+		}
+			#wrap div.col-md-4{
+    padding: 5px;
+			}
+			.tilecaption{
+			    text-align: left;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+font-size: 14px; font-size: 0.9vw;
+			}
+
+@media (min-width: 768px) { .tilecaption{font-size: 14px; font-size: 1.1vw;     padding-left: 10px!important;} }
+@media (min-width: 368px) { .tilecaption{font-size: 14px; font-size: 2.4vw;     padding-left: 10px!important;} }
+@media (min-width: 992px) { .tilecaption{font-size: 14px; font-size: 1vw;    padding-left: 3px!important; }}
+@media (min-width: 1200px) {.tilecaption{ font-size: 14px; font-size: 0.9vw;     padding-left: 10px!important;}}
+			
+			.tile-group{margin-right:0px;}
+			.container-ss .tile_image{border:0px;}
+			.tile_style aside {    padding-top: 2%;	}
+@media (max-width: 1280px) and (min-width: 1024px), (max-height: 811px){.container-ss .tile_image {	    width: 50%; }}
+			#wrap{overflow:auto}
+			.tile_style,.tile_style aside{height:auto;}
+			.whitebar{padding: 4px 0px;}
+			
+		.tile-group h3 {
+			padding-left: 3px;
+			color: #205081 !important;
+		}
+		.last-live-tile{margin-bottom:20px;}
+		</style>	
+</head>
+<body class="outer-wrapper">
+	<div id="wrapper">
+		<header class="header">   
+			<section class="GAP_home">
+				<div class="col-md-8 col-xs-12">
+					<%
+					var VarLogoImagePath = usr.FngetClientImage(VarTenantKey);
+					if(VarLogoImagePath != ''){
+					%>
+					<img class="img-responsive" src="<%=VarLogoImagePath%>" alt="logo" style="float: left;margin-right: 10px;height:46px;padding:3px 0px;"/>
+					<% } %>
+					
+				<h3 class="capitalize homeHeaderTxt"><%=VarTenantKey%></h3></div>
+				<div class="col-md-4 col-xs-12"> 
+					<% include(utils.resolvePath('templates/socialmedia-links.jag')); %>
+				</div>
+			</section>
+		</header>
+		<section id="wrap">
+			<div class="main-content dynamicTile pt-page-scaleUpDown pt-page-delay300">
+				<div class="content-wrapper tiles panorama-sections">
+					<section class="tile-group four-wide first tilescategoryOne col-md-6">
+						<h3><strong>App</strong> Management</h3>
+						<div class="container-ss get-width">
+							<!-- Category 1 -->
+							<div class="col-lg-4 col-md-4 col-sm-3 col-xs-12">
+								<div class="live-tile exclude tile" data-mode="none" data-bounce="true">
+									<div class="tile_style">
+										<section class="home-tilebg1">
+											<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/clients/list')">
+													<!-- Wrapper for slides -->
+															<aside><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/tiles/client-manage-w.svg')%>" class="tile_image hvr-grow-shadow img-responsive "/></aside>
+											</a>
+											<section class="tilecaptionbox whitebar">
+											<div class="tilecaption">Client Management</div>
+												<div class="tileactions">
+													<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/clients/add')" data-toggle="tooltip" title="Create"><span class="home-plusicon"></span></a>
+													<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/clients/list')" data-toggle="tooltip" title="List"><span class="home-menuicon"></span></a>
+												</div>
+											</section>
+										</section>
+									</div>
+								</div>
+							</div>
+				
+							<div class="col-lg-4 col-md-4 col-sm-3 col-xs-12">
+								<div class="live-tile exclude tile" data-mode="none" data-bounce="true">
+								
+									<div class="tile_style ">
+										<section class="home-tilebg2">
+										<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/users/list')">
+												<!-- Wrapper for slides -->
+														<aside><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/tiles/user-manage-w.svg')%>" class="tile_image hvr-grow-shadow img-responsive"/></aside>
+										</a>
+										<section class="tilecaptionbox whitebar">
+										<div class="tilecaption">User Management</div>
+											<div class="tileactions">
+												<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/users/add')" data-toggle="tooltip" title="Create"><span class="home-plusicon"></span></a>
+												<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/users/list')" data-toggle="tooltip" title="List"><span class="home-menuicon"></span></a>
+											</div>
+										</section>
+										</section>
+									</div>
+									
+								</div>
+							</div>
+							
+							<div class="col-lg-4 col-md-4 col-sm-3 col-xs-12">
+								<div class="live-tile exclude tile" data-mode="none" data-bounce="true">
+								
+									<div class="tile_style ">
+									<section class="home-tilebg3">
+										<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/device/list')">
+												<!-- Wrapper for slides -->
+														<aside><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/tiles/device-manage-w.svg')%>" class="tile_image hvr-grow-shadow img-responsive"/></aside>
+										</a>
+										<section class="tilecaptionbox whitebar">
+										<div class="tilecaption">Device Management</div>
+											<div class="tileactions">
+												<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/device/add')" data-toggle="tooltip" title="Create"><span class="home-plusicon"></span></a>
+												<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/device/list')" data-toggle="tooltip" title="List"><span class="home-menuicon"></span></a>
+											</div>
+										</section>
+									</section>
+									</div>
+									
+								</div>
+							</div>
+							
+						
+							
+							<!--<div data-ss-colspan="2">
+								<div class="live-tile exclude tile2" data-mode="none" data-bounce="true">
+									<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/dashboard/list')">
+										<div class="tile_style" style="background-color: #484B62;">
+											<aside><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/dashboard.png')%>"  class="tile_image hvr-grow-shadow img-responsive"/></aside>
+											<section class="tilecaptionbox noaction">
+												<div class="tilecaption" style="color:#fff">Dashboard</div>
+											</section>
+										</div>
+									</a>
+								</div>
+							</div>
+							
+							<div data-ss-colspan="2">
+								<div class="live-tile exclude tile2" data-mode="none" data-bounce="true">
+									<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/dashboard/create')">
+										<div class="tile_style" style="background-color: #db5226;">
+											<aside><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/dashboard_designer.png')%>" class="tile_image hvr-grow-shadow img-responsive" /></aside>
+											<section class="tilecaptionbox noaction">
+												<div class="tilecaption" style="color:#fff">Dashboard Designer</div>
+											</section>
+										</div>
+									</a>
+								</div>
+							</div>-->
+							
+							<div class="col-lg-4 col-md-4 col-sm-3 col-xs-12">
+								<div class="live-tile exclude tile" data-mode="none" data-bounce="true">
+									<div class="tile_style ">
+										<section class="home-tilebg4">
+										<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/roles/list')">
+												<!-- Wrapper for slides -->
+														<aside><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/tiles/role-manage-w.svg')%>" class="tile_image hvr-grow-shadow img-responsive"/></aside>
+										</a>
+										<section class="tilecaptionbox whitebar">
+										<div class="tilecaption">Role Management</div>
+											<div class="tileactions">
+												<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/roles/add')" data-toggle="tooltip" title="Create"><span class="home-plusicon"></span></a>
+												<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/roles/list')" data-toggle="tooltip" title="List"><span class="home-menuicon"></span></a>
+											</div>
+										</section>
+									</section>
+									</div>
+									
+								</div>
+							</div>
+							
+
+							
+							<div class="col-lg-4 col-md-4 col-sm-3 col-xs-12">
+								<div class="live-tile exclude tile" data-mode="none" data-bounce="true">
+								
+									<div class="tile_style " >
+									<section class="home-tilebg5">
+										<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/ccdhome')">
+												<!-- Wrapper for slides -->
+														<aside><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/tiles/connected-w.svg')%>" class="tile_image hvr-grow-shadow img-responsive"/></aside>
+										</a>
+										<section class="tilecaptionbox whitebar">
+										<div class="tilecaption">Connected Diagnostics</div>
+											
+										</section>
+									</section>
+									</div>
+									
+								</div>
+							</div>
+							
+							<div class="col-lg-4 col-md-4 col-sm-3 col-xs-12">
+								<div class="live-tile exclude tile" data-mode="none" data-bounce="true">
+								
+									<div class="tile_style ">
+									<section class="home-tilebg6">
+										<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/geofence/list')">
+												<!-- Wrapper for slides -->
+														<aside><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/tiles/geofence-w.svg')%>" class="tile_image hvr-grow-shadow img-responsive"/></aside>
+										</a>
+										<section class="tilecaptionbox whitebar">
+										<div class="tilecaption">Geofence</div>
+											<div class="tileactions">
+												<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/geofence/create')" data-toggle="tooltip" title="Create"><span class="home-plusicon"></span></a>
+												<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/geofence/list')" data-toggle="tooltip" title="List"><span class="home-menuicon"></span></a>
+											</div>
+										</section>
+									</section>
+									</div>
+									
+								</div>
+							</div>
+							
+							<div class="col-lg-4 col-md-4 col-sm-3 col-xs-12">
+								<div class="live-tile exclude tile" data-mode="none" data-bounce="true">
+								
+									<div class="tile_style ">
+									<section class="home-tilebg11">
+										<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/device/info')">
+												<!-- Wrapper for slides -->
+														<aside><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/tiles/device-status-w.svg')%>" class="tile_image hvr-grow-shadow img-responsive"/></aside>
+										</a>
+										<section class="tilecaptionbox whitebar">
+										<div class="tilecaption">Device Status</div>
+										</section>
+									</section>
+									</div>
+									
+								</div>
+							</div>
+							
+						</div>
+						
+						
+						<h3><strong>Tag</strong> Management</h3>
+						<div class="container-ss get-width">
+						
+							<div class="col-lg-4 col-md-4 col-sm-3 col-xs-12" title="Point of Interest Type">
+								<div class="live-tile exclude tile" data-mode="none" data-bounce="true">
+								
+									<div class="tile_style">
+									<section class="home-tilebg5">
+											<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/tags/template/list')">
+											<!-- Wrapper for slides -->
+											<aside><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/tiles/tag type-w.svg')%>" class="tile_image hvr-grow-shadow img-responsive"/></aside>
+										</a>
+										<section class="tilecaptionbox whitebar">
+										<div class="tilecaption" >Tag Type</div>
+										<div class="tileactions">
+												<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/tags/template/create')" data-toggle="tooltip" title="Create"><span class="home-plusicon"></span></a>
+												<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/tags/template/list')" data-toggle="tooltip" title="List"><span class="home-menuicon"></span></a>
+											</div>
+				
+											
+										</section>
+									</section>
+									</div>
+									
+								</div>
+							</div>	
+											
+							<!-- Category 2 -->
+							<div class="col-lg-4 col-md-4 col-sm-3 col-xs-12">
+								<div class="live-tile exclude tile" data-mode="none" data-bounce="true">
+									<div class="tile_style">
+										<section class="home-tilebg1">
+											<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/tags/nametag/list')">
+												<!-- Wrapper for slides -->
+												<aside><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/tiles/tag-w.svg')%>" class="tile_image hvr-grow-shadow img-responsive "/></aside>
+											</a>
+											<section class="tilecaptionbox whitebar">
+											<div class="tilecaption">Tags</div>
+												<div class="tileactions">
+													<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/tags/nametag/create')" data-toggle="tooltip" title="Create"><span class="home-plusicon"></span></a>
+													<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/tags/nametag/list')" data-toggle="tooltip" title="List"><span class="home-menuicon"></span></a>
+												</div>
+											</section>
+										</section>
+									</div>
+								</div>
+							</div>
+							
+
+						</div>
+						
+					</section>
+					<!-- End: Category 1 -->
+			
+					<!-- Category m -->
+					<section class="tile-group four-wide panorama-section tilescategoryGroup col-md-6">
+					<div style="" class="tilescategoryTwo">
+					<h3><strong>Asset</strong> Management</h3>
+					<div class="container-ss" >
+					
+							<div class="col-lg-4 col-md-4 col-sm-3 col-xs-12">
+								<div class="live-tile exclude tile" data-mode="none" data-bounce="true">
+									<div class="tile_style " >
+									<section class="home-tilebg7">
+										<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/assets/monitoring')">
+												<!-- Wrapper for slides -->
+												<aside><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/tiles/monitoring-w.svg')%>" class="tile_image hvr-grow-shadow img-responsive"/></aside>
+										</a>
+										<section class="tilecaptionbox whitebar">
+										<div class="tilecaption">Monitoring</div>
+										</section>
+									</section>
+									</div>
+								</div>
+							</div>
+							
+							<div class="col-lg-4 col-md-4 col-sm-3 col-xs-12">
+								<div class="live-tile exclude tile" data-mode="none" data-bounce="true">
+									<div class="tile_style ">
+									<section class="home-tilebg8">
+										<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/assets/historyasset')">
+												<!-- Wrapper for slides -->
+												<aside><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/tiles/assets-history-w.svg')%>" class="tile_image hvr-grow-shadow img-responsive"/></aside>
+										</a>
+										<section class="tilecaptionbox whitebar">
+										<div class="tilecaption">Asset History</div>
+										</section>
+									</section>
+									</div>
+								</div>
+							</div>
+						
+							<div class="col-lg-4 col-md-4 col-sm-3 col-xs-12">
+								<div class="live-tile exclude tile" data-mode="none" data-bounce="true">
+									<div class="tile_style ">
+										<section class="home-tilebg9">
+										<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/equipments/template/list')">
+												<!-- Wrapper for slides -->
+														<aside><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/tiles/asset-type-w.svg')%>" class="tile_image hvr-grow-shadow img-responsive"/></aside>
+										</a>
+										<section class="tilecaptionbox whitebar">
+										<div class="tilecaption">Asset Type</div>
+											<div class="tileactions">
+												<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/equipments/template/add')" data-toggle="tooltip" title="Create"><span class="home-plusicon"></span></a>
+												<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/equipments/template/list')" data-toggle="tooltip" title="List"><span class="home-menuicon"></span></a>
+											</div>
+										</section>
+									</section>
+									</div>
+									
+								</div>
+							</div>
+							
+							<div class="col-lg-4 col-md-4 col-sm-3 col-xs-12">
+								<div class="live-tile exclude tile" data-mode="none" data-bounce="true">
+									<div class="tile_style ">
+									<section class="home-tilebg10">
+										<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/equipments/asset/list')">
+												<!-- Wrapper for slides -->
+														<aside><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/tiles/assets-w.svg')%>" class="tile_image hvr-grow-shadow img-responsive"/></aside>
+										</a>
+										<section class="tilecaptionbox whitebar">
+										<div class="tilecaption">Assets</div>
+											<div class="tileactions">
+												<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/equipments/asset/add')" data-toggle="tooltip" title="Create"><span class="home-plusicon"></span></a>
+												<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/equipments/asset/list')" data-toggle="tooltip" title="List"><span class="home-menuicon"></span></a>
+											</div>
+										</section>
+									</section>
+									</div>
+									
+								</div>
+							</div>
+							
+							<div class="col-lg-4 col-md-4 col-sm-3 col-xs-12">
+								<div class="live-tile exclude tile" data-mode="none" data-bounce="true">
+									<div class="tile_style " >
+									<section class="home-tilebg7">
+										<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/equipments/asset/details')">
+											<!-- Wrapper for slides -->
+											<aside><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/tiles/monitoring-w.svg')%>" class="tile_image hvr-grow-shadow img-responsive"/></aside>
+										</a>
+										<section class="tilecaptionbox whitebar">
+										<div class="tilecaption">Asset Details</div>
+										</section>
+									</section>
+									</div>
+								</div>
+							</div>
+							
+
+		
+
+					</div>
+					</div>
+					
+			
+					
+					
+					<div class="tilescategoryThree">
+						<h3><strong>Alarm</strong> Management</h3>
+						<div class="container-ss">
+						
+							<div class="col-lg-4 col-md-4 col-sm-3 col-xs-12">
+								<div class="live-tile exclude tile" data-mode="none" data-bounce="true">
+									<div class="tile_style " style="background-color: #00c7fc;">
+									<section class="home-tilebg11">
+										<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/alarm/console')">
+												<!-- Wrapper for slides -->
+												<aside><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/tiles/console-w.svg')%>" class="tile_image hvr-grow-shadow img-responsive"/></aside>
+										</a>
+										<section class="tilecaptionbox whitebar">
+										<div class="tilecaption">Console</div>
+										</section>
+									</section>
+									</div>
+								</div>
+							</div>
+						
+						<div class="col-lg-4 col-md-4 col-sm-3 col-xs-12">
+								<div class="live-tile exclude tile" data-mode="none" data-bounce="true">
+									<div class="tile_style " style="background-color: #165d90;">
+									<section class="home-tilebg1">
+										<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/alarm/history')">
+												<!-- Wrapper for slides -->
+												<aside><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/tiles/alarm-logs-w.svg')%>" class="tile_image hvr-grow-shadow img-responsive"/></aside>
+										</a>
+										<section class="tilecaptionbox whitebar">
+										<div class="tilecaption">Logs</div>
+										</section>
+									</section>
+									</div>
+								</div>
+							</div>
+							
+							<div class="col-lg-4 col-md-4 col-sm-3 col-xs-12">
+								<div class="live-tile exclude tile" data-mode="none" data-bounce="true">
+									<div class="tile_style ">
+										<section class="home-tilebg4">
+											<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/alarm/definition')"><!-- Wrapper for slides -->
+												<aside><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/tiles/fault-logs-thin.svg')%>" class="tile_image hvr-grow-shadow img-responsive"/></aside>
+											</a>
+											<section class="tilecaptionbox whitebar">
+												<div class="tilecaption">Alarm Definition</div>
+											</section>
+										</section>
+									</div>
+								</div>
+							</div>
+													
+						</div>
+					</div>
+					
+					<div class="tilescategoryThree">
+						<h3><strong>POI</strong> </h3>
+						<div class="container-ss last-live-tile">
+							<div class="col-lg-4 col-md-4 col-sm-3 col-xs-12" title="Point of Interest Type">
+								<div class="live-tile exclude tile" data-mode="none" data-bounce="true">
+								
+									<div class="tile_style">
+									<section class="home-tilebg5">
+											<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/pointofinterest/template/list')">
+											<!-- Wrapper for slides -->
+											<aside><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/tiles/POI-type-w.svg')%>" class="tile_image hvr-grow-shadow img-responsive"/></aside>
+										</a>
+										<section class="tilecaptionbox whitebar">
+										<div class="tilecaption" >POI Type</div>
+										<div class="tileactions">
+												<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/pointofinterest/template/add')" data-toggle="tooltip" title="Create"><span class="home-plusicon"></span></a>
+												<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/pointofinterest/template/list')" data-toggle="tooltip" title="List"><span class="home-menuicon"></span></a>
+											</div>
+				
+											
+										</section>
+									</section>
+									</div>
+									
+								</div>
+							</div>
+							
+							
+						<!-- kt -->	
+							<div class="col-lg-4 col-md-4 col-sm-3 col-xs-12 " title="Point of Interest">
+								<div class="live-tile exclude tile " data-mode="none" data-bounce="true">
+								
+									<div class="tile_style">
+									<section class="home-tilebg2">
+											<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/pointofinterest/poi/list')">
+											<!-- Wrapper for slides -->
+											<aside><img src="<%=urlPrefix%><%=utils.resolveUrl('images/home/tiles/POI-w.svg')%>" class="tile_image hvr-grow-shadow img-responsive"/></aside>
+										</a>
+										<section class="tilecaptionbox whitebar">
+										<div class="tilecaption" >POI</div>
+										<div class="tileactions">
+												<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/pointofinterest/poi/add')" data-toggle="tooltip" title="Create"><span class="home-plusicon"></span></a>
+												<a href="Javascript:void(0)" onclick="FnNavigateTargetPage('<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/pointofinterest/poi/list')" data-toggle="tooltip" title="List"><span class="home-menuicon"></span></a>
+											</div>
+											
+										</section>
+									</section>
+									</div>
+									
+								</div>
+							</div>	
+							
+						</div>
+						
+
+					
+					</div>
+					
+					</section>
+					
+					<!-- End: Category m -->
+					
+				</div>
+
+			</div>
+		</section>
+<br/><br/><br/><br/><br/><br/><br/><br/><br/>
+		<div  id="myfooter" class="page-footer-inner">&copy; 2016 Galaxy, Pacific Controls.</div> 
+	</div>
+	
+	<form action="" name="gapp-tenant-info" id="gapp-tenant-info" method="post">
+		<input type="hidden" name="gapp-tenant-key" id="gapp-tenant-key" value="<%=VarTenantKey%>" />
+	</form>
+	
+</body>
+
+	<% 
+		include('/controllers/includes/theme-portal-scripts.jag');
+	%>
+	
+  <script type='text/javascript' src="<%=urlPrefix%>plugins/jquery.min.js"></script>
+	<script type='text/javascript' src="<%=urlPrefix%>plugins/jquery-ui/jquery-ui.min.js"></script>
+	<script type='text/javascript' src="<%=urlPrefix%>plugins/bootstrap/js/bootstrap.min.js"></script>  
+	<script type='text/javascript' src="<%=urlPrefix%><%=utils.resolveUrl('js/metroJs.min.js')%>"></script>
+	<script type='text/javascript' src="<%=urlPrefix%><%=utils.resolveUrl('js/ripples.min.js')%>"></script>
+	<script type='text/javascript' src="<%=urlPrefix%><%=utils.resolveUrl('js/modernizr.js')%>"></script>
+	<script type='text/javascript' src="<%=urlPrefix%><%=utils.resolveUrl('js/jquery.shapeshift.min.js')%>"></script>
+	<script type='text/javascript' src="<%=urlPrefix%><%=utils.resolveUrl('js/jquery.touchSwipe.min.js')%>"></script>
+	<script type='text/javascript' src="<%=urlPrefix%><%=utils.resolveUrl('js/clienthome.js')%>"></script>
+	<script type='text/javascript' src="<%=urlPrefix%>js/jquery-custom-scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
+	<!--<script type='text/javascript' src="<%=urlPrefix%><%=utils.resolveUrl('js/home-common.js')%>"></script>-->
+	<script type='text/javascript'>
+		$(document).ready(function(){
+			$('[data-toggle="tooltip"]').tooltip();
+
+			if($(".tilescategoryOne .container-ss > div").size() < 2){
+				$(".tilescategoryTwo .container-ss div.col-md-4").appendTo($(".tilescategoryOne > .container-ss"));
+				$(".tilescategoryTwo").remove();
+				$(".tilescategoryThree .container-ss div.col-md-4").appendTo($(".tilescategoryOne > .container-ss"));
+				$(".tilescategoryThree").remove();
+			}
+		});
+	</script>
+	
+</body>
+</html>

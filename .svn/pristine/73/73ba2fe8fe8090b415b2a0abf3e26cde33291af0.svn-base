@@ -1,0 +1,63 @@
+<%
+var pageId;
+var VarTenantKey;
+var VarCurrentTenantInfo;
+var ObjPageAccess;
+
+(function() {
+	
+    if (!user) {
+        sendLogin();
+        return;
+    }
+		
+    var vars;
+	var matcher = new URIMatcher(request.getRequestURI());
+	
+	if (matcher.match('/assets/{id}')) {
+	
+        vars = matcher.elements();
+        pageId = (vars.id).toString();
+		
+    } else {
+		response.sendError(404, JSON.stringify({
+					error: true
+				}));
+		return;
+	}
+	
+	var pages = require('/configs/pages.json');
+	
+	if (!pages.assets[pageId]) {
+	
+        response.sendRedirect(utils.tenantedPrefix(urlPrefix+"error/404"));
+        return;
+		
+    } else {
+		
+		var usr = require('/modules/user.js');
+		var permission = require('/configs/permissions.json');
+		ObjPageAccess = {'monitoring':'0','historyasset':'0','historyexport':'0','livegrid':'0','historyview':'0'};
+		var ObjPageConf = {'historyasset':['historyexport'],'monitoring':['livegrid','historyview']};
+		var VarPageRef = permission.assets;
+		ObjPageAccess = usr.FnGetPageAccessAuthorization(ObjPageAccess,ObjPageConf,pageId,VarPageRef);
+	}
+	
+	var method = request.getMethod();
+	
+	if (method === 'POST') { 
+		
+		VarTenantKey = (request.getParameter("gapp-tenant-key") != null) ? request.getParameter("gapp-tenant-key") : '';
+		
+	} else {
+				
+		var ObjTenantInfo = session.get('PARENT_CLIENT');
+		if(ObjTenantInfo != null){
+			VarTenantKey = ObjTenantInfo['tenantId'];
+		}
+	}	
+	
+	VarCurrentTenantInfo = usr.FnGetCurrentClientInfo(VarTenantKey);
+			
+    include(utils.resolvePath('templates/'+pages.assets[pageId]));
+} ()); %>

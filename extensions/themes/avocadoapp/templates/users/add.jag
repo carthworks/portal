@@ -1,0 +1,327 @@
+<%
+	var APICONF = require('/configs/apiproperties.jag');
+	var APPCONF = require('/configs/appconfig.jag');
+	var usr = require('/modules/user.js');
+	include(utils.resolvePath('templates/portal-header.jag'));
+	include('/controllers/includes/theme-portal-styles.jag');
+	
+%>
+	
+	<style type="text/css">
+		.checkbox-inner-padding { padding: 20px 30px;}
+		.portlet-title { min-height: 12px !important; padding:0; }
+				
+		.k-multiselect-wrap li.k-button {
+			background-color: #f44336;
+			color: #FFFFFF;
+			border-radius: 5px;
+			font-size:13px;
+			margin-top: 9px;
+		}
+		
+		.md-radio.has-error label > .check {
+			  background: #26A69A !important;
+			}
+		.md-radio.has-error label > .box {
+			border-color: #26A69A !important;
+			}
+			
+		div.fileUpload {
+			position: relative;
+			overflow: hidden;
+			margin: 10px;
+			background-image: url("<%=APPCONF.GAPP_CONF.APP_DOMAIN_ROOT_URL+APPCONF.GAPP_CONF.DOMAIN_IMG_PATH+APPCONF.GAPP_CONF.DOMAIN_IMG_DEFAULT+APPCONF.GAPP_CONF.DOMAIN_IMG_USERS+"/"%>/user.png");
+			background-size: 200px 200px;
+			background-color: #BDBDBD;
+			height: 200px;
+			width: 200px;
+			text-align: center;
+		}
+		div.fileUpload input.upload {
+			position: absolute;
+			top: 0;
+			right: 0;
+			margin: 0;
+			padding: 0;
+			font-size: 20px;
+			cursor: pointer;
+			opacity: 0;
+			filter: alpha(opacity=0);
+			height: 100%;
+			text-align: center;
+			    z-index: 99;
+		}
+		
+	  div.fileUpload input.upload + img  {position: absolute;
+		top: 0;
+		left: 0;
+		z-index: 9;}
+			.custom-span{  font-family: Arial;
+		font-weight: bold;
+		font-size: 25px;
+		color: #FFFFFF;
+		/* padding: 10px; */
+		float: left;
+	}
+	#uploadFile{border: none;margin-left: 10px; width: 200px;}
+	.custom-para{    font-family: arial;
+    /* font-weight: bold; */
+    font-size: 13px;
+    color: #FFFFFF;
+    text-align: left;
+    float: left;
+    margin: 0;
+    padding: 0px 6px;}
+		
+	.upload-addicon	{
+	    display: inline-block;
+    position: absolute;
+    bottom: 0;
+    width: 40px;
+    /* height: 40px; */
+    width: 100%;
+    z-index: 99;
+    left: 0;
+    text-align: left;
+    background: rgba(0, 0, 0, 0.7);
+    height: 32px;
+    line-height: 30px;
+    padding: 0px 10px;
+	}
+	
+
+	
+	</style>
+</head>
+<body class="page-md page-header-fixed page-quick-sidebar-over-content page-footer-fixed  page-full-width">
+	<div class="se-pre-con"></div>
+	<% include(utils.resolvePath('templates/global-header.jag')); %>
+	<!-- BEGIN CONTAINER -->
+	<div class="page-container">
+		<!-- BEGIN CONTENT -->
+		<div class="page-content-wrapper">
+		<div class="gapp-header">
+				<% include(utils.resolvePath('templates/leftnavigation.jag')); %>
+				<h3 class="page-title">	User Management  </h3>
+				<div class="page-bar">
+					<ul class="page-breadcrumb">
+						<li>
+							<i class="fa fa-home"></i>
+							<a href="Javascript:void(0)" onclick="FnBreadCrumbHome()">Home</a>
+							<i class="fa fa-angle-right"></i>
+						</li>
+						<li>
+							<a href="Javascript:void(0)" onclick="FnNavigateUserList()">Users</a>
+							<i class="fa fa-angle-right"></i>
+						</li>
+						<li>
+							<a href="Javascript:void(0)" id="caption-display-breadcrumb"><% if(VarUserId!='') { %> View User <% } else { %> Create User <% } %></a>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="page-content">
+				<!-- BEGIN PAGE CONTENT-->
+				<div class="row">
+					<div class="col-md-12">						
+						<div class="portlet light bordered animated fadeInUp dark">
+							<div class="portlet-title">
+								<div class="caption font-red-sunglo">
+									<i class="pageheadericon pageheader-usericon"></i>
+									<span class="caption-subject bold uppercase" id="caption-display-subject"> <% if(VarUserId!='') { %> View User <% } else { %> Create User <% } %> </span>
+								</div>
+								<div class="actions">
+									<div class="form-actions">
+										<!-- Tag Header -->
+											<% include(utils.resolvePath('templates/tagtemplate-header.jag')); %>
+										<!-- End Tag Header -->
+										
+										<% if(ObjPageAccess['edit']=='1') { %>	
+											<a class="btn btn-raised btn-edit red" href="Javascript:void(0)" id="gapp-user-edit" onclick="FnEditUser()"><i class="icon-note icons"></i>Edit</a>							
+										<% } %>
+										<button type="button" class="btn btn-raised default" name="gapp-user-cancel" id="gapp-user-cancel" onclick="FnCancelUser()" tabindex="8"><i class="icon-close icons" aria-hidden="true"></i>Cancel</button>			
+										<button type="button" class="btn btn-raised btn-danger" name="gapp-user-save" id="gapp-user-save" onclick="return FnSaveUser()" tabindex="7"><i class="icon-check icons" aria-hidden="true"></i>Save</button>
+									</div>
+								</div>
+							</div>
+							<div class="portlet-body form">
+								<form name="gapp-adduser-form" id="gapp-adduser-form" method="post" role="form" autocomplete="off" enctype="multipart/form-data">
+									<div class="form-body">
+										<div class="col-md-2">
+											<!-- BEGIN PROFILE IMAGE UPLOAD -->
+											<div class="form-group">
+												<div class="fileUpload">
+													<div class="upload-addicon">
+														<span class="custom-span">+</span>
+														<p class="custom-para">Add Image</p>
+													</div>
+													<input type="file" name="user-image" id="user-image" class="upload" accept="image/*" />
+													<%
+														var VarImgSrc = '';
+														if(VarUserId!='') {
+															var ObjFile = new File(APPCONF.GAPP_CONF.DOMAIN_IMG_PATH+"/"+VarCurrentTenantInfo.tenantDomain+APPCONF.GAPP_CONF.DOMAIN_IMG_USERS+"/"+VarUserId+".png");
+															if(ObjFile.isExists()){
+																VarImgSrc = APPCONF.GAPP_CONF.APP_DOMAIN_ROOT_URL+APPCONF.GAPP_CONF.DOMAIN_IMG_PATH+"/"+VarCurrentTenantInfo.tenantDomain+APPCONF.GAPP_CONF.DOMAIN_IMG_USERS+"/"+VarUserId+".png";
+															}
+															
+														}
+														
+														if(VarImgSrc != ''){
+													%>													
+														<img src="<%=VarImgSrc%>" id="user-image-preview" width="200" height="200" style="background-color:whitesmoke;" />
+													<% } else { %>
+														<img src="" id="user-image-preview" width="200" height="200" />
+													<% } %>
+												</div>
+											</div>
+											<!-- END PROFILE IMAGE UPLOAD -->
+										</div>
+										<div class="col-md-5">			
+											<!-- BEGIN USERNAME -->													
+											<div class="form-group form-md-line-input">
+												<input type="text" class="form-control" name="userName" id="userName" tabindex="1" required data-required-msg="User name not specified" data-available data-available-url="<%=APICONF.GAPP_SERVICES.users.usernameunique%>" data-available-msg="User name already exists" onkeypress="return FnAllowAlphaNumericOnlyNospaceBetween(event)" />							
+												<label class="col-md-12 control-label" for="form_control_1">User Name 
+													<span class="required" aria-required="true">* </span>
+												</label>
+												<div class="form-control-focus"></div>
+											</div>													
+											<!-- END USERNAME -->		
+													
+											<!-- BEGIN FIRSTNAME -->
+											<div class="form-group form-md-line-input">
+												<input type="text" class="form-control" name="firstName" id="firstName" tabindex="2" onkeypress="return FnNotAllowNumeric(event)" pattern="[^0-9]*" validationMessage="enter valid first name" />									
+												<label class="col-md-12 control-label" for="form_control_1">First Name</label>
+												<div class="form-control-focus"></div>
+											</div>
+											<!-- END FIRSTNAME -->
+											
+											<!-- BEGIN LASTNAME -->													
+											<div class="form-group form-md-line-input">
+												<input type="text" class="form-control" name="lastName" id="lastName" required data-required-msg="Last name not specified" tabindex="3" onkeypress="return FnNotAllowNumeric(event)" pattern="[^0-9]*" validationMessage="enter valid last name" />									
+												<label class="col-md-12 control-label" for="form_control_1">Last Name
+														<span class="required" aria-required="true">* </span>
+												</label>
+												<div class="form-control-focus"></div>
+											</div>													
+											<!-- END LASTNAME -->
+																																							
+										</div>								
+										
+										<div class="col-md-5">
+											<!-- BEGIN EMAILID -->
+											<div class="form-group form-md-line-input">
+												<div class="input-group">
+													<input type="email" class="form-control" placeholder="" name="emailId" id="emailId" required data-required-msg="Email Id not specified" tabindex="4" data-email-msg="Invalid email id" />												
+													<label class="col-md-12 control-label" for="form_control_1">Email Id
+														<span class="required" aria-required="true">* </span>
+													</label>
+													<span class="input-group-addon">
+														<i class="fa fa-envelope"></i>
+													</span>
+												</div>
+											</div>	
+											<!-- END EMAILID -->
+											
+											<!-- BEGIN ROLENAME -->
+											<div class="form-group form-md-line-input">
+												
+												<select class="form-control" name="roleName" id="roleName" multiple="multiple" required data-required-msg="Role not specified" tabindex="5"></select>
+												<label class="col-md-12 control-label" for="form_control_1">Role Name<span class="required" aria-required="true">* </span></label>
+												<div class="form-control-focus"></div>
+											</div>
+											<!-- END ROLENAME -->
+											
+											<!-- BEGIN CONTACTNO -->
+											<div class="form-group form-md-line-input">
+												<input type="text" class="form-control" name="contactNumber" id="contactNumber" tabindex="6"  onkeypress="return FnAllowNumbersOnly(event)" />								
+												<label class="col-md-12 control-label" for="form_control_1">Contact Number</label>
+												<div class="form-control-focus"></div>
+											</div>
+											<!-- END CONTACTNO -->
+											
+											<!-- BEGIN STATUS -->													
+											<div class="form-group form-md-line-input">
+												<label class="col-md-2 control-label" for="form_control_1">Status</label>
+												<div class="col-md-10">
+													<div class="md-radio-inline">										
+														<div class="md-radio has-error">
+															<input type="radio" id="statusName_active" name="statusName" class="md-radiobtn" checked value="ACTIVE">
+															<label for="statusName_active" style="color:#26A69A">
+															<span></span>
+															<span class="check"></span>
+															<span class="box"></span>
+															Active </label>
+														</div>
+														<div class="md-radio has-warning">
+															<input type="radio" id="statusName_inactive" name="statusName" class="md-radiobtn" value="INACTIVE">
+															<label for="statusName_inactive">
+															<span></span>
+															<span class="check"></span>
+															<span class="box"></span>
+															In Active</label>
+														</div>
+													</div>
+												</div>
+											</div>
+											<!-- END STATUS -->																	
+										</div>
+										
+									</div>
+												
+									<input type="hidden" name="user_id" id="user_id" value="<%=VarUserId%>" />
+									<input type="hidden" id="gapp-tenant-domain" name="gapp-tenant-domain" value="<%=VarTenantKey%>" />
+										
+								</form>
+								
+								<!-- Tag Template -->
+									<% include(utils.resolvePath('templates/tagtemplate.jag')); %>
+									<div class="clearfix"></div>	
+								<!-- End Tag Template -->
+								
+								<form id="gapp-user-list" role="form" action="<%=APPCONF.GAPP_CONF.CONTEXT_PATH%>/users/list" name="gapp-user-list" method="post">
+									<input type="hidden" id="gapp-tenant-key" name="gapp-tenant-key" value="<%=VarTenantKey%>" />
+								</form>
+							</div>
+							
+							
+							
+							
+						</div>
+					</div>
+					<!-- END SAMPLE FORM PORTLET-->
+				</div>
+				<!-- END PAGE CONTENT-->
+			</div>
+		</div>
+		<!-- END CONTENT -->
+		
+	</div>
+	<!-- END CONTAINER -->
+
+	<% include(utils.resolvePath('templates/global-footer.jag')); %>
+	<% 
+		include(utils.resolvePath('templates/portal-footer.jag'));
+		include('/controllers/includes/theme-portal-scripts.jag');
+	%>
+	<script type="text/javascript">
+
+		var VarCreateUserUrl = '<%=APICONF.GAPP_SERVICES.users.create%>';
+		var VarViewUserUrl = '<%=APICONF.GAPP_SERVICES.users.view%>';
+		var VarUpdateUserUrl = '<%=APICONF.GAPP_SERVICES.users.update%>';
+		var VarListRoleUrl = '<%=APICONF.GAPP_SERVICES.roles.list%>';
+		var VarLUDomainName = '<%=usr.domainName()%>';
+		var VarEditUserId = '<%=VarUserId%>';
+		var VarCurrentTenantInfo = $.parseJSON('<%=VarCurrentTenantInfo%>');
+		var VarAPPServerPath = '<%=APPCONF.GAPP_CONF.APP_DOMAIN_ROOT_URL%>';
+
+	</script>
+	
+	<script type='text/javascript' src="<%=urlPrefix%>plugins/jquery.form.js"></script>
+	
+	<!-- Tag Footer -->
+		<% include(utils.resolvePath('templates/tagtemplate-footer.jag')); %>
+	<!-- End Tag Footer -->
+	
+	<script type="text/javascript" src="<%=urlPrefix%><%=utils.resolveUrl('js/users/add.js')%>"></script>
+</body>
+</html>

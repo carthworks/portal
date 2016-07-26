@@ -1,0 +1,92 @@
+<%
+var method;
+var requesturi;
+var querystring;
+var payload;
+
+(function () {
+
+	var log = new Log();
+	
+	var APPCONF = require('/configs/appconfig.jag');
+	var APICONF = require('/configs/apiproperties.jag');
+	include('commonservicefunctions.jag');
+	
+	var VarAPIEndPointUrl = (APICONF.GAPP_SERVICES.server.scheme) + "://" + (APICONF.GAPP_SERVICES.server.host) + ":" + (APICONF.GAPP_SERVICES.server.port);
+	
+	method = request.getMethod();
+	requesturi = request.getRequestURI();
+	querystring = request.getQueryString();
+	payload = request.getContent();
+	
+	function FnServiceProcess(method,requesturi,querystring,payload){
+		var VarResponse;
+		var VarAuthCode;
+		var VarApiUrl = FnBuildServiceUrl(requesturi,querystring);
+		switch (method) {
+			case "POST" :
+					var VARAPIMNGRKEY = APPCONF.GAPP_CONF.CCD_CLIENT_ID +":"+ APPCONF.GAPP_CONF.CCD_CLIENT_SECRET;
+					var ObjAuthRes = parse(FnGetAuthToken(VARAPIMNGRKEY));
+					VarAuthCode = ObjAuthRes.access_token;
+					VarResponse = FnMakeRequestCall('POST',VarApiUrl,VarAuthCode,'application/json','application/json',payload);
+					break;
+			case "GET" :
+					var VARAPIMNGRKEY = APPCONF.GAPP_CONF.CCD_CLIENT_ID +":"+ APPCONF.GAPP_CONF.CCD_CLIENT_SECRET;
+					var ObjAuthRes = parse(FnGetAuthToken(VARAPIMNGRKEY));
+					VarAuthCode = ObjAuthRes.access_token;
+					VarResponse = FnMakeRequestCall('GET',VarApiUrl,VarAuthCode,'application/json','application/json',payload);
+					break;
+		}
+		
+		if(APPCONF.GAPP_CONF.APP_LOG_INIT == '1'){
+			include('applicationlogs.jag');
+			FnWriteLog(method,VarApiUrl,payload,VarResponse);
+		}
+		
+		print(VarResponse);
+	}
+	FnServiceProcess(method,requesturi,querystring,payload);
+	
+	function FnBuildServiceUrl(VarRequestUri,VarQryString){
+		var VarServiceurl = FnGetServiceUrl(VarRequestUri);
+		if(VarServiceurl != ''){
+			if(VarQryString != null && VarQryString != ''){
+				var URLQueryParams = getUrlVars(VarQryString);
+				if(URLQueryParams != null){
+					VarServiceurl = VarServiceurl + "?";
+					for (x in URLQueryParams) {
+						VarServiceurl += x +"="+ URLQueryParams[x] + "&";
+					}
+					VarServiceurl = VarServiceurl.slice(0, -1);
+				}
+			}
+		}
+		VarServiceurl = VarAPIEndPointUrl + VarServiceurl;
+		return VarServiceurl;
+	}
+	
+	function FnGetServiceUrl(VarRequestUri){
+		if(VarRequestUri==null || VarRequestUri==''){
+			return VarRequestUri;
+		}
+		
+		var separator = APPCONF.GAPP_CONF.CONTEXT_PATH + "/ajaxccd";
+		var pos = parseInt(VarRequestUri.indexOf(separator));
+		var VarServiceurl =  VarRequestUri.substring(pos + separator.length);
+		return VarServiceurl;
+	}
+	
+	function getUrlVars(url) {
+		var URLQueryParams = {};
+		var hash;
+		var hashes = url.slice(url.indexOf('?') + 1).split('&');
+		for (var i = 0; i < hashes.length; i++) {
+			hash = hashes[i].split('=');
+			URLQueryParams[hash[0]] = hash[1];
+		}
+		return URLQueryParams;
+	}
+
+}());
+
+%>
